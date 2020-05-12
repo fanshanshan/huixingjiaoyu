@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:background="#ffffff"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+
+        android:id="@+id/iv_img"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="170dp" />
+
+
+    <RelativeLayout
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/tv_title"
+                android:textColor="#222222"
+                android:textSize="16dp"
+                android:text="先赚他一个亿滚你妹妹的"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+
+                    android:id="@+id/iv_head"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FFffffff"/>
+
+                <TextView
+                    android:layout_marginLeft="4dp"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginLeft="6dp"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+       <LinearLayout
+           android:background="@drawable/living_join"
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentRight="true"
+           android:gravity="center"
+           android:orientation="horizontal"
+           android:layout_width="80dp"
+           android:layout_height="30dp">
+           <ImageView
+               android:src="@drawable/sanjiao"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+           <TextView
+               android:textColor="#ffffff"
+               android:gravity="center"
+               android:textAlignment="center"
+               android:id="@+id/tv_status"
+               android:text="直播中"
+               android:textSize="12sp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+       </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

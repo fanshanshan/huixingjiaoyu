@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.qulink.hxedu.R;
 
+import butterknife.ButterKnife;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public abstract  class BaseActivity extends SwipeBackActivity{
@@ -30,6 +31,8 @@ public abstract  class BaseActivity extends SwipeBackActivity{
 //            bar.setHeight(SystemUtil.getStatusHeight(this));
 //        }
         setContentView(getLayout());
+        ButterKnife.bind(this);
+
         getSwipeBackLayout().setEnableGesture(enableGestureBack());//子activity是否允许滑动退出
         init();
     }

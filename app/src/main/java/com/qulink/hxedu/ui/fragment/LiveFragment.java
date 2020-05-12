@@ -2,14 +2,22 @@ package com.qulink.hxedu.ui.fragment;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.adapter.FragmentViewPagerAdapter;
+import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +25,15 @@ import com.qulink.hxedu.R;
 public class LiveFragment extends Fragment {
 
 
+    View rootView;
+    @BindView(R.id.tab_parent)
+    SlidingTabLayout tabParent;
+    @BindView(R.id.vp)
+    ViewPager vp;
+
+    FragmentViewPagerAdapter viewPagerAdapter;
+    private List<Fragment> fragmentList;
+    private List<String> titleList;
     public LiveFragment() {
         // Required empty public constructor
     }
@@ -26,7 +43,37 @@ public class LiveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_live, container, false);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_live, container, false);
+            ButterKnife.bind(this, rootView);
+            initFragment();
+            initAdapter();
+        }
+        return rootView;
     }
 
+    void initFragment(){
+
+        fragmentList = new ArrayList<>();
+        LiveRecordFragment liveSubFragment =  new LiveRecordFragment();
+        Bundle  bundle = new Bundle();
+        bundle.putString("title","精彩回放");//全部
+        liveSubFragment.setArguments(bundle);
+        fragmentList.add(liveSubFragment);
+        LiveReadyBeginFragment liveReadyBeginFragment =  new LiveReadyBeginFragment();
+          bundle = new Bundle();
+        bundle.putString("title","-1");//全部
+        liveSubFragment.setArguments(bundle);
+        fragmentList.add(liveReadyBeginFragment);
+    }
+
+   void initAdapter(){
+       titleList = new ArrayList<>();
+       titleList.add("精彩回放");
+       titleList.add("即将开始");
+        viewPagerAdapter = new FragmentViewPagerAdapter(getChildFragmentManager(),titleList,fragmentList);
+        vp.setAdapter(viewPagerAdapter);
+        String[] s = new String[]{};
+        tabParent.setViewPager(vp);
+    }
 }

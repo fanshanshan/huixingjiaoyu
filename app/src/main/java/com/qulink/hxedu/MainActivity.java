@@ -1,9 +1,10 @@
 package com.qulink.hxedu;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -27,6 +28,10 @@ public class MainActivity extends BaseActivity {
     RadioButton rbZone;
     @BindView(R.id.rb_person)
     RadioButton rbPerson;
+    @BindView(R.id.fragment_contanier)
+    LinearLayout fragmentContanier;
+    @BindView(R.id.tab_parent)
+    RadioGroup tabParent;
     private int selectTab;
 
     private IndexFragment indexFragment;
@@ -54,7 +59,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        selectTab = 0;
+
+        rbIndex.setChecked(true);
 
     }
 
@@ -108,11 +114,11 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.rb_zone:
                 rbZone.setChecked(true);
-                fragmentManager.beginTransaction().hide(liveFragment).hide(zoneFragment).hide(personFragment).show(zoneFragment).commit();
+                fragmentManager.beginTransaction().hide(liveFragment).hide(indexFragment).hide(personFragment).show(zoneFragment).commit();
 
                 break;
             case R.id.rb_person:
-                rbIndex.setChecked(true);
+                rbPerson.setChecked(true);
                 fragmentManager.beginTransaction().hide(liveFragment).hide(zoneFragment).hide(indexFragment).show(personFragment).commit();
 
                 break;

@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".ui.fragment.LiveFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="z直播" />
+    <include layout="@layout/status"/>
 
-</FrameLayout>
+    <RelativeLayout
+        android:elevation="2dp"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:src="@drawable/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp"
+            android:textColor="#222222"
+            android:text="@string/live_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <include layout="@layout/line"/>
+    <com.qulink.hxedu.view.tablayout.SlidingTabLayout
+        android:layout_marginTop="12dp"
+        android:elevation="2dp"
+        android:id="@+id/tab_parent"
+
+        app:tl_indicator_width="30dp"
+        app:tl_textSelectColor="#3586F9"
+        app:tl_textsize="14sp"
+        app:tl_select_textsize="16sp"
+        app:tl_textUnselectColor="#999999"
+        app:tl_indicator_color="#3586F9"
+        android:layout_width="match_parent"
+        android:minHeight="30dp"
+        app:tl_tab_padding="10dp"
+        android:layout_height="wrap_content"
+        app:tl_textBold="SELECT"
+        >
+
+    </com.qulink.hxedu.view.tablayout.SlidingTabLayout>
+    <include layout="@layout/line"/>
+
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

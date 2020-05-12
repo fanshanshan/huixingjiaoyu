@@ -1,11 +1,31 @@
 <resources>
-    <string name="app_name">彗行教育</string>
+    <string name="app_name">慧行教育</string>
     <string name="tab_index">学习</string>
     <string name="tab_live">直播</string>
     <string name="tab_zone">社区</string>
     <string name="tab_person">我的</string>
     <string name="tab_search_hint_text">搜索课程名称</string>
 
+
+    <string name="index_item1">免费课程</string>
+    <string name="index_item2">健康系列</string>
+    <string name="index_item3">完美伴侣</string>
+    <string name="index_item4">亲子教育</string>
+    <string name="index_item5">智慧系列</string>
+    <string name="index_item6">人生故事</string>
+    <string name="index_item7">示例问答</string>
+    <string name="index_item8">运动生活</string>
+    <string name="hot_course">热门课程</string>
+    <string name="vip_no_money">会员免费</string>
+    <string name="more_course">更多</string>
+
+
+    <string name="money_course">付费课程</string>
+    <string name="vip_money">会员专享价</string>
+    <string name="live_title">直播</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
