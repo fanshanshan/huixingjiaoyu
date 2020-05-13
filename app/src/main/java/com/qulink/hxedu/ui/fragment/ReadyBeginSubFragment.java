@@ -154,23 +154,24 @@ public class ReadyBeginSubFragment extends Fragment {
             }
         };
         recycleView.setAdapter(adapter);
-        recycleView.addItemDecoration(new SpacesItemDecoration(16));
+        recycleView.addItemDecoration(new SpacesItemDecoration(0,16));
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-}
 
-class TempData{
-    String img;
-    int statu;
-    String title;
-    String headimg;
-    String name;
+   static class TempData{
+        String img;
+        int statu;
+        String title;
+        String headimg;
+        String name;
 
-    public TempData(String img, int statu, String title, String headimg, String name) {
-        this.img = img;
-        this.statu = statu;
-        this.title = title;
-        this.headimg = headimg;
-        this.name = name;
+        public TempData(String img, int statu, String title, String headimg, String name) {
+            this.img = img;
+            this.statu = statu;
+            this.title = title;
+            this.headimg = headimg;
+            this.name = name;
+        }
     }
 }
+

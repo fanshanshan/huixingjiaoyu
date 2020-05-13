@@ -151,7 +151,7 @@ public class IndexFragment extends Fragment {
         };
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-        recycleHotCourse.addItemDecoration(new SpacesItemDecoration(12));
+        recycleHotCourse.addItemDecoration(new SpacesItemDecoration(12,0));
         recycleHotCourse.setLayoutManager(layoutManager);
         recycleHotCourse.setAdapter(commonHotCourRcvAdapter);
     }
@@ -216,7 +216,7 @@ public class IndexFragment extends Fragment {
         };
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-        recycleMoneyCourse.addItemDecoration(new SpacesItemDecoration(12));
+        recycleMoneyCourse.addItemDecoration(new SpacesItemDecoration(12,0));
         recycleMoneyCourse.setLayoutManager(layoutManager);
         recycleMoneyCourse.setAdapter(commonMoneyCourRcvAdapter);
     }

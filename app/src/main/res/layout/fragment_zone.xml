@@ -87,10 +87,7 @@
 
 
             <LinearLayout
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+
                 android:layout_marginTop="8dp"
                 android:background="@color/white"
                 android:orientation="vertical"
@@ -98,6 +95,8 @@
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:background="#F8F8F8"
+
                     android:id="@+id/recycle_share_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

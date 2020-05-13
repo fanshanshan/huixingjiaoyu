@@ -43,7 +43,7 @@ public class LiveRecordSubFragment extends Fragment {
 
     CommonRcvAdapter adapter;
 
-    List<TempData> dataList;
+    List<ReadyBeginSubFragment.TempData> dataList;
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
 
@@ -84,20 +84,20 @@ public class LiveRecordSubFragment extends Fragment {
 
     void getData() {
         dataList = new ArrayList<>();
-        dataList.add(new TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
+        dataList.add(new ReadyBeginSubFragment.TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
                 1, "我是直播课程爱我你怕了吗", "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1089923673,1921966740&fm=26&gp=0.jpg",
                 "幂总"));
-        dataList.add(new TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
+        dataList.add(new ReadyBeginSubFragment.TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
                 2, "我是直播课程爱我你怕了吗", "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1089923673,1921966740&fm=26&gp=0.jpg",
                 "幂总"));
-        dataList.add(new TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
+        dataList.add(new ReadyBeginSubFragment.TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
                 3, "我是直播课程爱我你怕了吗", "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1089923673,1921966740&fm=26&gp=0.jpg",
                 "幂总"));
-        dataList.add(new TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
+        dataList.add(new ReadyBeginSubFragment.TempData("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg",
                 1, "我是直播课程爱我你怕了吗", "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1089923673,1921966740&fm=26&gp=0.jpg",
                 "幂总"));
 
-        adapter = new CommonRcvAdapter<TempData>(dataList) {
+        adapter = new CommonRcvAdapter<ReadyBeginSubFragment.TempData>(dataList) {
             ImageView ivHead;
             ImageView ivImg;
             TextView tvTitle;
@@ -134,9 +134,9 @@ public class LiveRecordSubFragment extends Fragment {
 
                     @Override
                     public void handleData(Object o, int position) {
-                        TempData tempData = null;
-                        if (o instanceof TempData) {
-                            tempData = (TempData) o;
+                        ReadyBeginSubFragment.TempData tempData = null;
+                        if (o instanceof ReadyBeginSubFragment.TempData) {
+                            tempData = (ReadyBeginSubFragment.TempData) o;
                         }
                         if (tempData != null) {
                             tvName.setText(tempData.name);
@@ -167,7 +167,7 @@ public class LiveRecordSubFragment extends Fragment {
             }
         };
         recycleView.setAdapter(adapter);
-        recycleView.addItemDecoration(new SpacesItemDecoration(16));
+        recycleView.addItemDecoration(new SpacesItemDecoration(0,16));
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }

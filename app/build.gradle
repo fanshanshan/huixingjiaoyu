@@ -46,7 +46,7 @@ dependencies {
 
     //圆角imageview
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 
 
     //圆形imageview
@@ -60,4 +60,11 @@ dependencies {
     implementation  'com.scwang.smart:refresh-header-classics:2.0.0'
     //经典加载
     implementation  'com.scwang.smart:refresh-footer-classics:2.0.0'
+
+
+    //展开收起 链接
+    implementation 'com.github.MZCretin:ExpandableTextView:1.6.1'
+
+    implementation 'com.github.MikeOrtiz:TouchImageView:3.0.1'
+
 }
