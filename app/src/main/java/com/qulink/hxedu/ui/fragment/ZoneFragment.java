@@ -322,7 +322,7 @@ public class ZoneFragment extends Fragment {
                 };
             }
         };
-        recycleShareContent.addItemDecoration(new SpacesItemDecoration(0, 16));
+        recycleShareContent.addItemDecoration(new SpacesItemDecoration(0, 16,0,0));
 
         recycleShareContent.setAdapter(shareContentBeanCommonRcvAdapter);
         recycleShareContent.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -56,6 +56,7 @@
                         android:paddingBottom="6dp">
 
                         <TextView
+                            android:id="@+id/tv_mfkc"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -67,6 +68,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_jkxl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -79,6 +81,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_wmbl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -91,6 +94,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_qzjy"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -111,6 +115,7 @@
                         android:paddingBottom="10dp">
 
                         <TextView
+                            android:id="@+id/tv_zhxl"
                             android:layout_width="0dp"
 
                             android:layout_height="wrap_content"
@@ -123,6 +128,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_rsgs"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -135,6 +141,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_slwd"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -146,6 +153,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_ydsh"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
 
@@ -158,20 +166,16 @@
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <ImageView
-                    android:scaleType="centerInside"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                <com.bigkoo.convenientbanner.ConvenientBanner
+                    android:id="@+id/convenientBanner"
                     android:layout_marginTop="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/emba"
-
                     android:layout_marginBottom="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    app:autoTurningTime="3000"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    app:canLoop="true"
 
-
+                />
 
 
                 <include layout="@layout/couse_line"/>
@@ -195,6 +199,7 @@
         android:paddingRight="15dp">
 
         <ImageView
+            android:id="@+id/iv_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

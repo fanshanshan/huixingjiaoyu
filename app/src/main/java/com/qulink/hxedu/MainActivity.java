@@ -1,18 +1,27 @@
 package com.qulink.hxedu;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.entity.TokenInfo;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.ui.fragment.IndexFragment;
 import com.qulink.hxedu.ui.fragment.LiveFragment;
 import com.qulink.hxedu.ui.fragment.PersonFragment;
 import com.qulink.hxedu.ui.fragment.ZoneFragment;
+import com.qulink.hxedu.util.PrefUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +78,29 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
+    private boolean isQuit;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (isQuit == false) {
+                isQuit = true;
+                Toast.makeText(getBaseContext(), "再按一次退出", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isQuit = false;
+                    }
+                }, 2000);
+            } else {
+                App.getInstance().exit();
+                finish();
+
+            }
+        }
+        return true;
+    }
     void initFragment(Bundle savedInstanceState) {
 
         fragmentManager = getSupportFragmentManager();
@@ -124,4 +156,19 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        Log.e("页面销毁啦","onDestroy");
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        Log.e("页面暂停","onPause");
+//
+//    }
 }

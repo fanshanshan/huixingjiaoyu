@@ -154,7 +154,7 @@ public class ReadyBeginSubFragment extends Fragment {
             }
         };
         recycleView.setAdapter(adapter);
-        recycleView.addItemDecoration(new SpacesItemDecoration(0,16));
+        recycleView.addItemDecoration(new SpacesItemDecoration(0,16,0,0));
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
