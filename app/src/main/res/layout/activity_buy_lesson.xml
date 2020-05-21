@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".ui.BuyLessonActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/bar"/>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                app:riv_corner_radius="5dp"
+                android:scaleType="fitXY"
+                android:id="@+id/iv_img"
+                android:layout_width="125dp"
+                android:layout_height="75dp" />
+
+            <RelativeLayout
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="70dp">
+
+                <TextView
+                    android:id="@+id/tv_lesson_title"
+                    android:textColor="#222222"
+                    android:textSize="14sp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+
+                        android:src="@drawable/star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:textSize="15sp"
+                        android:textColor="#FF973B"
+                        android:text="300+￥200"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/viptj"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <include layout="@layout/divider_bold"/>
+
+        <LinearLayout
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#222222"
+                android:textSize="15sp"
+                android:text="@string/pay_way"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <include layout="@layout/line"/>
+            <RelativeLayout
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/pay_ali"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/pay_ali"
+                        android:layout_width="wrap_content"
+                        android:textColor="#222222"
+                        android:textSize="15dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pay_checked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>            <include layout="@layout/line"/>
+
+            <RelativeLayout
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/pay_wx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/pay_wx"
+                        android:layout_width="wrap_content"
+                        android:textColor="#222222"
+                        android:textSize="15dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pay_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>            <include layout="@layout/line"/>
+
+            <RelativeLayout
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/pay_bank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/pay_bank"
+                        android:layout_width="wrap_content"
+                        android:textColor="#222222"
+                        android:textSize="15dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pay_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>            <include layout="@layout/line"/>
+
+            <RelativeLayout
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/bind_new_bank"
+                    android:layout_width="wrap_content"
+                    android:textColor="#222222"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content" />
+
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        >
+
+        <TextView
+            android:text="应付："
+            android:textSize="15sp"
+            android:textColor="#222222"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="￥8888"
+            android:textColor="#FCA84D"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_buy"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:background="@drawable/sure_buy_btn_bg"
+            android:gravity="center"
+            android:text="@string/sure_pay"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</RelativeLayout>

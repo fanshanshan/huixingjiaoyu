@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="bar_height">40dp</dimen>
+    <dimen name="status_height">20dp</dimen>
+    <dimen name="divider_height">10dp</dimen>
+    <dimen name="bar_status_height">60dp</dimen>
+    <dimen name="bar_textt_size">18sp</dimen>
+    <dimen name="complete_btn_height">56dp</dimen>
+
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+</resources>

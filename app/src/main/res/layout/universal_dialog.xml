@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+  >
+
+
+
+    <LinearLayout
+        android:background="@drawable/background_circle_universal"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--<TextView-->
+            <!--android:textSize="15sp"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:text="提示"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="content"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+
+        <View
+            android:background="@color/grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <Button
+                android:id="@+id/left"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="14dp"
+                android:layout_toLeftOf="@+id/right"
+                android:background="@null"
+                android:text="left"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/divider"
+                android:layout_marginTop="16dp"
+                android:background="@color/grey"
+                android:layout_width="1dp"
+                android:layout_height="45dp"/>
+            <Button
+                android:id="@+id/right"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:gravity="center"
+                android:text="right"
+                android:textColor="@color/theme_color"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

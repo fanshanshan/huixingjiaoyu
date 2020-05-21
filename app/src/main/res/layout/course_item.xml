@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:id="@+id/ll_root"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iv_img"
+        app:riv_corner_radius="5dp"
+        android:layout_width="125dp"
+        android:layout_height="75dp" />
+
+    <RelativeLayout
+        android:layout_marginLeft="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+        <TextView
+            android:textSize="14sp"
+            android:textColor="#222222"
+            android:id="@+id/tv_title"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="￥"
+                    android:textColor="#FF7B11"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/tv_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:textColor="#FF7B11"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/tv_desc"
+                    android:textColor="#F2A800"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_join_num"
+                android:textColor="#999999"
+                android:textSize="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

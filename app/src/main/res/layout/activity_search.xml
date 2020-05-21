@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".ui.SearchActivity">
+
+    <include layout="@layout/status"/>
+
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_height">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:src="@drawable/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:background="@drawable/search_edit_bg"
+            android:paddingLeft="12dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:paddingRight="12dp"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="30dp">
+            <ImageView
+                android:src="@drawable/search_page_sc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:textColor="@color/black"
+                android:textColorHint="#999999"
+                android:textSize="13sp"
+                android:hint="@string/search_edit_hint"
+                android:layout_weight="1"
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="30dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:text="@string/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:paddingRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="#222222"
+            android:text="@string/search_hitory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <com.qulink.hxedu.view.FlowLayout
+        android:id="@+id/flowLayout_search_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.qulink.hxedu.view.FlowLayout>
+    <RelativeLayout
+        android:paddingRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="#222222"
+            android:text="@string/hot_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_hot_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

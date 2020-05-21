@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.CourseActivity">
+
+    <include layout="@layout/status"/>
+
+
+    <RelativeLayout
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_height">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:text=""
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:textColor="@color/bar_txt_color"
+            android:textSize="@dimen/bar_textt_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <com.qulink.hxedu.view.tablayout.SlidingTabLayout
+        android:layout_marginTop="12dp"
+        android:elevation="2dp"
+        android:id="@+id/tab_parent"
+        app:tl_indicator_width="30dp"
+        app:tl_textSelectColor="#3586F9"
+        app:tl_textsize="14sp"
+        app:tl_select_textsize="14sp"
+        app:tl_textUnselectColor="#999999"
+        app:tl_indicator_color="#3586F9"
+        android:layout_width="match_parent"
+        android:minHeight="30dp"
+        app:tl_tab_padding="10dp"
+        android:layout_height="wrap_content"
+        app:tl_textBold="SELECT"
+        >
+
+    </com.qulink.hxedu.view.tablayout.SlidingTabLayout>
+    <include layout="@layout/line"/>
+
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

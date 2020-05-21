@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ui.EditHeadAndNickActivity">
+
+    <include layout="@layout/bar"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_head"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="125dp"
+        android:layout_height="125dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_head"
+            android:src="@drawable/head"
+            android:layout_width="125dp"
+            android:layout_height="125dp" />
+        <ImageView
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    
+    
+   <LinearLayout
+       android:layout_marginTop="50dp"
+       android:layout_marginRight="50dp"
+       android:layout_marginLeft="50dp"
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+       <TextView
+           android:textStyle="bold"
+           android:textColor="#222222"
+           android:textSize="17sp"
+           android:text="@string/nick"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+       <LinearLayout
+           android:gravity="center_vertical"
+           android:layout_marginTop="20dp"
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="40dp">
+           <EditText
+               android:textSize="15sp"
+               android:textColorHint="#CCCCCC"
+               android:hint="请输入昵称"
+               android:background="@null"
+               android:layout_weight="1"
+               android:id="@+id/et_nick"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content" />
+
+       </LinearLayout>
+
+       <include layout="@layout/line"/>
+
+       <TextView
+           android:layout_marginTop="8dp"
+           android:textSize="12sp"
+           android:textColor="#CCCCCC"
+           android:text="近一年内，您已修改过0次"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+
+
+       <TextView
+           android:textStyle="bold"
+           android:textColor="@color/white"
+           android:layout_marginTop="50dp"
+           android:background="@drawable/login_btn_bg"
+           android:gravity="center"
+           android:text="@string/save"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/complete_btn_height" />
+
+       <TextView
+           android:textAlignment="center"
+           android:textSize="12sp"
+           android:textColor="#CCCCCC"
+           android:text="@string/edit_nick_desc"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+   </LinearLayout>
+
+
+</LinearLayout>

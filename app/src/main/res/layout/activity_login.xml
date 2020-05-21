@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.LoginActivity">
+
+
+
+
+    <com.qulink.hxedu.view.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:paddingTop="@dimen/bar_status_height"
+
+                android:gravity="center_horizontal"
+                android:background="@drawable/login_top_bg"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+
+                <ImageView
+                    android:src="@drawable/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:text="@string/hx_edu"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="@string/hx_welcome"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#80ffffff"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/login_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:inputType="number"
+                    android:textSize="15sp"
+                    android:textColorHint="#CCCCCC"
+                    android:hint="@string/phone_hint"
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/et_phone"
+                    android:background="@null"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:background="#F4F4F4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/login_verify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:inputType="number"
+                    android:textSize="15sp"
+                    android:textColorHint="#CCCCCC"
+                    android:hint="@string/verify_hint"
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/et_verify"
+                    android:background="@null"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_get_smscode"
+                    android:textColor="#3586F9"
+                    android:textSize="13sp"
+                    android:text="@string/get_smscode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:background="#F4F4F4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:text="@string/complete"
+                android:background="@drawable/login_btn_bg"
+                android:layout_marginRight="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/complete_btn_height" />
+
+            <RelativeLayout
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_pwd_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/pwd_login"
+                    android:textColor="@color/theme_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_registe"
+                    android:text="@string/new_registe"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/theme_color"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:background="#F4F4F4"
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"/>
+
+
+                <TextView
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:textColor="#222222"
+                    android:text="@string/other_way_login"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+
+                <View
+                    android:background="#F4F4F4"
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"/>
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/iv_wx_login"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/login_wx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </com.qulink.hxedu.view.MyScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/status"/>
+        <RelativeLayout
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+
+                android:layout_centerVertical="true"
+                android:id="@+id/iv_back"
+                android:src="@drawable/back_white2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

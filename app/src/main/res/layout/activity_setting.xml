@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/grey"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ui.SettingActivity">
+
+    <com.qulink.hxedu.view.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/bar"/>
+
+            <!--手机号-->
+            <RelativeLayout
+                android:layout_marginTop="12dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="#999999"
+                        android:textSize="15sp"
+                        android:text=""
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:src="@drawable/next"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--微信-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_wx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="#999999"
+                        android:textSize="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <Switch
+                        android:checked="true"
+                        android:track="@drawable/switch_track"
+                        android:thumb="@drawable/switch_thumb"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <!--修改密码-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/edit_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/next"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <!--支付密码-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/edit_pay_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/next"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
+
+
+            <!--允许使用3g4g播放视频-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/net_play_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Switch
+                        android:checked="true"
+                        android:track="@drawable/switch_track"
+                        android:thumb="@drawable/switch_thumb"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <!--允许使用3g4g下载视频-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/net_download_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Switch
+                        android:checked="true"
+                        android:track="@drawable/switch_track"
+                        android:thumb="@drawable/switch_thumb"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+
+
+
+            <!--清除缓存-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/clear_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="#999999"
+                        android:textSize="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
+
+            <!--意见反馈-->
+            <RelativeLayout
+                android:layout_marginTop="1dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/advice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/next"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_marginTop="12dp"
+                android:textSize="17sp"
+                android:textColor="#333333"
+                android:text="@string/logout"
+                android:background="@color/white"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+        </LinearLayout>
+    </com.qulink.hxedu.view.MyScrollView>
+</LinearLayout>
