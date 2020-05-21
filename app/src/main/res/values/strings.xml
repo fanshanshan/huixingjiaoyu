@@ -38,6 +38,7 @@
     <string name="start_study">开始学习</string>
     <string name="login">登录</string>
     <string name="complete">完成</string>
+    <string name="save">保存</string>
     <string name="hx_edu">慧行文化</string>
     <string name="hx_welcome">欢迎来到慧行，开启学习之旅</string>
     <string name="phone_hint">请输入手机号码</string>
@@ -74,6 +75,10 @@
     <string name="advice">意见反馈</string>
     <string name="logout">退出登录</string>
     <string name="login_success">登录成功</string>
+    <string name="nick">昵称</string>
+    <string name="update">修改</string>
+    <string name="edit_info">编辑资料</string>
+    <string name="edit_nick_desc">VIP会员用户昵称设置成功后一年内可更改5次,非会员用户昵称设置成功后不可再更改哦~</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

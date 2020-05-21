@@ -3,13 +3,12 @@ package com.qulink.hxedu;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.qulink.hxedu.api.NetUtil;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.util.FinalValue;
-import com.qulink.hxedu.util.LoggerInterceptor;
 import com.qulink.hxedu.util.PrefUtils;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
@@ -19,25 +18,31 @@ import com.scwang.smart.refresh.layout.api.RefreshHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshFooterCreator;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshHeaderCreator;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jetbrains.annotations.NotNull;
+import org.xutils.x;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Stack;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class App extends Application {
     private final Stack<WeakReference<Activity>> activitys = new Stack<WeakReference<Activity>>();
 
     private TokenInfo tokenInfo;
+
+    public UserInfo getUserInfo() {
+        if(userInfo==null){
+            return new UserInfo();
+        }
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    private UserInfo userInfo;
 
     private static App instance;
 
@@ -63,17 +68,21 @@ public class App extends Application {
     public void setTokenInfo(TokenInfo tokenInfo) {
         this.tokenInfo = tokenInfo;
 
-        if (tokenInfo == null) {
-            //setRequestHeader("");
-            NetUtil.getInstance().setRequestHeader("");
-            EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
-        } else {
-            //setRequestHeader(tokenInfo.getToken());
-            NetUtil.getInstance().setRequestHeader(tokenInfo.getToken());
-            EventBus.getDefault().post(new MessageEvent(FinalValue.LOGIN_SUCCESS, 0));
-        }
     }
 
+    public void loginSuccess(TokenInfo tokenInfo){
+        setTokenInfo(tokenInfo);
+        NetUtil.getInstance().setToken(tokenInfo.getToken());
+        EventBus.getDefault().post(new MessageEvent(FinalValue.LOGIN_SUCCESS, 0));
+        PrefUtils.saveToken(this,tokenInfo);
+    }
+
+    public void logout(){
+        setTokenInfo(null);
+        PrefUtils.saveToken(this,tokenInfo);
+        EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
+
+    }
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
@@ -95,6 +104,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        x.Ext.init(this);
+        x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
+
     }
 
 

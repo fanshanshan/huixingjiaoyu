@@ -1,5 +1,6 @@
 package com.qulink.hxedu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,13 +16,21 @@ import androidx.fragment.app.FragmentManager;
 import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
 import com.qulink.hxedu.ui.BaseActivity;
+import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.fragment.IndexFragment;
 import com.qulink.hxedu.ui.fragment.LiveFragment;
 import com.qulink.hxedu.ui.fragment.PersonFragment;
 import com.qulink.hxedu.ui.fragment.ZoneFragment;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
+import com.qulink.hxedu.util.RouteUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -158,17 +167,32 @@ public class MainActivity extends BaseActivity {
     }
 
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        Log.e("页面销毁啦","onDestroy");
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        Log.e("页面暂停","onPause");
-//
-//    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Success(MessageEvent messageEvent) {
+        if (messageEvent.getMessage().equals(FinalValue.TOKEN_ERROR)
+        ) {
+            App.getInstance().logout();
+            EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT,0));
+
+            RouteUtil.startNewActivity(this,new Intent(this, LoginActivity.class));
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }
