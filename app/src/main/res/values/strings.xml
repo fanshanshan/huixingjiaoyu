@@ -22,12 +22,18 @@
 
     <string name="money_course">付费课程</string>
     <string name="vip_money">会员专享价</string>
+    <string name="vip">VIP会员</string>
+    <string name="my_vip">我的VIP</string>
     <string name="live_title">直播</string>
     <string name="person_title">账号</string>
     <string name="default_level_desc">普通用户</string>
     <string name="default_level">LV 1</string>
     <string name="wqd_desc">未签到</string>
+    <string name="qd_desc">已签到</string>
     <string name="open_vip">开通VIP会员</string>
+    <string name="now_open">立即开通</string>
+    <string name="next_vip">立即续费</string>
+    <string name="vip_special">VIP专属权益</string>
     <string name="study_quickly">为学习加速</string>
     <string name="study_desc">学习关系</string>
     <string name="near_study">最近学习</string>
@@ -38,6 +44,7 @@
     <string name="start_study">开始学习</string>
     <string name="login">登录</string>
     <string name="complete">完成</string>
+    <string name="sure">确定</string>
     <string name="save">保存</string>
     <string name="hx_edu">慧行文化</string>
     <string name="hx_welcome">欢迎来到慧行，开启学习之旅</string>
@@ -80,9 +87,64 @@
     <string name="edit_info">编辑资料</string>
     <string name="edit_nick_desc">VIP会员用户昵称设置成功后一年内可更改5次,非会员用户昵称设置成功后不可再更改哦~</string>
 
+    <string name="start_live">开启直播</string>
 
+
+    <string name="my_score">我的积分</string>
+    <string name="score_detail">积分明细</string>
+    <string name="score_shop">积分商城</string>
+    <string name="earn_score">赚积分</string>
+    <string name="score_rule">积分规则</string>
+    <string name="sign_by_sign">已连续签到</string>
+    <string name="sign_get_score">签到领积分</string>
+    <string name="send_vip">赠送好友: </string>
+    <string name="send_vip2">赠送好友</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <string name="send_vip_title">赠送好友会员说明</string>
+
+
+    <string name="send_vip_desc">慧行文化平台感恩您的用心付出，为朋友送上一份珍贵的礼物，请认真阅读以下内容，确保赠送过程顺利。
+\n
+1、被赠送人需要完成平台的用户注册且绑定本人手机号。
+\n
+2、请认真核对填入的好友手机号，以免错误赠送，因用户本人原因产生的错误赠送情况，平台概不负责。
+\n
+3、该赠送内容为向好友赠送一年的会员特权，会员权益请到相关页面了解。
+\n
+4、被赠送人将收到您的相关赠送信息。
+\n
+最后，感恩您的智慧付出，愿您生活顺利，万事如意。</string>
+
+    <string name="please_edit_friend_phone">请输入好友手机号</string>
+
+    <string name="special_title">特权说明</string>
+
+    <string name="special_desc">
+                                1、用户的会员特权从充值之时起开始生效，截止到次年的同一时刻结束。\n
+2、用户在会员有效期限内享有会员系列课程免费学习的特权。\n
+3、用户在会员有效期限内享有非会员系列售卖课程优惠购买的特权（纯积分兑换课程除外）。\n
+4、用户在会员有效期限内享有社区内账号尊贵标志展示的特权。\n
+5、用户在会员有效期限内免费享有参与奖学计划的资格。\n
+6、会员权益的最终解释全归慧行科技文化传播有限公司所有。
+                            </string>
+
+
+    <string name="get_more_score">赚取更多积分</string>
+    <string name="day_task">每日任务</string>
+    <string name="score_task1_title">观看视频或直播</string>
+    <string name="score_task1_desc">累积时长60分钟，+10积分</string>
+    <string name="score_task2_title">专业品论员</string>
+    <string name="score_task2_desc">参与话题评论三次，+5积分</string>
+    <string name="score_task3_title">能量点亮大使</string>
+    <string name="score_task3_desc">帖子及评论点赞10次，+5积分</string>
+    <string name="score_task4_title">智慧传递大使</string>
+    <string name="score_task4_desc">分享课程、直播、帖子到朋友圈3次，+30积分</string>
+
+    <string name="completed">已完成</string>
+    <string name="no_completed">未完成</string>
+    <string name="sign_suc">签到成功</string>
+    <string name="score">积分</string>
 </resources>

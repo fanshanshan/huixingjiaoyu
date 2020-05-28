@@ -69,7 +69,37 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
-    ;
+    protected void setRightTitle(String title) {
+        TextView tvRight = (TextView) findViewById(R.id.tv_bar_right);
+        if (tvRight != null) {
+            tvRight.setText(title);
+        }
+    }
+    protected void setBackImg(int img) {
+        ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
+        if (ivBack != null) {
+            ivBack.setImageResource(img);
+        }
+    }
+    protected void setBarTtxtColors(int color) {
+        TextView tvTitle = (TextView) findViewById(R.id.tv_bar_title);
+        if (tvTitle != null) {
+            tvTitle.setTextColor(color);
+        }
+
+        TextView tvRight = (TextView) findViewById(R.id.tv_bar_right);
+        if (tvRight != null) {
+            tvRight.setTextColor(color);
+        }
+    }
+
+    protected void setBarBg(int color) {
+        LinearLayout llBar = (LinearLayout) findViewById(R.id.ll_bar);
+        if (llBar != null) {
+            llBar.setBackgroundColor(color);
+        }
+    }
+
 
     @Override
     public void onClick(View v) {

@@ -65,6 +65,7 @@
                                 android:orientation="vertical">
 
                                 <LinearLayout
+                                    android:gravity="center_vertical"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
@@ -77,18 +78,15 @@
                                         android:textSize="16sp" />
 
 
-                                    <TextView
-                                        android:layout_marginLeft="4dp"
-                                        android:id="@+id/tv_level_name"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:background="@drawable/person_level_txt_bg"
-                                        android:text="@string/default_level_desc"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
+                                   <ImageView
+                                       android:layout_marginLeft="4dp"
+                                       android:id="@+id/iv_vip_status"
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content" />
                                 </LinearLayout>
 
                                 <TextView
+                                    android:id="@+id/tv_level"
                                     android:layout_width="60dp"
                                     android:layout_height="22dp"
                                     android:layout_marginTop="6dp"
@@ -104,6 +102,8 @@
 
 
                         <LinearLayout
+                            android:id="@+id/ll_sign"
+                            android:gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -114,11 +114,13 @@
                             android:paddingBottom="6dp">
 
                             <ImageView
+                                android:id="@+id/iv_sign"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/wqd" />
 
                             <TextView
+                                android:id="@+id/tv_sign"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="4dp"
@@ -131,7 +133,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-
+                        android:id="@+id/rl_vip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -152,6 +154,7 @@
                                 android:src="@drawable/vip" />
 
                             <TextView
+                                android:id="@+id/tv_open_vip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="12dp"

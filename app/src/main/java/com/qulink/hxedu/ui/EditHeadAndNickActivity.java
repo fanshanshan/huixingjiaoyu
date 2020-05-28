@@ -25,13 +25,23 @@ import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.DefaultSettingCallback;
+import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.DefaultSetting;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PermissionUtils;
 import com.qulink.hxedu.util.QiniuUtil;
 import com.qulink.hxedu.util.SystemUtil;
+import com.qulink.hxedu.util.ToastUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -69,6 +79,13 @@ public class EditHeadAndNickActivity extends BaseActivity {
     protected void init() {
 
         setTitle(getString(R.string.edit_info));
+        App.getInstance().getUserInfo(this, new UserInfoCallback() {
+            @Override
+            public void getUserInfo(UserInfo userInfo) {
+                etNick.setText(userInfo.getNickename());
+                etNick.setSelection(userInfo.getNickename().length());
+            }
+        });
     }
 
     @Override
@@ -76,11 +93,14 @@ public class EditHeadAndNickActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick(R.id.rl_head)
+    @OnClick({R.id.rl_head,R.id.tv_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_head:
                 showChooseDialog();
+                break;
+            case R.id.tv_save:
+                save();
                 break;
         }
     }
@@ -156,6 +176,7 @@ public class EditHeadAndNickActivity extends BaseActivity {
             startPhotoZoom(data.getData());
         } else if (requestCode == REQUEST_CUT_CODE && resultCode == RESULT_OK) {
             //裁剪成功
+          //  getQiniuToken();
             Glide.with(EditHeadAndNickActivity.this).load(cutUri).into(ivHead);
         } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
             //请求相机成功
@@ -206,29 +227,110 @@ public class EditHeadAndNickActivity extends BaseActivity {
         }
     }
 
+    void getQiniuToken(){
+        DialogUtil.showLoading(this,true);
+        ApiUtils.getInstance().getQiniuToken(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                uploadHeadImg(t.getData().toString());
+            }
 
-    void uploadHeadImg(String url){
-        Configuration config = new Configuration.Builder()
-                //.xxxx()
-                .dns(null)
-                //.yyyy()
-                .build();
-        UploadManager uploadManager = new UploadManager(config, 3);
-        String key ="";
-        String token = "";
-        QiniuUtil.getInstance().put(url, key, token,
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                ToastUtils.show(EditHeadAndNickActivity.this,msg);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                ToastUtils.show(EditHeadAndNickActivity.this,expectionMsg);
+
+            }
+        });
+    }
+
+    void uploadHeadImg(String token){
+        DialogUtil.showLoading(this,true,"正在上传头像");
+        QiniuUtil.getInstance().put(cutUri.getPath(), "", token,
                 new UpCompletionHandler() {
                     @Override
-                    public void complete(String key, ResponseInfo info, JSONObject res) {
+                    public void complete(String key, ResponseInfo info,final JSONObject res) {
+                        DialogUtil.hideLoading(EditHeadAndNickActivity.this);
                         //res包含hash、key等信息，具体字段取决于上传策略的设置
                         if(info.isOK()) {
-                            Log.i("qiniu", "Upload Success");
+                            try {
+                                updateUserInfo(etNick.getText().toString(), res.getString("hash"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         } else {
-                            Log.i("qiniu", "Upload Fail");
+                            DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                            ToastUtils.show(EditHeadAndNickActivity.this,"上传失败");
                             //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
                         }
                         Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
                     }
                 }, null);
+    }
+
+
+    String qiniuToken;
+    void save(){
+        App.getInstance().getUserInfo(this, new UserInfoCallback() {
+            @Override
+            public void getUserInfo(UserInfo userInfo) {
+                if(cutUri==null&&etNick.getText().toString().equals(userInfo.getNickename())){
+                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg());
+                }else{
+                    if(cutUri==null){
+                        App.getInstance().getUserInfo(EditHeadAndNickActivity.this, new UserInfoCallback() {
+                            @Override
+                            public void getUserInfo(UserInfo userInfo) {
+                                if(userInfo!=null){
+                                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg());
+                                }
+                            }
+                        });
+                    }else{
+                        if(qiniuToken==null){
+                            getQiniuToken();
+                        }else{
+                            uploadHeadImg(qiniuToken);
+                        }
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    void updateUserInfo(String nickName,String headimgPath){
+        DialogUtil.showLoading(this,true,"正在提交信息");
+        ApiUtils.getInstance().updateUserInfo(nickName, headimgPath, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+             DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+             //保存成功 用户信息置空  下次就会获取最新的
+                App.getInstance().setUserInfo(null);
+             ToastUtils.show(EditHeadAndNickActivity.this,"保存成功");
+             finish();
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                ToastUtils.show(EditHeadAndNickActivity.this,msg);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                ToastUtils.show(EditHeadAndNickActivity.this,expectionMsg);
+            }
+        });
     }
 }

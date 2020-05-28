@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_pwd_login:
                 MyActivityManager.getInstance().pushActivity(this);
-                RouteUtil.startNewActivity(this,new Intent(this,PwdLoginActivity.class));
+                RouteUtil.startNewActivity(this, new Intent(this, PwdLoginActivity.class));
                 break;
         }
     }
@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    void login(){
+    void login() {
         if (etPhone.getText().toString().equals("")) {
             ToastUtils.show(this, "请输入手机号");
             return;
@@ -150,31 +150,32 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void success(ResponseData data) {
                 DialogUtil.hideLoading(LoginActivity.this);
-                ToastUtils.show(LoginActivity.this,getString(R.string.login_success));
-                TokenInfo tokenInfo = GsonUtil.GsonToBean(data.getData().toString(),TokenInfo.class);
+                ToastUtils.show(LoginActivity.this, getString(R.string.login_success));
+                TokenInfo tokenInfo = GsonUtil.GsonToBean(data.getData().toString(), TokenInfo.class);
                 App.getInstance().setTokenInfo(tokenInfo);
-                PrefUtils.saveToken(LoginActivity.this,tokenInfo);
+                PrefUtils.saveToken(LoginActivity.this, tokenInfo);
                 MyActivityManager.getInstance().pushActivity(LoginActivity.this);
-                RouteUtil.startNewActivity(LoginActivity.this,new Intent(LoginActivity.this, MainActivity.class));
+                RouteUtil.startNewActivity(LoginActivity.this, new Intent(LoginActivity.this, MainActivity.class));
                 MyActivityManager.getInstance().popAllActivitys();
             }
 
             @Override
             public void error(String code, String msg) {
                 DialogUtil.hideLoading(LoginActivity.this);
-                ToastUtils.show(LoginActivity.this,msg);
+                ToastUtils.show(LoginActivity.this, msg);
             }
 
             @Override
             public void expcetion(String e) {
                 DialogUtil.hideLoading(LoginActivity.this);
-                ToastUtils.show(LoginActivity.this,e);
+                ToastUtils.show(LoginActivity.this, e);
             }
         });
 
     }
+
     void sendSmscode() {
-        if(smsCodeEndTime!=60){
+        if (smsCodeEndTime != 60) {
             return;
         }
         if (etPhone.getText().toString().equals("")) {
@@ -188,14 +189,14 @@ public class LoginActivity extends BaseActivity {
         DialogUtil.showLoading(this, true);
 
 
-        ApiUtils.getInstance().sendSmsCode(etPhone.getText().toString(),"2",  new ApiCallback() {
+        ApiUtils.getInstance().sendSmsCode(etPhone.getText().toString(), "2", new ApiCallback() {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(LoginActivity.this);
                 etVerify.setText("");
-                tvGetSmscode.setText( String.format(endTimeFormat, smsCodeEndTime));
+                tvGetSmscode.setText(String.format(endTimeFormat, smsCodeEndTime));
                 tvGetSmscode.setTextColor(0xff666666);
-                handler.sendEmptyMessageDelayed(0,1000);
+                handler.sendEmptyMessageDelayed(0, 1000);
             }
 
             @Override

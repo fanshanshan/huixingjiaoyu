@@ -14,7 +14,7 @@ public class UserInfo {
      */
 
     private String phone;
-    private String nickename;
+    private String nickname;
     private String headImg;
     private int level;
     private int status;
@@ -32,11 +32,11 @@ public class UserInfo {
     }
 
     public String getNickename() {
-        return nickename;
+        return nickname;
     }
 
     public void setNickename(String nickename) {
-        this.nickename = nickename;
+        this.nickname = nickename;
     }
 
     public String getHeadImg() {
@@ -93,5 +93,18 @@ public class UserInfo {
 
     public void setWxBindStatus(int wxBindStatus) {
         this.wxBindStatus = wxBindStatus;
+    }
+
+    public boolean isSign(){
+        if(this.getSignStatus()==0){
+            return false;
+        }
+        return true;
+    }
+    public boolean isVip(){
+        if(this.getStatus()==0){
+            return false;
+        }
+        return true;
     }
 }

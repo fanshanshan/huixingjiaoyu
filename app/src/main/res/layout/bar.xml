@@ -4,11 +4,13 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:elevation="2dp"
+    android:id="@+id/ll_bar"
     android:orientation="vertical">
 
     <include layout="@layout/status" />
 
     <RelativeLayout
+        android:paddingRight="15dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bar_height"
         android:paddingLeft="15dp">
@@ -29,5 +31,16 @@
             android:textColor="@color/bar_txt_color"
             android:textSize="@dimen/bar_textt_size"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_alignParentRight="true"
+            android:id="@+id/tv_bar_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/bar_textt_size"
+            android:textStyle="normal" />
     </RelativeLayout>
 </LinearLayout>

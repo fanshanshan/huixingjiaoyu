@@ -78,6 +78,7 @@
 
 
        <TextView
+           android:id="@+id/tv_save"
            android:textStyle="bold"
            android:textColor="@color/white"
            android:layout_marginTop="50dp"

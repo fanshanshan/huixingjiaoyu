@@ -1,9 +1,17 @@
 package com.qulink.hxedu.api;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 
+import com.qulink.hxedu.App;
+import com.qulink.hxedu.MainActivity;
+import com.qulink.hxedu.MyActivityManager;
 import com.qulink.hxedu.entity.MessageEvent;
+import com.qulink.hxedu.ui.LoginActivity;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.RouteUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
@@ -16,7 +24,6 @@ public class NetUtil {
   static   String token ="";
 
 
-    public static String baseUrl = "https://hx-test.kuaiyunma.com/";
     private static NetUtil instance;
 
     public String getToken() {
@@ -36,7 +43,7 @@ public class NetUtil {
 
 
     public void post(String method, Map<String, String> params, ApiCallback apiCallback) {
-        RequestParams requestParams = new RequestParams(baseUrl+method);
+        RequestParams requestParams = new RequestParams(method);
         // params.setSslSocketFactory(...); // 如果需要自定义SSL
         if(params!=null){
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -57,7 +64,8 @@ public class NetUtil {
                     apiCallback.success(responseData);
                 } else {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
-                        EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                        showTokenErrorDialog();
+                       // EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
                     }
                     apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
@@ -84,7 +92,7 @@ public class NetUtil {
     }
 
     public void get(String method, Map<String, String> params, ApiCallback apiCallback) {
-        RequestParams requestParams = new RequestParams(baseUrl+method);
+        RequestParams requestParams = new RequestParams(method);
         // params.setSslSocketFactory(...); // 如果需要自定义SSL
         requestParams.addHeader("token",token);
 
@@ -106,7 +114,8 @@ public class NetUtil {
                     apiCallback.success(responseData);
                 } else {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
-                        EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                        showTokenErrorDialog();
+                        //EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
                     }
                     apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
@@ -127,6 +136,31 @@ public class NetUtil {
             @Override
             public void onFinished() {
 
+            }
+        });
+
+    }
+
+
+    boolean isShow = false;
+    void showTokenErrorDialog(){
+//        if(isShow){
+//            return;
+//        }
+//        isShow=true;
+
+        DialogUtil.showAlertDialog(MyActivityManager.getInstance().currentActivity(), "提示", "登陆状态已过期，请重新登陆", "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                App.getInstance().logout();
+                EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
+                RouteUtil.startNewActivity(MyActivityManager.getInstance().currentActivity(), new Intent(MyActivityManager.getInstance().currentActivity(), LoginActivity.class));
+            }
+        }, "一会再说", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
 

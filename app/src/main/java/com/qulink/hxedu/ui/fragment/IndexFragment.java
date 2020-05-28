@@ -20,12 +20,21 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.CustomData;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.ui.CourseActivity;
 import com.qulink.hxedu.ui.CourseDetailActivity;
 import com.qulink.hxedu.ui.SearchActivity;
+import com.qulink.hxedu.ui.sign.SignActivity;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.RouteUtil;
+import com.qulink.hxedu.util.ToastUtils;
 import com.qulink.hxedu.view.MyScrollView;
 import com.qulink.hxedu.view.SpacesItemDecoration;
 
@@ -105,7 +114,7 @@ public class IndexFragment extends Fragment {
             initHotCource();
             initMoneyCource();
             addScrollviewListener();
-
+            initView();
             initAutoScrollViewPager();
 
         }
@@ -113,6 +122,19 @@ public class IndexFragment extends Fragment {
     }
 
 
+    void initView(){
+       App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+           @Override
+           public void getUserInfo(UserInfo userInfo) {
+               if(userInfo.isSign()){
+                   ivQiandao.setImageResource(R.drawable.qd);
+               }else{
+                   ivQiandao.setImageResource(R.drawable.wqd);
+
+               }
+           }
+       });
+    }
     //处理滑动bar颜色变化
 
     /**
@@ -315,7 +337,7 @@ public class IndexFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.tv_more_hot_course, R.id.tv_more_money_course, R.id.iv_top_bg, R.id.iv_search, R.id.tv_mfkc, R.id.tv_jkxl, R.id.tv_wmbl, R.id.tv_qzjy, R.id.tv_zhxl, R.id.tv_rsgs, R.id.tv_slwd, R.id.tv_ydsh})
+    @OnClick({R.id.iv_qiandao,R.id.tv_more_hot_course, R.id.tv_more_money_course, R.id.iv_top_bg, R.id.iv_search, R.id.tv_mfkc, R.id.tv_jkxl, R.id.tv_wmbl, R.id.tv_qzjy, R.id.tv_zhxl, R.id.tv_rsgs, R.id.tv_slwd, R.id.tv_ydsh})
     public void onViewClicked(View view) {
         Intent intent = null;
         switch (view.getId()) {
@@ -365,8 +387,55 @@ public class IndexFragment extends Fragment {
                 intent.putExtra("title", "付费课程");
                 RouteUtil.startNewActivity(getActivity(), intent);
                 break;
+            case R.id.iv_qiandao:
+                if(App.getInstance().isLogin(getActivity(),true)){
+                    App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+                        @Override
+                        public void getUserInfo(UserInfo userInfo) {
+                            RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), SignActivity.class));
+
+                        }
+                    });
+                }
+                break;
         }
     }
+
+
+    //签到
+    void signServer() {
+        DialogUtil.showLoading(getActivity(), true);
+        ApiUtils.getInstance().sign(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(getActivity());
+                App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+                    @Override
+                    public void getUserInfo(UserInfo userInfo) {
+                        ToastUtils.show(getContext(), getString(R.string.qd_desc));
+                        userInfo.setSignStatus(1);
+                        initView();
+                    }
+                });
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+                DialogUtil.hideLoading(getActivity());
+                ToastUtils.show(getActivity(), msg);
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(getActivity());
+
+                ToastUtils.show(getActivity(), expectionMsg);
+            }
+        });
+    }
+
 }
 
 

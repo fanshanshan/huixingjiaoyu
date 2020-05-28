@@ -4,11 +4,8 @@ import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
 
 public class QiniuUtil {
-    private static QiniuUtil instance;
 
-    public static void setInstance(QiniuUtil instance) {
-        QiniuUtil.instance = instance;
-    }
+
 
     public static UploadManager getUploadManager() {
         return uploadManager;

@@ -1,5 +1,6 @@
 package com.qulink.hxedu;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.qulink.hxedu.ui.fragment.IndexFragment;
 import com.qulink.hxedu.ui.fragment.LiveFragment;
 import com.qulink.hxedu.ui.fragment.PersonFragment;
 import com.qulink.hxedu.ui.fragment.ZoneFragment;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
 import com.qulink.hxedu.util.RouteUtil;
@@ -103,13 +105,13 @@ public class MainActivity extends BaseActivity {
                     }
                 }, 2000);
             } else {
-                App.getInstance().exit();
                 finish();
 
             }
         }
         return true;
     }
+
     void initFragment(Bundle savedInstanceState) {
 
         fragmentManager = getSupportFragmentManager();
@@ -167,16 +169,25 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Success(MessageEvent messageEvent) {
         if (messageEvent.getMessage().equals(FinalValue.TOKEN_ERROR)
         ) {
-            App.getInstance().logout();
-            EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT,0));
+            DialogUtil.showAlertDialog(this, "提示", "登陆状态已过期，请重新登陆", "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    App.getInstance().logout();
+                    EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
+                    RouteUtil.startNewActivity(MainActivity.this, new Intent(MainActivity.this, LoginActivity.class));
+                }
+            }, "一会再说", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
-            RouteUtil.startNewActivity(this,new Intent(this, LoginActivity.class));
         }
     }
 

@@ -40,3 +40,5 @@
     @org.xutils.view.annotation.Event <methods>;
 }
 #################### end region
+#腾讯云直播相关
+-keep class com.tencent.** { *; }

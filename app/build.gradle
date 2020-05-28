@@ -10,6 +10,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+
     }
     signingConfigs {
         release {
@@ -31,6 +35,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        doNotStrip "*/armeabi/libYTCommon.so"
+        doNotStrip "*/armeabi-v7a/libYTCommon.so"
+        doNotStrip "*/x86/libYTCommon.so"
+        doNotStrip "*/arm64-v8a/libYTCommon.so"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -92,4 +103,10 @@ dependencies {
 
 
     implementation 'com.qiniu:qiniu-android-sdk:7.6.1'
+
+
+    implementation(name: 'alipaySdk-15.7.5-20200422171619', ext: 'aar')
+    //腾讯云直播
+    implementation 'com.tencent.liteavsdk:LiteAVSDK_Smart:latest.release'
+
 }

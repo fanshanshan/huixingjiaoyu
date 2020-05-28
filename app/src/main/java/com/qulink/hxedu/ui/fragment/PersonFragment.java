@@ -4,7 +4,6 @@ package com.qulink.hxedu.ui.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.PersonMenuItem;
 import com.qulink.hxedu.entity.UserInfo;
@@ -32,9 +32,13 @@ import com.qulink.hxedu.ui.EditHeadAndNickActivity;
 import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.MyOrderActivity;
 import com.qulink.hxedu.ui.SettingActivity;
+import com.qulink.hxedu.ui.sign.SignActivity;
+import com.qulink.hxedu.ui.VipDetailActivity;
+import com.qulink.hxedu.ui.live.AuthorActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
+import com.qulink.hxedu.util.ViewUtils;
 import com.qulink.hxedu.view.MyScrollView;
 import com.qulink.hxedu.view.SpacesItemDecoration;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -64,8 +68,6 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.tv_level_name)
-    TextView tvLevelName;
     @BindView(R.id.recycle_study)
     RecyclerView recycleStudy;
     @BindView(R.id.recycle_item)
@@ -88,6 +90,18 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     TextView tv1;
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.iv_vip_status)
+    ImageView ivVipStatus;
+    @BindView(R.id.iv_sign)
+    ImageView ivSign;
+    @BindView(R.id.tv_sign)
+    TextView tvSign;
+    @BindView(R.id.tv_level)
+    TextView tvLevel;
+    @BindView(R.id.ll_sign)
+    LinearLayout llSign;
+    @BindView(R.id.tv_open_vip)
+    TextView tvOpenVip;
     private View rootView;
 
     public PersonFragment() {
@@ -112,15 +126,40 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     }
 
     void initView() {
-        if (!App.getInstance().isLogin()) {
+        if (!App.getInstance().isLogin(getActivity())) {
             llUserInfo.setVisibility(View.GONE);
             ivHeadimg.setImageResource(R.drawable.user_default);
             tvLogin.setVisibility(View.VISIBLE);
         } else {
-            Glide.with(getActivity()).load(App.getInstance().getUserInfo().getHeadImg()).error(R.drawable.user_default).into(ivHeadimg);
+            App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+                @Override
+                public void getUserInfo(UserInfo userInfo) {
+                    if (userInfo != null) {
+                        tvName.setText(userInfo.getNickename() + "");
+                        Glide.with(getActivity()).load(userInfo.getHeadImg()).error(R.drawable.user_default).into(ivHeadimg);
+                        tvLevel.setBackgroundResource(ViewUtils.getLevelBgByLevel(userInfo.getLevel()));
+                        //会员状态 0否1是
+                        if (!userInfo.isVip()) {
+                            tvOpenVip.setText(getString(R.string.open_vip));
+                            ivVipStatus.setImageResource(R.drawable.normal_logo);
+                        } else {
+                            tvOpenVip.setText(getString(R.string.vip));
+                            ivVipStatus.setImageResource(R.drawable.vip_logo);
+                        }
+                        //签到状态 0否1是
+                        if (!userInfo.isSign()) {
+                            ivSign.setImageResource(R.drawable.wqd);
+                            tvSign.setText(getString(R.string.wqd_desc));
+                        } else {
+                            ivSign.setImageResource(R.drawable.qd);
+                            tvSign.setText(getString(R.string.qd_desc));
+                        }
+
+                    }
+                }
+            });
             tvLogin.setVisibility(View.GONE);
-            tvLevelName.setText(App.getInstance().getUserInfo().getLevel() + "");
-            tvName.setText(App.getInstance().getUserInfo().getNickename() + "");
+
             llUserInfo.setVisibility(View.VISIBLE);
         }
     }
@@ -141,7 +180,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     CommonRcvAdapter<String> stringCommonRcvAdapter;
 
     void initStudy() {
-        if (!App.getInstance().isLogin()) {
+        if (!App.getInstance().isLogin(getActivity())) {
             llNearStudy.setVisibility(View.GONE);
             return;
         } else {
@@ -266,7 +305,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         recycleItem.setLayoutManager(new GridLayoutManager(getActivity(), 4));
     }
 
-    @OnClick({R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name})
+    @OnClick({R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name, R.id.ll_sign,R.id.rl_vip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_user_info:
@@ -275,17 +314,27 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
                 break;
             case R.id.iv_headimg:
-                if (App.getInstance().isLogin()) {
+                if (App.getInstance().isLogin(getActivity(),true)) {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), EditHeadAndNickActivity.class));
                 } else {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
             case R.id.tv_name:
-                if (App.getInstance().isLogin()) {
+                if (App.getInstance().isLogin(getActivity(),true)) {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), EditHeadAndNickActivity.class));
                 } else {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
+            case R.id.ll_sign:
+                if (App.getInstance().isLogin(getActivity(),true)) {
+                    RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), SignActivity.class));
+                }
+                break;
+            case R.id.rl_vip:
+                if(App.getInstance().isLogin(getActivity(),true)){
+                    RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), VipDetailActivity.class));
                 }
                 break;
         }
@@ -299,7 +348,9 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 break;
             case "设置":
                 RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), SettingActivity.class));
-
+                break;
+            case "开启直播":
+                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), AuthorActivity.class));
                 break;
         }
     }
@@ -312,8 +363,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     public void Success(MessageEvent messageEvent) {
         if (messageEvent.getMessage().equals(FinalValue.LOGIN_SUCCESS)
         ) {
-            Log.e("收到通知","登陆成功");
-            getUserInfo();
+//            getUserInfo();
             initView();
             initStudy();
         } else if (
@@ -351,12 +401,13 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 refreshLayout.finishRefresh(true);
                 UserInfo userInfo = GsonUtil.GsonToBean(t.getData().toString(), UserInfo.class);
                 App.getInstance().setUserInfo(userInfo);
-                EventBus.getDefault().post(new MessageEvent(FinalValue.GET_USERINFO, 0));
+                initView();
+                //    EventBus.getDefault().post(new MessageEvent(FinalValue.GET_USERINFO, 0));
             }
 
             @Override
             public void error(String code, String msg) {
-                ToastUtils.show(getActivity(),msg);
+                ToastUtils.show(getActivity(), msg);
                 refreshLayout.finishRefresh(false);
             }
 
@@ -377,4 +428,6 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         getUserInfo();
     }
+
+
 }

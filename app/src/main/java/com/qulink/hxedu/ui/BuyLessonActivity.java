@@ -1,11 +1,27 @@
 package com.qulink.hxedu.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.pay.PayResult;
+import com.qulink.hxedu.pay.PayResultDetail;
+import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.ToastUtils;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,6 +47,7 @@ public class BuyLessonActivity extends BaseActivity {
 
 
 
+
     @Override
     protected void init() {
         setTitle(getString(R.string.sure_order));
@@ -44,6 +61,11 @@ public class BuyLessonActivity extends BaseActivity {
     }
 
     @OnClick(R.id.tv_buy)
-    public void onViewClicked() {
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.tv_buy:
+                break;
+        }
     }
+
 }

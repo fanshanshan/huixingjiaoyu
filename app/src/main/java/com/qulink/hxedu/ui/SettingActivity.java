@@ -11,10 +11,14 @@ import com.qulink.hxedu.App;
 import com.qulink.hxedu.MainActivity;
 import com.qulink.hxedu.MyActivityManager;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.view.UniversalDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,7 +45,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void init() {
         setTitle(getString(R.string.setting));
-        if(App.getInstance().isLogin()){
+        if(App.getInstance().isLogin(this)){
             tvLogout.setText("退出登录");
         }else{
             tvLogout.setText("立即登录");
@@ -57,7 +61,7 @@ public class SettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.tv_logout:
-                if(App.getInstance().isLogin()){
+                if(App.getInstance().isLogin(SettingActivity.this)){
                     logout();
                 }else{
                     MyActivityManager.getInstance().pushActivity(SettingActivity.this);
@@ -73,6 +77,7 @@ public class SettingActivity extends BaseActivity {
                 dialogInterface.dismiss();
                 PrefUtils.clearToken(SettingActivity.this);
                 App.getInstance().setTokenInfo(null);
+                EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT));
                 RouteUtil.startNewActivity(SettingActivity.this,new Intent(SettingActivity.this, MainActivity.class));
             }
         }).setContent("确定要重新登录吗？").setLeftButton("取消", new DialogInterface.OnClickListener() {
