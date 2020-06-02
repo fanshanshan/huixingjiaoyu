@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.sign.AddStudyPlanActivity">
+
+
+    <include layout="@layout/bar"/>
+
+
+    <LinearLayout
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/ll_bar"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:maxEms="100"
+            android:id="@+id/et_plan"
+            android:padding="4dp"
+            android:gravity="start"
+            android:hint="创建您的学习计划吧"
+            android:textSize="15sp"
+            android:textColorLink="#999999"
+            android:background="@color/grey"
+
+            android:layout_width="match_parent"
+            android:layout_height="140dp" />
+
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_gravity="right"
+            android:id="@+id/tv_input_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:paddingRight="12dp"
+        android:paddingLeft="12dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/save"
+            android:background="@drawable/login_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:text="目标设定后即刻生效，设定后不可进行更改，如果调整次日新建"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

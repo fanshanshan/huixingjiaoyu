@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".ui.SendVipActivity">
+
+    <com.qulink.hxedu.view.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:paddingBottom="40dp"
+                android:background="@drawable/vip_card_bg"
+                android:layout_width="match_parent"
+                android:layout_height="236dp">
+
+
+                <TextView
+                    android:layout_marginRight="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/tv_vip_price_desc"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+               <LinearLayout
+                   android:orientation="vertical"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <include layout="@layout/status"/>
+                   <RelativeLayout
+                       android:paddingRight="15dp"
+                       android:layout_width="match_parent"
+                       android:layout_height="@dimen/bar_height"
+                       android:paddingLeft="15dp">
+
+                       <ImageView
+                           android:id="@+id/iv_back"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_centerVertical="true"
+                           android:src="@drawable/back_white2" />
+
+                       <TextView
+                           android:text="@string/my_vip"
+                           android:id="@+id/tv_bar_title"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_centerHorizontal="true"
+                           android:layout_centerVertical="true"
+                           android:textColor="@color/white"
+                           android:textSize="@dimen/bar_textt_size"
+                           android:textStyle="bold" />
+                       <ImageView
+                           android:id="@+id/iv_send"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentRight="true"
+                           android:src="@drawable/gift"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                   </RelativeLayout>
+               </LinearLayout>
+
+
+            </RelativeLayout>
+
+           <LinearLayout
+               android:paddingRight="15dp"
+               android:paddingLeft="15dp"
+               android:gravity="center_horizontal"
+               android:background="@color/white"
+               android:orientation="vertical"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:layout_marginBottom="12dp"
+                   android:text="@string/vip_special"
+                   android:textSize="20sp"
+                   android:textColor="#222222"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+
+               <include layout="@layout/line"/>
+
+
+               <LinearLayout
+                   android:layout_marginTop="12dp"
+                   android:paddingBottom="8dp"
+                   android:paddingTop="8dp"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <ImageView
+                       android:src="@drawable/vip_yi"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <LinearLayout
+                       android:layout_marginLeft="8dp"
+                       android:orientation="vertical"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
+                       <TextView
+                           android:textSize="15sp"
+                           android:textColor="#222222"
+                           android:text="会员课程无限学"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                       <TextView
+                           android:layout_marginTop="4dp"
+
+                           android:textSize="13sp"
+                           android:textColor="#999999"
+                           android:text="平台所有会员课程免费学习"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                   </LinearLayout>
+               </LinearLayout>
+               <include layout="@layout/line"/>
+
+               <LinearLayout
+                   android:paddingBottom="8dp"
+                   android:paddingTop="8dp"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <ImageView
+                       android:src="@drawable/vip_er"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <LinearLayout
+                       android:layout_marginLeft="8dp"
+                       android:orientation="vertical"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
+                       <TextView
+                           android:textSize="15sp"
+                           android:textColor="#222222"
+                           android:text="付费课程享特价"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                       <TextView
+                           android:layout_marginTop="4dp"
+
+                           android:textSize="13sp"
+                           android:textColor="#999999"
+                           android:text="开通会员付费课程价格更低"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                   </LinearLayout>
+               </LinearLayout>
+               <include layout="@layout/line"/>
+
+               <LinearLayout
+                   android:paddingBottom="8dp"
+                   android:paddingTop="8dp"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <ImageView
+                       android:src="@drawable/vip_san"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <LinearLayout
+                       android:layout_marginLeft="8dp"
+                       android:orientation="vertical"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
+                       <TextView
+                           android:textSize="15sp"
+                           android:textColor="#222222"
+                           android:text="积分商城更划算"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                       <TextView
+                           android:layout_marginTop="4dp"
+
+                           android:textSize="13sp"
+                           android:textColor="#999999"
+                           android:text="免费获得参与奖学计划的资格，推广课程即可获得现金奖励 开通会员付费课程价格更低"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                   </LinearLayout>
+               </LinearLayout>
+               <include layout="@layout/line"/>
+
+               <LinearLayout
+                   android:paddingBottom="8dp"
+                   android:paddingTop="8dp"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <ImageView
+                       android:src="@drawable/vip_si"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <LinearLayout
+                       android:layout_marginLeft="8dp"
+                       android:orientation="vertical"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
+                       <TextView
+                           android:textSize="15sp"
+                           android:textColor="#222222"
+                           android:text="社区账号显尊贵"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                       <TextView
+                           android:layout_marginTop="4dp"
+
+                           android:textSize="13sp"
+                           android:textColor="#999999"
+                           android:text="在社区内发布话题评论时更显尊贵标志"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content" />
+                   </LinearLayout>
+               </LinearLayout>
+           </LinearLayout>
+
+            <LinearLayout
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/special_title"
+                    android:textSize="20sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:text="@string/special_desc"
+                    android:layout_marginTop="12dp"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="100dp"/>
+        </LinearLayout>
+    </com.qulink.hxedu.view.MyScrollView>
+
+
+
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        >
+
+
+        <TextView
+            android:id="@+id/tv_buy"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/now_open"
+            android:background="@drawable/open_vip_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
