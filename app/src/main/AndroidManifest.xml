@@ -28,7 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.sign.SudyPlanActivity"></activity>
+        <activity android:name=".ui.sign.PlatformGroupScoreDetailActivity"></activity>
+        <activity
+            android:name=".ui.sign.PlatformAccountSignActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ui.sign.AddStudyPlanActivity" />
+        <activity android:name=".ui.sign.StudyPlanActivity" />
         <activity android:name=".ui.VipDetailActivity" />
         <activity android:name=".ui.SendVipActivity" />
         <activity

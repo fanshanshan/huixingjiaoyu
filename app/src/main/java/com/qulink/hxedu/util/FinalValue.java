@@ -17,7 +17,11 @@ public class FinalValue {
     public static String PAY_WX="2";
     public static String PAY_BANK="3";
 
+
     public static String IMG_SAVE_PATH = Environment.getExternalStorageDirectory()
             + File.separator + Environment.DIRECTORY_DCIM
-            +File.separator+"Camera"+File.separator; ;
+            +File.separator+"Camera"+File.separator;
+
+
+    public static int completePlanAddScore =1;
 }

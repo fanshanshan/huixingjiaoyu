@@ -1,16 +1,20 @@
 package com.qulink.hxedu.entity;
 
 public class UserInfo {
+
     /**
      * phone : 18363815233
-     * nickename :
-     * headImg :
+     * nickname : 傻狗
+     * headImg : null
      * level : 1
-     * status : 0
+     * status : 1
      * payPasswordStatus : 1
-     * signStatus : 0
-     * nicknameModifications : 0
-     * wxBindStatus : 0
+     * signStatus : 1
+     * nicknameModifications : 修改昵称次数
+     * wxBindStatus : 微信绑定状态
+     * platformStatus : 是否是平台账号
+     * arriveDate : 2021-05-27
+     * boughtStatus : 是否购买过会员
      */
 
     private String phone;
@@ -22,7 +26,35 @@ public class UserInfo {
     private int signStatus;
     private int nicknameModifications;
     private int wxBindStatus;
+    private int platformStatus;
+    private String arriveDate;
+    private int boughtStatus;
 
+    public boolean isSign(){
+        if(this.getSignStatus()==0){
+            return false;
+        }
+        return true;
+    }
+    public boolean isVip(){
+        if(this.getStatus()==0){
+            return false;
+        }
+        return true;
+    }
+    public boolean isBoughtVip(){
+        if(this.getBoughtStatus()==0){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isPlatformAccount(){
+        if(this.getPlatformStatus()==0){
+            return false;
+        }
+        return true;
+    }
     public String getPhone() {
         return phone;
     }
@@ -31,12 +63,12 @@ public class UserInfo {
         this.phone = phone;
     }
 
-    public String getNickename() {
+    public String getNickname() {
         return nickname;
     }
 
-    public void setNickename(String nickename) {
-        this.nickname = nickename;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getHeadImg() {
@@ -95,16 +127,27 @@ public class UserInfo {
         this.wxBindStatus = wxBindStatus;
     }
 
-    public boolean isSign(){
-        if(this.getSignStatus()==0){
-            return false;
-        }
-        return true;
+    public int getPlatformStatus() {
+        return platformStatus;
     }
-    public boolean isVip(){
-        if(this.getStatus()==0){
-            return false;
-        }
-        return true;
+
+    public void setPlatformStatus(int platformStatus) {
+        this.platformStatus = platformStatus;
+    }
+
+    public String getArriveDate() {
+        return arriveDate;
+    }
+
+    public void setArriveDate(String arriveDate) {
+        this.arriveDate = arriveDate;
+    }
+
+    public int getBoughtStatus() {
+        return boughtStatus;
+    }
+
+    public void setBoughtStatus(int boughtStatus) {
+        this.boughtStatus = boughtStatus;
     }
 }

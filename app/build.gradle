@@ -108,5 +108,7 @@ dependencies {
     implementation(name: 'alipaySdk-15.7.5-20200422171619', ext: 'aar')
     //腾讯云直播
     implementation 'com.tencent.liteavsdk:LiteAVSDK_Smart:latest.release'
+    implementation 'com.google.android.material:material:1.0.0'
 
+    //implementation group: 'cn.hutool', name: 'hutool-all', version: '5.3.5'
 }

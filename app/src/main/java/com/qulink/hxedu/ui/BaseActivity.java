@@ -121,7 +121,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
                     root.removeView(loadingView);
                 } else {
                     finish();
-
                 }
             } else {
                 finish();

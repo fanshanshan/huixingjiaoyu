@@ -23,6 +23,9 @@ public class GsonUtil {
     private GsonUtil() {
     }
 
+    public static Gson getInstance(){
+        return gson;
+    }
     /**
      * 转成json
      *

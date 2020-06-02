@@ -2,9 +2,9 @@ package com.qulink.hxedu.api;
 
 public class ResponseData <T>{
 
-    private T data;
+    private String data;
 
-    public ResponseData(T data, String code, int count, String msg) {
+    public ResponseData(String data, String code, int count, String msg) {
         this.data = data;
         this.code = code;
         this.count = count;
@@ -17,11 +17,11 @@ public class ResponseData <T>{
     private String code;
     private int count;
 
-    public T getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(String data) {
         this.data = data;
     }
 

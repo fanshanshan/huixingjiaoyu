@@ -32,9 +32,11 @@ import com.qulink.hxedu.ui.EditHeadAndNickActivity;
 import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.MyOrderActivity;
 import com.qulink.hxedu.ui.SettingActivity;
+import com.qulink.hxedu.ui.sign.PlatformAccountSignActivity;
 import com.qulink.hxedu.ui.sign.SignActivity;
 import com.qulink.hxedu.ui.VipDetailActivity;
 import com.qulink.hxedu.ui.live.AuthorActivity;
+import com.qulink.hxedu.ui.sign.StudyPlanActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
@@ -135,7 +137,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 @Override
                 public void getUserInfo(UserInfo userInfo) {
                     if (userInfo != null) {
-                        tvName.setText(userInfo.getNickename() + "");
+                        tvName.setText(userInfo.getNickname() + "");
                         Glide.with(getActivity()).load(userInfo.getHeadImg()).error(R.drawable.user_default).into(ivHeadimg);
                         tvLevel.setBackgroundResource(ViewUtils.getLevelBgByLevel(userInfo.getLevel()));
                         //会员状态 0否1是
@@ -305,7 +307,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         recycleItem.setLayoutManager(new GridLayoutManager(getActivity(), 4));
     }
 
-    @OnClick({R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name, R.id.ll_sign,R.id.rl_vip})
+    @OnClick({R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name, R.id.ll_sign, R.id.rl_vip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_user_info:
@@ -314,27 +316,34 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
                 break;
             case R.id.iv_headimg:
-                if (App.getInstance().isLogin(getActivity(),true)) {
+                if (App.getInstance().isLogin(getActivity(), true)) {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), EditHeadAndNickActivity.class));
                 } else {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
             case R.id.tv_name:
-                if (App.getInstance().isLogin(getActivity(),true)) {
+                if (App.getInstance().isLogin(getActivity(), true)) {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), EditHeadAndNickActivity.class));
                 } else {
                     RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
             case R.id.ll_sign:
-                if (App.getInstance().isLogin(getActivity(),true)) {
-                    RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), SignActivity.class));
-                }
+                App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+                    @Override
+                    public void getUserInfo(UserInfo userInfo) {
+                        if(userInfo.isPlatformAccount()){
+                            RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), PlatformAccountSignActivity.class));
+                        }else{
+                            RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), SignActivity.class));
+                        }
+                    }
+                });
                 break;
             case R.id.rl_vip:
-                if(App.getInstance().isLogin(getActivity(),true)){
-                    RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), VipDetailActivity.class));
+                if (App.getInstance().isLogin(getActivity(), true)) {
+                    RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), VipDetailActivity.class));
                 }
                 break;
         }
@@ -342,17 +351,35 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
 
     void menuClickCallback(String title) {
-        switch (title) {
-            case "订单":
-                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), MyOrderActivity.class));
-                break;
-            case "设置":
-                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), SettingActivity.class));
-                break;
-            case "开启直播":
-                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), AuthorActivity.class));
-                break;
+        if(App.getInstance().isLogin(getActivity(),true)){
+            switch (title) {
+                case "订单":
+                    RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), MyOrderActivity.class));
+                    break;
+                case "设置":
+                    RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), SettingActivity.class));
+                    break;
+                case "开启直播":
+                    RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), AuthorActivity.class));
+                    break;
+                case "学习计划":
+                    RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), StudyPlanActivity.class));
+                    break;
+                case "积分":
+                    App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+                        @Override
+                        public void getUserInfo(UserInfo userInfo) {
+                            if(userInfo.isPlatformAccount()){
+                                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), PlatformAccountSignActivity.class));
+                            }else{
+                                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), SignActivity.class));
+                            }
+                        }
+                    });
+                    break;
+            }
         }
+
     }
 
     @OnClick(R.id.tv_login)

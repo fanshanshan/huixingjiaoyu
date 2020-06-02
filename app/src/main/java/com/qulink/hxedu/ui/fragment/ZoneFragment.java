@@ -2,7 +2,6 @@ package com.qulink.hxedu.ui.fragment;
 
 
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,25 +18,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.entity.HotArtical;
+import com.qulink.hxedu.mvp.contract.ZoneContract;
+import com.qulink.hxedu.mvp.presenter.ZonePresenter;
 import com.qulink.hxedu.ui.ImagesPreviewActivity;
-import com.qulink.hxedu.util.ScreenUtil;
 import com.qulink.hxedu.util.ToastUtils;
 import com.qulink.hxedu.view.SpacesItemDecoration;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kale.adapter.CommonRcvAdapter;
 import kale.adapter.item.AdapterItem;
+import kale.adapter.util.IAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ZoneFragment extends Fragment {
+public class ZoneFragment extends Fragment implements ZoneContract.View , OnRefreshListener, OnLoadMoreListener {
 
 
     @BindView(R.id.recycle_official_action)
@@ -48,23 +57,32 @@ public class ZoneFragment extends Fragment {
     RecyclerView recycleSubject;
     @BindView(R.id.recycle_share_content)
     RecyclerView recycleShareContent;
+    @BindView(R.id.smart_layout)
+    SmartRefreshLayout smartLayout;
     private View rootView;
+
+    private ZonePresenter mPresenter;
 
     public ZoneFragment() {
         // Required empty public constructor
     }
-    private Bundle bundle;
+
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_zone, container, false);
-
             ButterKnife.bind(this, rootView);
-            initOffcialaction();
+
+            mPresenter = new ZonePresenter();
+            mPresenter.attachView(this);
+            mPresenter.getHotArtical();
+            smartLayout.setOnRefreshListener(this);
+            smartLayout.setOnLoadMoreListener(this);
+
             initSubject();
             initShareContent();
         }
@@ -72,56 +90,32 @@ public class ZoneFragment extends Fragment {
     }
 
 
-    List<String> actionList;
-    CommonRcvAdapter<String> actionAdapter;
+    private CommonRcvAdapter<HotArtical> hotArticalCommonRcvAdapter;
 
-    void initOffcialaction() {
-        actionList = new ArrayList<>();
-        actionList.add("社区怎么玩，我来教你啊");
-        actionList.add("社区怎么玩，我来教你啊");
-        actionList.add("社区怎么玩，我来教你啊");
+    private void initHotArtical(List<HotArtical> actionList) {
 
-        actionAdapter = new CommonRcvAdapter<String>(actionList) {
-            TextView tvTtitle;
+        hotArticalCommonRcvAdapter = new CommonRcvAdapter<HotArtical>(actionList) {
+
+            @Override
+            public Object getItemType(HotArtical hotArtical) {
+                return hotArtical;
+            }
 
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
-                return new AdapterItem() {
-                    @Override
-                    public int getLayoutResId() {
-                        return R.layout.official_action_item;
-                    }
-
-                    @Override
-                    public void bindViews(@NonNull View root) {
-                        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        tvTtitle = root.findViewById(R.id.tv_title);
-                    }
-
-                    @Override
-                    public void setViews() {
-
-                    }
-
-                    @Override
-                    public void handleData(Object o, int position) {
-
-                        tvTtitle.setText(o.toString());
-                    }
-                };
+                return new HotArticalItem();
             }
         };
-        recycleOfficialAction.setAdapter(actionAdapter);
+        recycleOfficialAction.setAdapter(hotArticalCommonRcvAdapter);
         recycleOfficialAction.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
 
-    List<SubjectBean> subjectBeanList;
-    CommonRcvAdapter<SubjectBean> subjectAdapter;
+    private List<SubjectBean> subjectBeanList;
+    private CommonRcvAdapter<SubjectBean> subjectAdapter;
 
-    void initSubject() {
+    private void initSubject() {
         subjectBeanList = new ArrayList<>();
         subjectBeanList.add(new SubjectBean("社区到底怎么玩啊", 1));
         subjectBeanList.add(new SubjectBean("社区到底怎么玩啊", 2));
@@ -267,10 +261,10 @@ public class ZoneFragment extends Fragment {
 
                             levelContanier.addView(imageView);
 
-                            if(shareContentBean.item!=""){
+                            if (shareContentBean.item != "") {
                                 tvItem.setText(shareContentBean.item);
                                 tvItem.setVisibility(View.VISIBLE);
-                            }else{
+                            } else {
                                 tvItem.setVisibility(View.GONE);
 
                             }
@@ -305,8 +299,8 @@ public class ZoneFragment extends Fragment {
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent intent = new Intent(getActivity(), ImagesPreviewActivity.class);
-                                                    intent.putExtra("position",position);
-                                                    intent.putStringArrayListExtra("data",shareContentBean.imgList);
+                                                    intent.putExtra("position", position);
+                                                    intent.putStringArrayListExtra("data", shareContentBean.imgList);
                                                     startActivity(intent);
                                                 }
                                             });
@@ -322,10 +316,83 @@ public class ZoneFragment extends Fragment {
                 };
             }
         };
-        recycleShareContent.addItemDecoration(new SpacesItemDecoration(0, 16,0,0));
+        recycleShareContent.addItemDecoration(new SpacesItemDecoration(0, 16, 0, 0));
 
         recycleShareContent.setAdapter(shareContentBeanCommonRcvAdapter);
         recycleShareContent.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+    @Override
+    public void getHotArticalSuc( List<HotArtical> hotArticalList ) {
+        initHotArtical(hotArticalList);
+    }
+
+    @Override
+    public void getHotArticalFail(String msg) {
+        smartLayout.finishRefresh(false);
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void onError(String msg) {
+
+    }
+
+    @Override
+    public void onSuccess(ResponseData data) {
+
+    }
+
+    @Override
+    public void onExpcetion(String msg) {
+
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        mPresenter.getHotArtical();
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
+    }
+    class HotArticalItem implements AdapterItem<HotArtical>{
+        TextView tvTtitle;
+
+        @Override
+        public int getLayoutResId() {
+            return R.layout.official_action_item;
+        }
+
+        @Override
+        public void bindViews(@NonNull View root) {
+            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            tvTtitle = root.findViewById(R.id.tv_title);
+        }
+
+        @Override
+        public void setViews() {
+
+        }
+
+        @Override
+        public void handleData(HotArtical o, int position) {
+            tvTtitle.setText(o.getContent());
+
+        }
+
+
     }
 
     class TitleItem implements AdapterItem {
@@ -432,7 +499,11 @@ public class ZoneFragment extends Fragment {
     }
 
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+    }
 }
 
 

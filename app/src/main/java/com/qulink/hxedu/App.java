@@ -51,6 +51,7 @@ public class App extends Application {
     private DefaultSetting defaultSetting;
 
     public Activity getCurrentActivity() {
+
         return currentActivity;
     }
 

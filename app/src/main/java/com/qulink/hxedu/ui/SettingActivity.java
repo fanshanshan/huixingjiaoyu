@@ -71,21 +71,22 @@ public class SettingActivity extends BaseActivity {
         }
     }
     void logout(){
-        new UniversalDialog.Builder(this).setRightButton("确定", new DialogInterface.OnClickListener() {
+        DialogUtil.showAlertDialog(this, "提示", "确定要退出登陆吗？", "确定", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 PrefUtils.clearToken(SettingActivity.this);
                 App.getInstance().setTokenInfo(null);
                 EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT));
                 RouteUtil.startNewActivity(SettingActivity.this,new Intent(SettingActivity.this, MainActivity.class));
+
             }
-        }).setContent("确定要重新登录吗？").setLeftButton("取消", new DialogInterface.OnClickListener() {
+        }, "取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        })
-                .create().show();
+        });
+
     }
 }

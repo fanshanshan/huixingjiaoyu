@@ -41,6 +41,7 @@
     <string name="search">搜索</string>
     <string name="search_hitory">搜索历史</string>
     <string name="hot_subject">热门话题</string>
+    <string name="submit">提交</string>
     <string name="start_study">开始学习</string>
     <string name="login">登录</string>
     <string name="complete">完成</string>
@@ -147,4 +148,15 @@
     <string name="no_completed">未完成</string>
     <string name="sign_suc">签到成功</string>
     <string name="score">积分</string>
+    <string name="study_plan">学习计划</string>
+    <string name="add">添加</string>
+    <string name="add_plan">添加计划</string>
+    <string name="success_toast">成功</string>
+    <string name="fail_toast">失败</string>
+    <string name="wait_plan">待完成计划</string>
+    <string name="finish_plan">已完成计划</string>
+    <string name="today_plan">今日目标</string>
+    <string name="self_score">自我考核积分</string>
+    <string name="please_edit_get_score">请输入获得积分数</string>
+    <string name="group_score">小组活动积分</string>
 </resources>

@@ -173,20 +173,20 @@ public class MainActivity extends BaseActivity {
     public void Success(MessageEvent messageEvent) {
         if (messageEvent.getMessage().equals(FinalValue.TOKEN_ERROR)
         ) {
-            DialogUtil.showAlertDialog(this, "提示", "登陆状态已过期，请重新登陆", "确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    App.getInstance().logout();
-                    EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
-                    RouteUtil.startNewActivity(MainActivity.this, new Intent(MainActivity.this, LoginActivity.class));
-                }
-            }, "一会再说", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+//            DialogUtil.showAlertDialog(this, "提示", "登陆状态已过期，请重新登陆", "确定", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                    App.getInstance().logout();
+//                    EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
+//                    RouteUtil.startNewActivity(MainActivity.this, new Intent(MainActivity.this, LoginActivity.class));
+//                }
+//            }, "一会再说", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
 
         }
     }

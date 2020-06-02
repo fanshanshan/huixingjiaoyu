@@ -82,8 +82,8 @@ public class EditHeadAndNickActivity extends BaseActivity {
         App.getInstance().getUserInfo(this, new UserInfoCallback() {
             @Override
             public void getUserInfo(UserInfo userInfo) {
-                etNick.setText(userInfo.getNickename());
-                etNick.setSelection(userInfo.getNickename().length());
+                etNick.setText(userInfo.getNickname());
+                etNick.setSelection(userInfo.getNickname().length());
             }
         });
     }
@@ -282,15 +282,15 @@ public class EditHeadAndNickActivity extends BaseActivity {
         App.getInstance().getUserInfo(this, new UserInfoCallback() {
             @Override
             public void getUserInfo(UserInfo userInfo) {
-                if(cutUri==null&&etNick.getText().toString().equals(userInfo.getNickename())){
-                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg());
+                if(cutUri==null&&etNick.getText().toString().equals(userInfo.getNickname())){
+                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg().toString());
                 }else{
                     if(cutUri==null){
                         App.getInstance().getUserInfo(EditHeadAndNickActivity.this, new UserInfoCallback() {
                             @Override
                             public void getUserInfo(UserInfo userInfo) {
                                 if(userInfo!=null){
-                                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg());
+                                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg().toString());
                                 }
                             }
                         });
