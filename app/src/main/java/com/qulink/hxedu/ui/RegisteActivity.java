@@ -152,7 +152,7 @@ public class RegisteActivity extends BaseActivity {
                 ToastUtils.show(RegisteActivity.this,"注册成功");
                 Intent intent = new Intent(RegisteActivity.this,LoginActivity.class);
                 intent.putExtra("phone",etPhone.getText().toString());
-                setResult(0,intent);
+                setResult(RESULT_OK,intent);
                 finish();
 
             }

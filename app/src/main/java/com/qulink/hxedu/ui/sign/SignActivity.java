@@ -65,7 +65,7 @@ public class SignActivity extends BaseActivity {
     @BindView(R.id.ll_bar)
     LinearLayout llBar;
     @BindView(R.id.tv_sign)
-    Button tvSign;
+    TextView tvSign;
     @BindView(R.id.tv_my_score)
     TextView tvMyScore;
     @BindView(R.id.tv_today_score)
@@ -108,9 +108,11 @@ public class SignActivity extends BaseActivity {
             @Override
             public void getUserInfo(UserInfo userInfo) {
                 if (userInfo.isSign()) {
-                    tvSign.setVisibility(View.GONE);
+                    tvSign.setBackgroundResource(R.drawable.signed);
+                    tvSign.setText(getString(R.string.signed));
                 } else {
-                    tvSign.setVisibility(View.VISIBLE);
+
+                    tvSign.setBackgroundResource(R.drawable.sign);
                     tvSign.setText(getString(R.string.sign_get_score));
                 }
             }
@@ -325,9 +327,19 @@ public class SignActivity extends BaseActivity {
             case R.id.tv_sign_days:
                 break;
             case R.id.tv_sign:
-                if(!FastClick.isFastClick()){
-                    signServer();
-                }
+                App.getInstance().getUserInfo(this, new UserInfoCallback() {
+                    @Override
+                    public void getUserInfo(UserInfo userInfo) {
+                        if(FastClick.isFastClick()){
+                            if (userInfo.isSign()) {
+                               ToastUtils.show(SignActivity.this,"已签到");
+                            } else {
+                               signServer();
+                            }
+                        }
+                    }
+                });
+
                 break;
         }
     }
@@ -345,7 +357,8 @@ public class SignActivity extends BaseActivity {
                     public void getUserInfo(UserInfo userInfo) {
                         ToastUtils.show(SignActivity.this, getString(R.string.qd_desc));
                         userInfo.setSignStatus(1);
-                        tvSign.setVisibility(View.GONE);
+                        tvSign.setBackgroundResource(R.drawable.signed);
+                        tvSign.setText(getString(R.string.signed));
                         getScoreDetail();
                         showSignSucDialog();
                     }

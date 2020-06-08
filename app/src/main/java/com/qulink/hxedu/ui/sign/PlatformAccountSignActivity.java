@@ -99,9 +99,13 @@ public class PlatformAccountSignActivity extends BaseActivity {
         tvSubmit.setVisibility(View.VISIBLE);
         tvMyScore.setText(signDetailEntity.getCredit() + "");
         if (signDetailEntity.isCommit()) {
-            tvSubmit.setVisibility(View.GONE);
+            tvSubmit.setText("今日已提交");
+            tvSubmit.setBackgroundResource(R.drawable.signed);
         } else {
-            tvSubmit.setVisibility(View.VISIBLE);
+            tvSubmit.setText("提交");
+
+            tvSubmit.setBackgroundResource(R.drawable.login_btn_bg);
+
         }
 
         editTextList = new ArrayList<>();
@@ -249,7 +253,9 @@ public class PlatformAccountSignActivity extends BaseActivity {
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(PlatformAccountSignActivity.this);
                 ToastUtils.show(PlatformAccountSignActivity.this, "提交成功");
-                tvSubmit.setVisibility(View.GONE);
+                tvSubmit.setText("今日已提交");
+                signDetailEntity.setCommitStatus(1);
+                tvSubmit.setBackgroundResource(R.drawable.signed);
                 for (EdittextAndDesc e : editTextList) {
                     e.getEditText().setText("");
                 }
@@ -284,7 +290,14 @@ public class PlatformAccountSignActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_submit:
-                subit();
+                if(signDetailEntity==null){
+                    return;
+                }
+                if(signDetailEntity.isCommit()){
+                    ToastUtils.show(PlatformAccountSignActivity.this,"今日已提交");
+                }else{
+                    subit();
+                }
                 break;
         }
     }

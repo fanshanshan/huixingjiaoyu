@@ -8,10 +8,10 @@
     android:orientation="vertical">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="163dp"
         android:id="@+id/iv_course_corver"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/temp1"
         app:riv_corner_radius="5dp" />
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:text="flutter从入门到放弃"
+        android:text=""
         android:textColor="#040303"
         android:textSize="12sp" />
 
@@ -32,47 +32,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:text="2222人加入了学习"
+        android:text=""
         android:textColor="#BABABA"
         android:textSize="12sp" />
 
 
     <RelativeLayout
+        android:orientation="horizontal"
         android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:gravity="bottom"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="￥"
+                android:textColor="#FF7B11"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/tv_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text=""
+                android:textStyle="bold"
+                android:textColor="#FF7B11"
+                android:textSize="15sp" />
+
+
+            <TextView
+                android:layout_marginLeft="4dp"
+                android:id="@+id/tv_new_price"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text=" "
+                android:textColor="#999999"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+
+
         <TextView
             android:layout_centerVertical="true"
-            android:id="@+id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="￥"
-            android:textColor="#FF7B11"
-            android:textSize="12sp" />
-        <TextView
-            android:layout_alignParentBottom="true"
-
-            android:id="@+id/tv_money"
-            android:layout_toRightOf="@id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="￥2399"
-            android:textStyle="bold"
-            android:textColor="#FF7B11"
-            android:textSize="15sp" />
-
-        <TextView
-
-            android:layout_centerVertical="true"
-            android:id="@+id/tv_desc"
             android:layout_alignParentRight="true"
+            android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="VIP免费"
+            android:text=""
             android:textColor="#F2A800"
             android:textSize="12sp" />
     </RelativeLayout>

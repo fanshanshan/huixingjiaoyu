@@ -4,6 +4,7 @@ import com.qulink.hxedu.api.ResponseData;
 
 public interface BaseView {
 
+
     /**
      * 显示加载中
      */
@@ -25,4 +26,6 @@ public interface BaseView {
 
 
     void onExpcetion(String msg);
+
+    void noMore();
 }

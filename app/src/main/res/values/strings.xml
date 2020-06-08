@@ -43,6 +43,7 @@
     <string name="hot_subject">热门话题</string>
     <string name="submit">提交</string>
     <string name="start_study">开始学习</string>
+    <string name="send_success">发送成功</string>
     <string name="login">登录</string>
     <string name="complete">完成</string>
     <string name="sure">确定</string>
@@ -54,6 +55,7 @@
     <string name="new_pwd_hint">请输入新密码</string>
     <string name="verify_hint">请输入验证码</string>
     <string name="invite_code_hint">请输入邀请码(选填)</string>
+    <string name="bind_success">绑定成功</string>
     <string name="get_smscode">获取验证码</string>
     <string name="pwd_login">密码登陆</string>
     <string name="new_registe">新用户注册</string>
@@ -71,6 +73,7 @@
     <string name="sure_pay">确认支付</string>
     <string name="my_order">我的订单</string>
     <string name="forget_pwd">忘记密码</string>
+    <string name="bind_phone">绑定手机号</string>
     <string name="pwd_error_tip">请输入正确的密码</string>
     <string name="setting">设置</string>
     <string name="phone">手机号</string>
@@ -98,6 +101,7 @@
     <string name="score_rule">积分规则</string>
     <string name="sign_by_sign">已连续签到</string>
     <string name="sign_get_score">签到领积分</string>
+    <string name="signed">已签到</string>
     <string name="send_vip">赠送好友: </string>
     <string name="send_vip2">赠送好友</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -159,4 +163,16 @@
     <string name="self_score">自我考核积分</string>
     <string name="please_edit_get_score">请输入获得积分数</string>
     <string name="group_score">小组活动积分</string>
+    <string name="filter">筛选</string>
+    <string name="course_type">课程类型</string>
+    <string name="reset">重置</string>
+    <string name="my_topic">我的话题</string>
+    <string name="publis">发布</string>
+    <string name="publis_topic">发布贴子</string>
+    <string name="please_edit_topic_title">请输入帖子标题</string>
+    <string name="i_want_see">我想说的是...</string>
+    <string name="add_subject">添加话题</string>
+    <string name="search_subject_hint">搜索话题</string>
+    <string name="not_choose_subject">不参与话题</string>
+    <string name="no_want_subject">没有想参与的话题</string>
 </resources>

@@ -15,6 +15,7 @@ import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ToastUtils;
 
 import butterknife.BindView;
@@ -29,6 +30,7 @@ public class AddStudyPlanActivity extends BaseActivity {
     @BindView(R.id.tv_input_number)
     TextView tvInputNumber;
 
+    private int length;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class AddStudyPlanActivity extends BaseActivity {
     @Override
     protected void init() {
 //etNoteContent是EditText
-
+        length = getIntent().getIntExtra("length",0);
         setTitle(getString(R.string.add_plan));
         etPlan.addTextChangedListener(new TextWatcher() {
             private CharSequence wordNum;//记录输入的字数
@@ -64,7 +66,9 @@ public class AddStudyPlanActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 int number = num - s.length();
                 //TextView显示剩余字数
-                tvInputNumber.setText("" + number);          selectionStart=etPlan.getSelectionStart();
+                tvInputNumber.setText(wordNum.length()+"/" +num);
+
+                      selectionStart=etPlan.getSelectionStart();
                 selectionEnd = etPlan.getSelectionEnd();
                 if (wordNum.length() > num) {
                     //删除多余输入的字（不会显示出来）
@@ -94,6 +98,11 @@ public class AddStudyPlanActivity extends BaseActivity {
     }
 
     void save() {
+        if(length> FinalValue.maxStudyLimit||length==FinalValue.maxStudyLimit){
+            ToastUtils.show(AddStudyPlanActivity.this,"每天最多添加"+FinalValue.maxStudyLimit+"个学习计划");
+
+            return;
+        }
         if (TextUtils.isEmpty(etPlan.getText().toString())) {
             ToastUtils.show(this, "请输入学习计划");
             return;
@@ -107,11 +116,13 @@ public class AddStudyPlanActivity extends BaseActivity {
         ApiUtils.getInstance().addStudyPlan(etPlan.getText().toString(), new ApiCallback() {
             @Override
             public void success(ResponseData t) {
+                length++;
                 DialogUtil.hideLoading(AddStudyPlanActivity.this);
                 DialogUtil.showAlertDialog(AddStudyPlanActivity.this, "提示", "添加学习计划成功", "继续添加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
                         etPlan.setText("");
                     }
                 }, "完成", new DialogInterface.OnClickListener() {

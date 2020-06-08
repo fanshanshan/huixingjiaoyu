@@ -84,7 +84,6 @@ public class PrefUtils {
 	}
 	public static TokenInfo getTokenBean(Context context){
 		String tokenStr = getString(context,TOKEN_KEY,"");
-		Log.e("tokenInfo",tokenStr);
 		return GsonUtil.GsonToBean(tokenStr,TokenInfo.class);
 	}
 	public static void clearData(Context context){

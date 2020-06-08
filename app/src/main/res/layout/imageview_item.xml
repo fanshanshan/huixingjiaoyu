@@ -3,7 +3,7 @@
     android:layout_width="110dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/iv"
-    android:scaleType="fitXY"
+    android:scaleType="centerCrop"
     android:padding="2dp"
     app:riv_corner_radius="5dp"
     android:layout_height="110dp">

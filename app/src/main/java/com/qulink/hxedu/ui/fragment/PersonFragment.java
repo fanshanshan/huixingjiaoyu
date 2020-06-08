@@ -24,7 +24,9 @@ import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.PersonMenuItem;
 import com.qulink.hxedu.entity.UserInfo;
@@ -38,6 +40,7 @@ import com.qulink.hxedu.ui.VipDetailActivity;
 import com.qulink.hxedu.ui.live.AuthorActivity;
 import com.qulink.hxedu.ui.sign.StudyPlanActivity;
 import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
 import com.qulink.hxedu.util.ViewUtils;
@@ -138,7 +141,13 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 public void getUserInfo(UserInfo userInfo) {
                     if (userInfo != null) {
                         tvName.setText(userInfo.getNickname() + "");
-                        Glide.with(getActivity()).load(userInfo.getHeadImg()).error(R.drawable.user_default).into(ivHeadimg);
+                        App.getInstance().getDefaultSetting(getActivity(), new DefaultSettingCallback() {
+                            @Override
+                            public void getDefaultSetting(DefaultSetting defaultSetting) {
+                                Glide.with(getActivity()).load(
+                                        ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),userInfo.getHeadImg())).error(R.drawable.user_default).into(ivHeadimg);
+                            }
+                        });
                         tvLevel.setBackgroundResource(ViewUtils.getLevelBgByLevel(userInfo.getLevel()));
                         //会员状态 0否1是
                         if (!userInfo.isVip()) {
@@ -455,6 +464,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         getUserInfo();
     }
+
+
 
 
 }

@@ -11,6 +11,7 @@ import com.qulink.hxedu.App;
 import com.qulink.hxedu.MainActivity;
 import com.qulink.hxedu.MyActivityManager;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.NetUtil;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
@@ -77,6 +78,7 @@ public class SettingActivity extends BaseActivity {
                 dialog.dismiss();
                 PrefUtils.clearToken(SettingActivity.this);
                 App.getInstance().setTokenInfo(null);
+                NetUtil.getInstance().setToken("");
                 EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT));
                 RouteUtil.startNewActivity(SettingActivity.this,new Intent(SettingActivity.this, MainActivity.class));
 

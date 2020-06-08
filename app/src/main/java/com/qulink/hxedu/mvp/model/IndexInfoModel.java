@@ -4,6 +4,7 @@ import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.mvp.contract.IndexInfoContract;
+import com.qulink.hxedu.util.FinalValue;
 
 public class IndexInfoModel implements IndexInfoContract.Model {
 
@@ -22,12 +23,12 @@ public class IndexInfoModel implements IndexInfoContract.Model {
 
     @Override
     public void getHotCourse(ApiCallback apiCallback) {
-        ApiUtils.getInstance().getIndexSortCourse(1,1,4,apiCallback);
+        ApiUtils.getInstance().getIndexSortCourse(FinalValue.hotCourseCurriculumType,1,4,apiCallback);
     }
 
     @Override
     public void getMoneyCourse(ApiCallback apiCallback) {
-        ApiUtils.getInstance().getIndexSortCourse(3,1,4,apiCallback);
+        ApiUtils.getInstance().getIndexSortCourse(FinalValue.moneyCourseCurriculumType,1,4,apiCallback);
 
     }
 }

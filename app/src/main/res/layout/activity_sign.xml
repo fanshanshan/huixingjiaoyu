@@ -151,13 +151,13 @@
 
                 </LinearLayout>
 
-                <Button
+                <TextView
                     android:id="@+id/tv_sign"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/complete_btn_height"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/login_btn_bg"
+                    android:background="@drawable/sign"
                     android:gravity="center"
                     android:text="@string/sign_get_score"
                     android:textColor="@color/white"
@@ -441,7 +441,7 @@
 
                     <LinearLayout
                         android:visibility="gone"
-                        android:layout_marginTop="100dp"
+                        android:layout_marginTop="50dp"
                         android:id="@+id/ll_un_finish_Plan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

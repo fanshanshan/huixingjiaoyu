@@ -24,6 +24,7 @@ import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.entity.StudyPlan;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
 
@@ -84,7 +85,19 @@ public class StudyPlanActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_bar_right:
-                RouteUtil.startNewActivityAndResult(StudyPlanActivity.this, new Intent(StudyPlanActivity.this, AddStudyPlanActivity.class), 1);
+                if(studyPlan==null){
+                    return;
+                }
+                if(studyPlan.getTotal()< FinalValue.limit||studyPlan.getTotal()== FinalValue.limit){
+                      ToastUtils.show(StudyPlanActivity.this,"每天最多添加"+FinalValue.maxStudyLimit+"个学习计划");
+
+                }else{
+                    Intent intent = new Intent(StudyPlanActivity.this, AddStudyPlanActivity.class);
+                    intent.putExtra("length",studyPlan.getTotal());
+                    RouteUtil.startNewActivityAndResult(StudyPlanActivity.this,intent , 1);
+
+                }
+
                 break;
         }
     }
@@ -94,10 +107,16 @@ public class StudyPlanActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 2) {
             //刷新学习计划
-            getStudyPlanDetail();
+          //  getStudyPlanDetail();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getStudyPlanDetail();
+
+    }
 
     void getStudyPlanDetail() {
         DialogUtil.showLoading(this, false);

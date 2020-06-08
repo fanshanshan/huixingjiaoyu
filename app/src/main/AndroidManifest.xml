@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.qulink.hxedu">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,8 +28,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".ui.sign.PlatformGroupScoreDetailActivity"></activity>
+        android:usesCleartextTraffic="true"
+        tools:replace="android:name">
+        <activity android:name=".ui.zone.AddSubjectActivity"></activity>
+        <activity android:name=".ui.zone.PublishTopicActivity" />
+        <activity android:name=".ui.zone.PersonZoneIndexActivity" />
+        <activity android:name=".ui.BindPhoneActivity" />
+        <activity android:name=".ui.course.MoreCourseActivity" />
+        <activity android:name=".ui.sign.PlatformGroupScoreDetailActivity" />
         <activity
             android:name=".ui.sign.PlatformAccountSignActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -95,13 +102,13 @@
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.CourseDetailActivity"
+            android:name=".ui.course.CourseDetailActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CourseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SearchActivity"
+            android:name=".ui.SearchCourseActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.BaseActivity" />
         <activity
@@ -111,6 +118,32 @@
         <activity
             android:name=".ui.ImagesPreviewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/wx_theme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx8c302ab306d3e641" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/wx_theme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx8c302ab306d3e641" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

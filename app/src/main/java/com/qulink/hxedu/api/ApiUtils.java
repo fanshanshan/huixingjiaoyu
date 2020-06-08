@@ -8,10 +8,11 @@ import java.util.Map;
 
 public class ApiUtils {
 
-    private static String baseUrl = "https://hx-test.kuaiyunma.com/";//测试服
-   // public static String baseUrl = "http://192.168.199.186:8080/";//牛元亮
+        private static String baseUrl = "https://hx-test.kuaiyunma.com/";//测试服
+    //public static String baseUrl = "http://192.168.199.187:8080/";//牛元亮
 
     private static ApiUtils instance;
+
 
     public static ApiUtils getInstance() {
         if (instance == null) {
@@ -38,11 +39,11 @@ public class ApiUtils {
     /**
      * 类型 1:注册 2:登陆 3:重置密码 4:重置支付密码 5:更换手机号(原手机号) 6:更换手机号(新手机号) 7:绑定手机
      *
-     * @param phone 手机号
-     * @param code 验证码
+     * @param phone        手机号
+     * @param code         验证码
      * @param invationCode 邀请码
-     * @param type 类型
-     * @param apiCallback 回调
+     * @param type         类型
+     * @param apiCallback  回调
      */
     public void registe(String phone, String code, String invationCode, String type, ApiCallback apiCallback) {
         Map<String, String> params = new HashMap<>();
@@ -53,12 +54,29 @@ public class ApiUtils {
         NetUtil.getInstance().post(baseUrl + "user/register", params, apiCallback);
     }
 
+    /**
+     * 类型 1:注册 2:登陆 3:重置密码 4:重置支付密码 5:更换手机号(原手机号) 6:更换手机号(新手机号) 7:绑定手机
+     *
+     * @param phone        手机号
+     * @param code         验证码
+     * @param invationCode 邀请码
+     * @param type         类型
+     * @param apiCallback  回调
+     */
+    public void bindPhone(String phone, String code, String invationCode, String type, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        params.put("code", code);
+        params.put("invationCode", invationCode);
+        params.put("type", type);
+        NetUtil.getInstance().post(baseUrl + "user/bindPhone", params, apiCallback);
+    }
 
     /**
      * 类型 1:注册 2:登陆 3:重置密码 4:重置支付密码 5:更换手机号(原手机号) 6:更换手机号(新手机号) 7:绑定手机
      *
-     * @param phone 手机号
-     * @param code 验证码
+     * @param phone    手机号
+     * @param code     验证码
      * @param callback 回调
      */
     public void loginBySmsCode(String phone, String code, ApiCallback callback) {
@@ -74,9 +92,9 @@ public class ApiUtils {
     /**
      * 充值密码
      *
-     * @param phone 手机号
-     * @param code  验证码
-     * @param pwd  密码
+     * @param phone    手机号
+     * @param code     验证码
+     * @param pwd      密码
      * @param callback 回调
      */
     public void resetPwd(String phone, String code, String pwd, ApiCallback callback) {
@@ -91,8 +109,8 @@ public class ApiUtils {
     /**
      * 账号密码登陆
      *
-     * @param phone 手机号
-     * @param pwd 密码
+     * @param phone    手机号
+     * @param pwd      密码
      * @param callback 回调
      */
     public void loginByPwd(String phone, String pwd, ApiCallback callback) {
@@ -102,11 +120,12 @@ public class ApiUtils {
         NetUtil.getInstance().post(baseUrl + "user/passwordLogin", params, callback);
     }
 
+
     /**
      * 修改个人信息
      *
      * @param nickName 昵称
-     * @param path  头像路径
+     * @param path     头像路径
      * @param callback 回调
      */
     public void updateUserInfo(String nickName, String path, ApiCallback callback) {
@@ -225,7 +244,7 @@ public class ApiUtils {
     /**
      * 添加学习计划
      *
-     * @param content 内容
+     * @param content     内容
      * @param apiCallback 回调
      */
     public void addStudyPlan(String content, ApiCallback apiCallback) {
@@ -259,84 +278,282 @@ public class ApiUtils {
 
     /**
      * 提交平台积分
-     * @param jsonStr id和积分组合的json字符串
+     *
+     * @param jsonStr     id和积分组合的json字符串
      * @param apiCallback 回调
      */
-    public void submitPlatformScore(String jsonStr,ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
+    public void submitPlatformScore(String jsonStr, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
         params.put("data", jsonStr);
-        NetUtil.getInstance().post(baseUrl+"platformCredit/commitSelfPc",params,apiCallback);
+        NetUtil.getInstance().post(baseUrl + "platformCredit/commitSelfPc", params, apiCallback);
     }
 
 
     /**
      * 提交平台积分
-     * @param id 分组id
+     *
+     * @param id          分组id
      * @param apiCallback 回调
      */
-    public void getPlatformGroupById(String id,ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
+    public void getPlatformGroupById(String id, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
         params.put("pccId", id);
-        NetUtil.getInstance().post(baseUrl+"platformCredit/getPlatformCreditByCategoryId",params,apiCallback);
+        NetUtil.getInstance().post(baseUrl + "platformCredit/getPlatformCreditByCategoryId", params, apiCallback);
     }
 
     /**
      * 完成积分项
-     * @param id 项目id
-     * @param pccId 分组id
+     *
+     * @param id          项目id
+     * @param pccId       分组id
      * @param apiCallback 回调
      */
-    public void completeGroupScore(String id,String pccId,ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
+    public void completeGroupScore(String id, String pccId, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
         params.put("pccId", pccId);
         params.put("id", id);
-        NetUtil.getInstance().post(baseUrl+"platformCredit/finishPlatformCredit",params,apiCallback);
+        NetUtil.getInstance().post(baseUrl + "platformCredit/finishPlatformCredit", params, apiCallback);
     }
 
     //*************************************************************首页相关
+
     /**
      * 获取首页轮播
+     *
      * @param apiCallback 回调
      */
-    public void getIndexBanner(ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
-        NetUtil.getInstance().get(baseUrl+"curriculum/getCarousel",params,apiCallback);
+    public void getIndexBanner(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().get(baseUrl + "curriculum/getCarousel", params, apiCallback);
     }
 
     /**
      * 获取首页课程一级分类
+     *
      * @param apiCallback 回调
      */
-    public void getIndexCourseItem(ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
-        NetUtil.getInstance().get(baseUrl+"curriculum/getClassify",params,apiCallback);
+    public void getIndexCourseItem(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().get(baseUrl + "curriculum/getClassify", params, apiCallback);
+    }
+
+    /**
+     * 获取课程分类信息
+     *
+     * @param classifyId  id
+     * @param apiCallback 回调
+     */
+    public void getSubCourseNameById(int classifyId, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("classifyId", classifyId + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/getTags", params, apiCallback);
+    }
+
+    /**
+     * 获取课程子列表
+     *
+     * @param classifyId     由getTags接口返回classify
+     * @param tagId          由getTags接口返回tags
+     * @param pageNo         页码从1开始,必须大于0
+     * @param pageSize       分页数量从1开始,必须大于0,小于等于20
+     * @param curriculumType 1-热门课程,2-会员免费,3-付费课程,4-会员专享价
+     * @param apiCallback    回调
+     */
+    public void getCourseList(int classifyId, int tagId, int pageNo, int pageSize, int curriculumType, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("classifyId", classifyId + "");
+        params.put("tagId", tagId + "");
+        params.put("pageNo", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        params.put("curriculumType", curriculumType + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/search", params, apiCallback);
+    }
+
+    /**
+     * @param curriculumType 1-热门课程,2-会员免费,3-付费课程,4-会员专享价
+     * @param pageNo         页码从1开始,必须大于0
+     * @param pageSize       分页数量从1开始,必须大于0,小于等于20
+     * @param apiCallback    回调
+     */
+    public void getIndexSortCourse(int curriculumType, int pageNo, int pageSize, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageNo", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        params.put("curriculumType", curriculumType + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/getCurriculum", params, apiCallback);
     }
 
 
     /**
+     * 获取可曾详情
      *
-     * @param curriculumType 1-热门课程,2-会员免费,3-付费课程,4-会员专享价
-     * @param pageNo 页码从1开始,必须大于0
-     * @param pageSize 分页数量从1开始,必须大于0,小于等于20
-     * @param apiCallback 回调
+     * @param curriculumId 课程id
+     * @param apiCallback  回调
      */
-    public void getIndexSortCourse(int curriculumType,int pageNo,int pageSize,ApiCallback apiCallback){
-        Map<String,String> params = new HashMap<>();
-        params.put("pageNo",pageNo+"");
-        params.put("pageSize",pageSize+"");
-        params.put("curriculumType",curriculumType+"");
-        NetUtil.getInstance().get(baseUrl+"curriculum/getCurriculum",params,apiCallback);
+    public void getCourseDetail(int curriculumId, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("curriculumId", curriculumId + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/getDetail", map, apiCallback);
     }
 
+    /**
+     * 获取课程观看人数
+     *
+     * @param curriculumId 课程id
+     * @param apiCallback  回调
+     */
+    public void getCourseLookNum(int curriculumId, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("curriculumId", curriculumId + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/getParticipant", map, apiCallback);
+    }
+
+    /**
+     * 获取本人关于此课程的可观看信息
+     *
+     * @param curriculumId 课程id
+     * @param apiCallback  回调
+     */
+    public void getCourseDetailForPersonnal(int curriculumId, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("curriculumId", curriculumId + "");
+        NetUtil.getInstance().get(baseUrl + "curriculum/getPersonalCurriculum", map, apiCallback);
+    }
+
+
+    /**
+     * 上报观看次数
+     * @param curriculumId 课程id
+     * @param apiCallback 回调
+     */
+    public void increaseLookNumberToServer(int curriculumId,ApiCallback apiCallback){
+        Map<String, String> map = new HashMap<>();
+        map.put("curriculumId", curriculumId + "");
+        NetUtil.getInstance().post(baseUrl + "curriculum/increaseParticipant", map, apiCallback);
+    }
     //**********************************************************社区相关
 
     /**
+     * @param apiCallback 回调
+     */
+    public void getHotArtical(ApiCallback apiCallback) {
+        NetUtil.getInstance().post(baseUrl + "community/topArticle", new HashMap<>(), apiCallback);
+    }
+
+
+    /**
+     * 获取顶部话题
      *
      * @param apiCallback 回调
      */
-    public void getHotArtical(ApiCallback apiCallback){
-        //NetUtil.getInstance().post2(baseUrl+"community/topArticle",new HashMap<>(),apiCallback);
+    public void getTopPic(ApiCallback apiCallback) {
+        NetUtil.getInstance().post(baseUrl + "community/getTopics", new HashMap<>(), apiCallback);
+
     }
 
+    /**
+     * 社区首页帖子列表
+     *
+     * @param pageNo      页码 1开始
+     * @param pageSize    数量
+     * @param topicName   搜索内容
+     * @param topicId     主题id
+     * @param apiCallback 回调
+     */
+    public void getTopPic(int pageNo, int pageSize, String topicName, String topicId, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("pageNo", pageNo + "");
+        map.put("pageSize", pageSize + "");
+        map.put("topicName", topicName + "");
+        map.put("topicId", topicId + "");
+        NetUtil.getInstance().post(baseUrl + "community/articles", map, apiCallback);
+
+    }
+
+    /**
+     * 获取帖子主人信息
+     *
+     * @param currentUserIds 帖主id
+     * @param apiCallback    回调
+     */
+    public void getPicMasterById(int currentUserIds, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("currentUserIds", currentUserIds + "");
+        NetUtil.getInstance().postCache(baseUrl + "community/articleUserInfo", map, apiCallback);
+
+    }
+
+    /**
+     * 个人社区主页
+     * @param apiCallback 回调
+     */
+    public void getPersonZoneIndex(ApiCallback apiCallback){
+        NetUtil.getInstance().post(baseUrl+"community/cmInfoByUserId",new HashMap<>(),apiCallback);
+    }
+
+    /**
+     *
+     * @param pageSize 页码
+     * @param pageNo size
+     * @param name 搜索关键词
+     * @param apiCallback 回调
+     */
+    public void searchSubject(int pageSize,int pageNo,String name,ApiCallback apiCallback){
+        Map<String,String > param = new HashMap<>();
+        param.put("pageSize",pageSize+"");
+        param.put("pageNo",pageNo+"");
+        param.put("name",name+"");
+        NetUtil.getInstance().post(baseUrl+"community/searchTopic",param,apiCallback);
+    }
+
+
+    /**
+     * 创建话题
+     * @param name 话题描述
+     * @param apiCallback 回调
+     */
+    public void createSubject(String name,ApiCallback apiCallback){
+        Map<String,String > param = new HashMap<>();
+        param.put("name",name+"");
+        NetUtil.getInstance().post(baseUrl+"community/addTopic",param,apiCallback);
+    }
+
+    /**
+     * 发布贴子
+     * @param topicId 话题id
+     * @param title 标题
+     * @param content 内容
+     * @param imgPath 图片路径
+     * @param apiCallback 回调
+     */
+    public void createTopic(int topicId,String title,String content,String imgPath,ApiCallback apiCallback){
+        Map<String,String > param = new HashMap<>();
+        param.put("topicId",topicId+"");
+        param.put("title",title+"");
+        param.put("content",content+"");
+        param.put("imgPath",imgPath+"");
+        NetUtil.getInstance().post(baseUrl+"community/addArticle",param,apiCallback);
+    }
+
+    /**
+     * 获取我参与的话题
+     * @param apiCallback 回调
+     */
+    public void getMyTopic(int pageNo,int pageSize,ApiCallback apiCallback){
+        Map<String,String > param = new HashMap<>();
+        param.put("pageSize",pageSize+"");
+        param.put("pageNo",pageNo+"");
+        NetUtil.getInstance().post(baseUrl+"community/articleByUserId",param,apiCallback);
+    }
+
+
+
+
+    //*************************************************************************
+    public void wxLogin(String code,ApiCallback apiCallback){
+        Map<String,String> map = new HashMap<>();
+        map.put("code",code);
+        NetUtil.getInstance().post(baseUrl+"user/wxLogin",map,apiCallback);
+    }
 
 }

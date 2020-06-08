@@ -9,9 +9,15 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi-v7a"
+            abiFilters "armeabi-v7a", "x86"
+        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
         }
 
     }
@@ -73,8 +79,8 @@ dependencies {
     //圆角imageview
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-
-
+    //配合glide使用高斯模糊
+    implementation 'jp.wasabeef:glide-transformations:2.0.2'
     //圆形imageview
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
@@ -111,4 +117,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     //implementation group: 'cn.hutool', name: 'hutool-all', version: '5.3.5'
+    implementation 'org.glassfish:javax.annotation:10.0-b28' //java注解
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
+    //阿里云播放器
+    implementation 'com.aliyun.sdk.android:AliyunPlayer:4.5.0-full'
+    implementation 'com.alivc.conan:AlivcConan:0.9.5'
+
+    //腾讯开放平台
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(path: ':selectorlibrary')
+    implementation 'com.github.open-android:ImageSelector:0.1.0'
 }

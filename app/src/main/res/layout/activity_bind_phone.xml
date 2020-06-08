@@ -1,0 +1,114 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".ui.PwdLoginActivity">
+
+    <ImageView
+        android:src="@drawable/back"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:textColor="#222222"
+        android:text="@string/bind_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:inputType="number"
+            android:hint="@string/phone_hint"
+            android:layout_marginBottom="12dp"
+            android:textSize="16sp"
+            android:textColorHint="#CCCCCC"
+            android:id="@+id/et_phone"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <include layout="@layout/line"/>
+        <LinearLayout
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:inputType="number"
+                android:textSize="15sp"
+                android:textColorHint="#CCCCCC"
+                android:hint="@string/verify_hint"
+                android:id="@+id/et_verify"
+                android:background="@null"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_get_smscode"
+                android:textColor="#3586F9"
+                android:textSize="13sp"
+                android:text="@string/get_smscode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <include layout="@layout/line"/>
+
+
+        <LinearLayout
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:inputType="number"
+                android:textSize="15sp"
+                android:textColorHint="#CCCCCC"
+                android:hint="@string/invite_code_hint"
+                android:id="@+id/et_invite_code"
+                android:background="@null"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <include layout="@layout/line"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="@string/complete"
+        android:background="@drawable/login_btn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_btn_height" />
+</LinearLayout>

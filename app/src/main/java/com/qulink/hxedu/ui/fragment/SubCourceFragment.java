@@ -11,40 +11,222 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
-import com.qulink.hxedu.ui.CourseDetailActivity;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.DefaultSettingCallback;
+import com.qulink.hxedu.entity.CourseBean;
+import com.qulink.hxedu.entity.DefaultSetting;
+import com.qulink.hxedu.ui.course.CourseDetailActivity;
+import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.view.SpacesItemDecoration;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kale.adapter.CommonRcvAdapter;
 import kale.adapter.item.AdapterItem;
+import kale.adapter.util.IAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SubCourceFragment extends Fragment {
+public class SubCourceFragment extends Fragment implements OnLoadMoreListener, OnRefreshListener {
 
 
     @BindView(R.id.recycle_course)
     RecyclerView recycleCourse;
+    @BindView(R.id.smart_layout)
+    SmartRefreshLayout smartLayout;
 
     public SubCourceFragment() {
         // Required empty public constructor
     }
 
 
-    private View rootView;
+    int classifyId;
+    int tagId;
 
+
+
+
+    class  Item implements AdapterItem<CourseBean.RecordsBean>{
+        ImageView ivImg;
+        TextView tvTitle;
+        TextView tvNomey;
+        ImageView ivVip;
+        TextView tvJoinNum;
+        LinearLayout llRoot;
+        @Override
+        public int getLayoutResId() {
+            return R.layout.course_item;
+        }
+
+        @Override
+        public void bindViews(@NonNull View root) {
+
+            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            tvTitle = root.findViewById(R.id.tv_title);
+            llRoot = root.findViewById(R.id.ll_root);
+            tvNomey = root.findViewById(R.id.tv_money);
+            ivVip = root.findViewById(R.id.iv_vip);
+            tvJoinNum = root.findViewById(R.id.tv_join_num);
+            ivImg = root.findViewById(R.id.iv_img);
+        }
+
+        @Override
+        public void setViews() {
+
+        }
+
+        @Override
+        public void handleData(CourseBean.RecordsBean data, int position) {
+
+            tvTitle.setText(data.getCurriculumName());
+            tvNomey.setText(data.getParticipantNum() + "");
+            tvJoinNum.setText(data.getParticipantNum() + "人加入了学习");
+            App.getInstance().getDefaultSetting(getActivity(), new DefaultSettingCallback() {
+                @Override
+                public void getDefaultSetting(DefaultSetting defaultSetting) {
+                    Glide.with(getActivity()).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),data.getCurriculumImage())).into(ivImg);
+
+                }
+            });
+            if(data.isVipFree()){
+                ivVip.setImageResource(R.drawable.vipmf);
+            }
+            if(data.isVipSpecial()){
+                ivVip.setImageResource(R.drawable.vipzx);
+            }
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(),CourseDetailActivity.class);
+                    intent.putExtra("courseId",data.getId());
+                    RouteUtil.startNewActivity(getActivity(), intent);
+                }
+            });
+        }
+    }
+    void initData(List<CourseBean.RecordsBean> records) {
+
+
+        recycleCourse.setAdapter(new CommonRcvAdapter<CourseBean.RecordsBean>(records) {
+
+
+            @NonNull
+            @Override
+            public AdapterItem createItem(Object type) {
+                return new Item();
+            }
+        });
+        recycleCourse.addItemDecoration(new SpacesItemDecoration(0, 4, 0, 0));
+        recycleCourse.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+
+    private int pageNo;
+    private int pageSize = FinalValue.limit;
+
+    void getData() {
+        pageNo = 1;
+        smartLayout.setNoMoreData(false);
+        hideEmpty();
+        ApiUtils.getInstance().getCourseList(classifyId, tagId, pageNo, pageSize, 0, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                CourseBean courseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), CourseBean.class);
+                initData(courseBean.getRecords());
+                smartLayout.finishRefresh(true);
+                if(courseBean.getTotal()==0){
+                    showEmpty();
+                }
+                if(courseBean.getRecords().size()<pageSize){
+                    smartLayout.finishLoadMoreWithNoMoreData();
+                }
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                smartLayout.finishRefresh(false);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                smartLayout.finishRefresh(false);
+
+            }
+        });
+    }
+
+    void loadMore(){
+        pageNo++;
+        ApiUtils.getInstance().getCourseList(classifyId, tagId, pageNo, pageSize, 0, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                CourseBean courseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), CourseBean.class);
+              if(courseBean.getRecords().size()<pageSize){
+                  smartLayout.setNoMoreData(true);
+              }
+                dealLoadMore(courseBean.getRecords());
+                smartLayout.finishLoadMore(true);
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                smartLayout.finishLoadMore(false);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                smartLayout.finishLoadMore(false);
+
+            }
+        });
+    }
+    void dealLoadMore(List<CourseBean.RecordsBean> records){
+        List<CourseBean.RecordsBean> list =   ((IAdapter<CourseBean.RecordsBean>) recycleCourse.getAdapter()).getData();
+        list.addAll(records);
+        ((IAdapter<CourseBean.RecordsBean>) recycleCourse.getAdapter()).setData(list);
+        recycleCourse.getAdapter().notifyDataSetChanged();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        loadMore();
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        getData();
+    }
+
+
+
+    private View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,103 +234,28 @@ public class SubCourceFragment extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_sub_cource, container, false);
             ButterKnife.bind(this, rootView);
-            initData();
+            ButterKnife.bind(this, rootView);
+            smartLayout.setOnLoadMoreListener(this);
+            smartLayout.setOnRefreshListener(this);
+            smartLayout.autoRefresh();
+            classifyId = getArguments().getInt("classId");
+            tagId = getArguments().getInt("tagId");
+            smartLayout.autoRefresh();
+            getData();
         }
         return rootView;
     }
 
-    List<Data> dataList;
-    CommonRcvAdapter<Data> commonRcvAdapter ;
-    void initData(){
-        dataList = new ArrayList<>();
-        dataList.add(new Data("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg",
-                "杨幂最新私服曝光,黑色针织长裙展现温柔一面,锁骨都..._手机网易网",
-                250,"VIP免费",2324));
-        dataList.add(new Data("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg",
-                "杨幂最新私服曝光,黑色针织长裙展现温柔一面,锁骨都..._手机网易网",
-                250,"VIP免费",2324));
-        dataList.add(new Data("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg",
-                "杨幂最新私服曝光,黑色针织长裙展现温柔一面,锁骨都..._手机网易网",
-                250,"VIP免费",2324));
-        dataList.add(new Data("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg",
-                "杨幂最新私服曝光,黑色针织长裙展现温柔一面,锁骨都..._手机网易网",
-                250,"VIP免费",2324));
-        dataList.add(new Data("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg",
-                "杨幂最新私服曝光,黑色针织长裙展现温柔一面,锁骨都..._手机网易网",
-                250,"VIP免费",2324));
-        commonRcvAdapter = new CommonRcvAdapter<Data>(dataList) {
-            ImageView ivImg;
-            TextView tvTitle;
-            TextView tvNomey;
-            TextView tvDesc;
-            TextView tvJoinNum;
-            LinearLayout llRoot;
-            @NonNull
-            @Override
-            public AdapterItem createItem(Object type) {
-                return new AdapterItem() {
-                    @Override
-                    public int getLayoutResId() {
-                        return R.layout.course_item;
-                    }
-
-                    @Override
-                    public void bindViews(@NonNull View root) {
-
-                        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        tvTitle = root.findViewById(R.id.tv_title);
-                        llRoot = root.findViewById(R.id.ll_root);
-                        tvNomey = root.findViewById(R.id.tv_money);
-                        tvDesc = root.findViewById(R.id.tv_desc);
-                        tvJoinNum = root.findViewById(R.id.tv_join_num);
-                        ivImg = root.findViewById(R.id.iv_img);
-                    }
-
-                    @Override
-                    public void setViews() {
-                        llRoot.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), CourseDetailActivity.class));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void handleData(Object o, int position) {
-
-                        if(o instanceof Data){
-                            Data data = (Data)o;
-                            tvTitle.setText(data.title);
-                            tvDesc.setText(data.desc);
-                            tvNomey.setText(data.price+"");
-                            tvJoinNum.setText(data.joinNum+"加入了学习");
-                            Glide.with(getActivity()).load(data.img).into(ivImg);
-                        }
-                    }
-                };
-            }
-        };
-        recycleCourse.setAdapter(commonRcvAdapter);
-        recycleCourse.addItemDecoration(new SpacesItemDecoration(0,4,0,40));
-        recycleCourse.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
-
-    public static  class Data{
-        String img;
-        String title;
-
-        public Data(String img, String title, double price, String desc, int joinNum) {
-            this.img = img;
-            this.title = title;
-            this.price = price;
-            this.desc = desc;
-            this.joinNum = joinNum;
+    protected void hideEmpty(){
+        View view = rootView.findViewById(R.id.ll_empty);
+        if(view!=null){
+            view.setVisibility(View.GONE);
         }
-
-        double price;
-        String desc;
-        int joinNum;
+    }
+    protected void showEmpty(){
+        View view = rootView.findViewById(R.id.ll_empty);
+        if(view!=null){
+            view.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -9,22 +9,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UploadManager;
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.api.ApiCallback;
@@ -33,14 +31,17 @@ import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.PermissionUtils;
 import com.qulink.hxedu.util.QiniuUtil;
 import com.qulink.hxedu.util.SystemUtil;
 import com.qulink.hxedu.util.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +65,8 @@ public class EditHeadAndNickActivity extends BaseActivity {
     private final int REQUEST_CAMERA_PERMISSION_CODE = 4;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
+    @BindView(R.id.tv_edit_times)
+    TextView tvEditTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,17 @@ public class EditHeadAndNickActivity extends BaseActivity {
             @Override
             public void getUserInfo(UserInfo userInfo) {
                 etNick.setText(userInfo.getNickname());
-                etNick.setSelection(userInfo.getNickname().length());
+                if (TextUtils.isEmpty(userInfo.getNickname())) {
+                    etNick.setSelection(userInfo.getNickname().length());
+                }
+                tvEditTimes.setText("近一年内，您已修改过"+userInfo.getNicknameModifications()+"次");
+                App.getInstance().getDefaultSetting(EditHeadAndNickActivity.this, new DefaultSettingCallback() {
+                    @Override
+                    public void getDefaultSetting(DefaultSetting defaultSetting) {
+                        Glide.with(EditHeadAndNickActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), userInfo.getHeadImg())).error(R.drawable.head).into(ivHead);
+
+                    }
+                });
             }
         });
     }
@@ -93,7 +106,7 @@ public class EditHeadAndNickActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.rl_head,R.id.tv_save})
+    @OnClick({R.id.rl_head, R.id.tv_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_head:
@@ -169,14 +182,14 @@ public class EditHeadAndNickActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
 
-        Log.e("结果",resultCode+"");
+        Log.e("结果", resultCode + "");
 
         if (requestCode == REQUEST_ALBUM_CODE && resultCode == RESULT_OK) {
             //获取相册图片成功
             startPhotoZoom(data.getData());
         } else if (requestCode == REQUEST_CUT_CODE && resultCode == RESULT_OK) {
             //裁剪成功
-          //  getQiniuToken();
+            //  getQiniuToken();
             Glide.with(EditHeadAndNickActivity.this).load(cutUri).into(ivHead);
         } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
             //请求相机成功
@@ -185,7 +198,7 @@ public class EditHeadAndNickActivity extends BaseActivity {
     }
 
     private void startPhotoZoom(Uri uri) {
-        File CropPhoto = new File(getExternalCacheDir(), SystemUtil.getRandomString2(32)+"Crop.jpg");//这个是创建一个截取后的图片路径和名称。
+        File CropPhoto = new File(getExternalCacheDir(), SystemUtil.getRandomString2(32) + "Crop.jpg");//这个是创建一个截取后的图片路径和名称。
         try {
             if (CropPhoto.exists()) {
                 CropPhoto.delete();
@@ -227,8 +240,8 @@ public class EditHeadAndNickActivity extends BaseActivity {
         }
     }
 
-    void getQiniuToken(){
-        DialogUtil.showLoading(this,true);
+    void getQiniuToken() {
+        DialogUtil.showLoading(this, true);
         ApiUtils.getInstance().getQiniuToken(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
@@ -239,36 +252,38 @@ public class EditHeadAndNickActivity extends BaseActivity {
             @Override
             public void error(String code, String msg) {
                 DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-                ToastUtils.show(EditHeadAndNickActivity.this,msg);
+                ToastUtils.show(EditHeadAndNickActivity.this, msg);
             }
 
             @Override
             public void expcetion(String expectionMsg) {
                 DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-                ToastUtils.show(EditHeadAndNickActivity.this,expectionMsg);
+                ToastUtils.show(EditHeadAndNickActivity.this, expectionMsg);
 
             }
         });
     }
 
-    void uploadHeadImg(String token){
-        DialogUtil.showLoading(this,true,"正在上传头像");
-        QiniuUtil.getInstance().put(cutUri.getPath(), "", token,
+    void uploadHeadImg(String token) {
+        DialogUtil.showLoading(this, true, "正在上传头像");
+        String key = SystemUtil.getUploadImageKey(this);
+        QiniuUtil.getInstance().put(cutUri.getPath(), key, token,
                 new UpCompletionHandler() {
                     @Override
-                    public void complete(String key, ResponseInfo info,final JSONObject res) {
+                    public void complete(String key, ResponseInfo info, final JSONObject res) {
                         DialogUtil.hideLoading(EditHeadAndNickActivity.this);
                         //res包含hash、key等信息，具体字段取决于上传策略的设置
-                        if(info.isOK()) {
+                        if (info.isOK()) {
                             try {
-                                updateUserInfo(etNick.getText().toString(), res.getString("hash"));
+                                lastImg = res.getString("key");
+                                updateUserInfo();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
                         } else {
                             DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-                            ToastUtils.show(EditHeadAndNickActivity.this,"上传失败");
+                            ToastUtils.show(EditHeadAndNickActivity.this, info.error);
                             //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
                         }
                         Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
@@ -278,58 +293,68 @@ public class EditHeadAndNickActivity extends BaseActivity {
 
 
     String qiniuToken;
-    void save(){
+    String lastName;
+    String lastImg;
+
+    void save() {
         App.getInstance().getUserInfo(this, new UserInfoCallback() {
             @Override
             public void getUserInfo(UserInfo userInfo) {
-                if(cutUri==null&&etNick.getText().toString().equals(userInfo.getNickname())){
-                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg().toString());
-                }else{
-                    if(cutUri==null){
-                        App.getInstance().getUserInfo(EditHeadAndNickActivity.this, new UserInfoCallback() {
-                            @Override
-                            public void getUserInfo(UserInfo userInfo) {
-                                if(userInfo!=null){
-                                    updateUserInfo(etNick.getText().toString(),userInfo.getHeadImg().toString());
-                                }
-                            }
-                        });
-                    }else{
-                        if(qiniuToken==null){
+                if (etNick.getText().toString().equals(userInfo.getNickname())) {
+                    if (cutUri == null) {
+                        finish();
+                    } else {
+                        lastName = "";
+                        if (qiniuToken == null) {
                             getQiniuToken();
-                        }else{
+                        } else {
+                            uploadHeadImg(qiniuToken);
+                        }
+                    }
+                } else {
+                    lastName = etNick.getText().toString();
+
+                    if (cutUri == null) {
+                        lastImg = "";
+                        updateUserInfo();
+                    } else {
+                        if (qiniuToken == null) {
+                            getQiniuToken();
+                        } else {
                             uploadHeadImg(qiniuToken);
                         }
                     }
                 }
+
             }
         });
 
 
     }
 
-    void updateUserInfo(String nickName,String headimgPath){
-        DialogUtil.showLoading(this,true,"正在提交信息");
-        ApiUtils.getInstance().updateUserInfo(nickName, headimgPath, new ApiCallback() {
+    void updateUserInfo() {
+        DialogUtil.showLoading(this, true, "正在提交信息");
+        ApiUtils.getInstance().updateUserInfo(lastName, lastImg, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-             DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-             //保存成功 用户信息置空  下次就会获取最新的
+                DialogUtil.hideLoading(EditHeadAndNickActivity.this);
+                //保存成功 用户信息置空  下次就会获取最新的
                 App.getInstance().setUserInfo(null);
-             ToastUtils.show(EditHeadAndNickActivity.this,"保存成功");
-             finish();
+                EventBus.getDefault().post(new MessageEvent(FinalValue.GET_USERINFO));
+                ToastUtils.show(EditHeadAndNickActivity.this, "保存成功");
+                finish();
             }
 
             @Override
             public void error(String code, String msg) {
                 DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-                ToastUtils.show(EditHeadAndNickActivity.this,msg);
+                ToastUtils.show(EditHeadAndNickActivity.this, msg);
             }
 
             @Override
             public void expcetion(String expectionMsg) {
                 DialogUtil.hideLoading(EditHeadAndNickActivity.this);
-                ToastUtils.show(EditHeadAndNickActivity.this,expectionMsg);
+                ToastUtils.show(EditHeadAndNickActivity.this, expectionMsg);
             }
         });
     }

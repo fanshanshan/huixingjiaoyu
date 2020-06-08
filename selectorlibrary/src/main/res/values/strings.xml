@@ -1,0 +1,7 @@
+<resources>
+    <string name="image_selector_finish">完成</string>
+    <string name="image_selector_preview">预览</string>
+    <string name="image_selector_back">返回</string>
+    <string name="image_selector_authorization_failed"></string>
+    <string name="image_selector_limit_of_img_error"></string>
+</resources>

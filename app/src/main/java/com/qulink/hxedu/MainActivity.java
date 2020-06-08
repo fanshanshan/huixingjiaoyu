@@ -158,7 +158,6 @@ public class MainActivity extends BaseActivity {
             case R.id.rb_zone:
                 rbZone.setChecked(true);
                 fragmentManager.beginTransaction().hide(liveFragment).hide(indexFragment).hide(personFragment).show(zoneFragment).commit();
-
                 break;
             case R.id.rb_person:
                 rbPerson.setChecked(true);

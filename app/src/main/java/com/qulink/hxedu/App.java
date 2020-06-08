@@ -3,9 +3,13 @@ package com.qulink.hxedu;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.text.LineBreaker;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDex;
 
 import com.alipay.sdk.app.EnvUtils;
 import com.qulink.hxedu.api.ApiCallback;
@@ -32,6 +36,7 @@ import com.scwang.smart.refresh.layout.api.RefreshHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshFooterCreator;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshHeaderCreator;
+import com.scwang.smart.refresh.layout.listener.DefaultRefreshInitializer;
 import com.tencent.rtmp.TXLiveBase;
 
 import org.greenrobot.eventbus.EventBus;
@@ -91,8 +96,15 @@ public class App extends Application {
     private static App instance;
 
     public static App getInstance() {
+
         if (instance == null) {
-            instance = new App();
+            // 加锁目的，防止多线程同时进入造成对象多次实例化
+            synchronized (App.class) {
+                // 为了在null的情况下创建实例，防止不必要的损耗
+                if (instance == null) {
+                    instance = new App();
+                }
+            }
         }
         return instance;
     }
@@ -103,7 +115,7 @@ public class App extends Application {
             if(tokenInfo==null){
                 return null;
             }else{
-                NetUtil.getInstance().setToken(tokenInfo.getToken());
+                //NetUtil.getInstance().setToken(tokenInfo.getToken());
                 setTokenInfo(tokenInfo);
             }
 
@@ -120,7 +132,7 @@ public class App extends Application {
     }
     public boolean isLogin(Context context,boolean withIntent) {
         if (getTokenInfo(context) == null) {
-            context.startActivity(new Intent(context, LoginActivity.class));
+           showLoginDialog(context);
             return false;
         }
         return true;
@@ -159,6 +171,12 @@ public class App extends Application {
                 return new ClassicsFooter(context).setDrawableSize(20);
             }
         });
+        SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
+            @Override
+            public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
+                layout.getLayout().setTag("close egg");
+            }
+        });
     }
 
     @Override
@@ -170,10 +188,9 @@ public class App extends Application {
 //        handler.init(getApplicationContext());
 //        Thread.setDefaultUncaughtExceptionHandler(handler);
 
-
+        MultiDex.install(this);
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
-
         //支付宝沙箱环境
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 
@@ -295,6 +312,20 @@ public class App extends Application {
         });
     }
 
+
+    void showLoginDialog(Context context){
+        DialogUtil.showAlertDialog(context, "提示", "登录后才能进行操作", "立即登录", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                context.startActivity(new Intent(context, LoginActivity.class));
+            }
+        }, "一会再说", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
 
 
 }

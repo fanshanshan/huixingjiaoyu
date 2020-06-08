@@ -24,4 +24,15 @@ public class FinalValue {
 
 
     public static int completePlanAddScore =1;
+    public static int limit =8;
+    public static int maxStudyLimit = 6;
+    public static int startpageNo =1;
+
+
+    public static int hotCourseCurriculumType = 1;//热门课程
+    public static int moneyCourseCurriculumType = 1;//付费课程
+    public static int WECHAT_PAYEOK = 999;//微信支付成功返回码
+    public static int WECHAT_LOGINEOK = 888;//微信登录成功返回码
+    public static int WECHAT_SHAREOK = 777;//微信分享成功返回码
+    public static String WECHAT_APP_ID = "wx9c863272e5ed7596";//微信appid
 }

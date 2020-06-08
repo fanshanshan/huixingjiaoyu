@@ -31,7 +31,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         // setContentView(R.layout.activity_base);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //PushAgent.getInstance(this).onAppStart();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //去掉Activity上面的状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
@@ -129,4 +129,16 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         return true;
     }
 
+    protected void hideEmpty(){
+        View view = findViewById(R.id.ll_empty);
+        if(view!=null){
+            view.setVisibility(View.GONE);
+        }
+    }
+    protected void showEmpty(){
+        View view = findViewById(R.id.ll_empty);
+        if(view!=null){
+            view.setVisibility(View.VISIBLE);
+        }
+    }
 }
