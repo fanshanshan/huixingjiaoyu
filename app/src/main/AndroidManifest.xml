@@ -30,7 +30,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name">
-        <activity android:name=".ui.zone.AddSubjectActivity"></activity>
+        <activity android:name=".ui.zone.ArticalDetailActivity"></activity>
+        <activity android:name=".ui.zone.MoreSubjectActivity" />
+        <activity android:name=".ui.zone.TopTopicActivity" />
+        <activity android:name=".ui.zone.AddSubjectActivity" />
         <activity android:name=".ui.zone.PublishTopicActivity" />
         <activity android:name=".ui.zone.PersonZoneIndexActivity" />
         <activity android:name=".ui.BindPhoneActivity" />

@@ -2,6 +2,7 @@ package com.qulink.hxedu.ui.fragment;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,11 +32,19 @@ import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.PicBean;
 import com.qulink.hxedu.entity.PicMaster;
 import com.qulink.hxedu.entity.TopPicBean;
+import com.qulink.hxedu.mvp.contract.ArticalContract;
+import com.qulink.hxedu.mvp.contract.LikeArticalContract;
 import com.qulink.hxedu.mvp.contract.ZoneContract;
+import com.qulink.hxedu.mvp.presenter.ArticalPresenter;
+import com.qulink.hxedu.mvp.presenter.LikeArticalPresenter;
 import com.qulink.hxedu.mvp.presenter.ZonePresenter;
 import com.qulink.hxedu.ui.ImagesPreviewActivity;
+import com.qulink.hxedu.ui.zone.ArticalDetailActivity;
+import com.qulink.hxedu.ui.zone.MoreSubjectActivity;
 import com.qulink.hxedu.ui.zone.PersonZoneIndexActivity;
+import com.qulink.hxedu.ui.zone.TopTopicActivity;
 import com.qulink.hxedu.util.CourseUtil;
+import com.qulink.hxedu.util.FastClick;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
@@ -62,7 +72,7 @@ import kale.adapter.util.IAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefreshListener, OnLoadMoreListener {
+public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefreshListener, OnLoadMoreListener, LikeArticalContract.View {
 
 
     @BindView(R.id.recycle_official_action)
@@ -78,11 +88,19 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
     private View rootView;
 
     private ZonePresenter mPresenter;
+    private LikeArticalPresenter likeArticalPresenter;
+
+    private Activity mActivity;
 
     public ZoneFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+    }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -93,7 +111,9 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
             ButterKnife.bind(this, rootView);
 
             mPresenter = new ZonePresenter();
+            likeArticalPresenter = new LikeArticalPresenter();
             mPresenter.attachView(this);
+            likeArticalPresenter.attachView(this);
             mPresenter.getHotArtical();
             mPresenter.getTopPic();
             mPresenter.getAllPic();
@@ -139,7 +159,8 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
             public AdapterItem createItem(Object type) {
 
                 if ((int) type == -1) {
-                    return new MoreItem();
+                    return new MoreItem
+                            ();
                 }
                 return new TitleItem();
             }
@@ -192,6 +213,8 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
         recycleShareContent.getAdapter().notifyDataSetChanged();
     }
 
+
+
     @Override
     public void showLoading() {
 
@@ -238,11 +261,36 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
 
     @OnClick(R.id.iv_person)
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_person:
-                RouteUtil.startNewActivity(getActivity(),new Intent(getActivity(), PersonZoneIndexActivity.class));
+                RouteUtil.startNewActivity(getActivity(), new Intent(getActivity(), PersonZoneIndexActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void likeArticalSuc(int articalId) {
+        List<PicBean> list = ((IAdapter<PicBean>) recycleShareContent.getAdapter()).getData();
+        for (PicBean p : list) {
+            if (p.getId() ==articalId) {
+                p.setThumbStatus(1);
+                p.setThumbs(p.getThumbs()+1);
+            }
+        }
+        recycleShareContent.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void cancelLikeArticalSuc(int articalId) {
+        List<PicBean> list = ((IAdapter<PicBean>) recycleShareContent.getAdapter()).getData();
+        for (PicBean p : list) {
+            if (p.getId() ==articalId) {
+                p.setThumbStatus(0);
+                p.setThumbs(p.getThumbs()-1);
+
+            }
+        }
+        recycleShareContent.getAdapter().notifyDataSetChanged();
     }
 
     class HotArticalItem implements AdapterItem<HotArtical> {
@@ -301,10 +349,22 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
         public void handleData(TopPicBean subjectBean, int position) {
 
             tvTitle.setText(subjectBean.getName());
-            if (CourseUtil.isOk(subjectBean.getHotStatus()
-            )) {
+            if (CourseUtil.isOk(subjectBean.getHotStatus())) {
                 ivImag.setImageResource(R.drawable.hot);
             }
+            if (CourseUtil.isOk(subjectBean.getRecStatus())) {
+                ivImag.setImageResource(R.drawable.tj);
+            }
+            tvTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, TopTopicActivity.class);
+                    intent.putExtra("name", subjectBean.getName());
+                    intent.putExtra("num", subjectBean.getNumbers());
+                    intent.putExtra("id", subjectBean.getId());
+                    RouteUtil.startNewActivity(mActivity, intent);
+                }
+            });
 //            else if (subjectBean.type == 2) {
 //                ivImag.setImageResource(R.drawable.tj);
 //            }
@@ -333,7 +393,7 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
             tvMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.show(getActivity(), "更多");
+                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, MoreSubjectActivity.class));
                 }
             });
         }
@@ -360,7 +420,7 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
         recycleShareContent.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    class TopicItem implements AdapterItem<PicBean>{
+    class TopicItem implements AdapterItem<PicBean> {
         TextView tvName;
         TextView tvCommentNum;
         TextView tvLikeNum;
@@ -368,7 +428,11 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
         ExpandableTextView expandableTextView;
         RecyclerView imgRecycleview;
         ImageView ivHeadimg;
+        ImageView ivLike;
+        LinearLayout llRoot;
         LinearLayout levelContanier;
+        LinearLayout llLike;
+
 
         @Override
         public int getLayoutResId() {
@@ -388,7 +452,10 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
             tvItem = root.findViewById(R.id.tv_item);
             ivHeadimg = root.findViewById(R.id.iv_headimg);
             imgRecycleview = root.findViewById(R.id.recycle_img);
+            llRoot = root.findViewById(R.id.ll_root);
             levelContanier = root.findViewById(R.id.ll_level_contanier);
+            llLike = root.findViewById(R.id.ll_like);
+            ivLike = root.findViewById(R.id.iv_like);
 
         }
 
@@ -411,14 +478,14 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
                             Glide.with(getActivity()).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), shareContentBean.getPicMaster().getHeadImg())).into(ivHeadimg);
                         }
                     });
-                    if(CourseUtil.isOk(shareContentBean.getPicMaster().getStatus())){
+                    if (CourseUtil.isOk(shareContentBean.getPicMaster().getStatus())) {
                         ImageView imageView = new ImageView(getActivity());
                         imageView.setImageResource(R.drawable.hg);
                         levelContanier.addView(imageView);
                     }
-                    if(!shareContentBean.getPicMaster().getBadge().isEmpty()){
+                    if (!shareContentBean.getPicMaster().getBadge().isEmpty()) {
 
-                        ImageView  imageView = new ImageView(getActivity());
+                        ImageView imageView = new ImageView(getActivity());
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         layoutParams.leftMargin = 6;
                         imageView.setLayoutParams(layoutParams);
@@ -427,19 +494,44 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
                     }
                 }
             }
+            if (CourseUtil.isOk(shareContentBean.getThumbStatus())) {
+                ivLike.setImageResource(R.drawable.liked);
+            } else {
+                ivLike.setImageResource(R.drawable.like);
+            }
+            //点赞 和取消点赞
+            ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(FastClick.isFastClick()){
+                        if(CourseUtil.isOk(shareContentBean.getThumbStatus())){
+                            likeArticalPresenter.cancelLikeArtical(shareContentBean.getId());
+                        }else{
+                            likeArticalPresenter.likeArtical(shareContentBean.getId());
+                        }
+                    }
+                }
+            });
+
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mActivity, ArticalDetailActivity.class);
+                    intent.putExtra("data",shareContentBean);
+                    RouteUtil.startNewActivityAndResult(mActivity,intent,0);
+                }
+            });
             tvLikeNum.setText(shareContentBean.getThumbs() + "");
             tvCommentNum.setText(shareContentBean.getComments() + "");
             expandableTextView.setContent(shareContentBean.getContent());
             levelContanier.removeAllViews();
 
-
-                            if (!TextUtils.isEmpty(shareContentBean.getTopicName() )) {
-                                tvItem.setText(shareContentBean.getTopicName() );
-                                tvItem.setVisibility(View.VISIBLE);
-                            } else {
-                                tvItem.setVisibility(View.GONE);
-
-                            }
+            if (!TextUtils.isEmpty(shareContentBean.getTopicName())) {
+                tvItem.setText(shareContentBean.getTopicName());
+                tvItem.setVisibility(View.VISIBLE);
+            } else {
+                tvItem.setVisibility(View.GONE);
+            }
 
 
             if (!TextUtils.isEmpty(shareContentBean.getImgPath())) {
@@ -491,7 +583,8 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
                                         try {
                                             Glide.with(getActivity()).load(o).into(iv);
 
-                                        }catch (Exception e){}
+                                        } catch (Exception e) {
+                                        }
                                     }
                                 };
                             }
@@ -505,7 +598,8 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
 
         }
     }
-//
+
+    //
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Success(MessageEvent messageEvent) {
         if (messageEvent.getMessage().equals(FinalValue.LOGIN_SUCCESS)
@@ -529,12 +623,32 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
 
         super.onDestroy();
         mPresenter.detachView();
+        likeArticalPresenter.detachView();
 
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==-1){
+            PicBean picBean = (PicBean) data.getSerializableExtra("data");
+            if(picBean==null){
+                return;
+            }
+            List<PicBean> list = ((IAdapter<PicBean>) recycleShareContent.getAdapter()).getData();
+            for (PicBean p : list) {
+                if (p.getId() ==picBean.getId()) {
+                   p = picBean;
+
+                }
+            }
+            recycleShareContent.getAdapter().notifyDataSetChanged();
+        }
+    }
 }
 
 

@@ -175,4 +175,10 @@
     <string name="search_subject_hint">搜索话题</string>
     <string name="not_choose_subject">不参与话题</string>
     <string name="no_want_subject">没有想参与的话题</string>
+    <string name="top_topic_title">置顶话题</string>
+    <string name="more_subject">更多话题</string>
+    <string name="send">发送</string>
+    <string name="all_comments">全部评论</string>
+    <string name="new_comments">最新评论↑</string>
+    <string name="reply">回复↑</string>
 </resources>

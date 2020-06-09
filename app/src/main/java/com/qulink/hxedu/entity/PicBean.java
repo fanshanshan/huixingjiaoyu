@@ -1,6 +1,8 @@
 package com.qulink.hxedu.entity;
 
-public class PicBean {
+import java.io.Serializable;
+
+public class PicBean implements Serializable {
 
     /**
      * id : 14

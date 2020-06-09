@@ -5,8 +5,8 @@ public class TopPicBean {
      * id : 5
      * name : 热门话题3
      * disableStatus : 0
-     * hotStatus : 1
-     * recStatus : 0
+     * hotStatus : 1 热门状态
+     * recStatus : 0 推荐状态
      * numbers : 0
      * createTime : 2020-05-29 09:25:07
      * updateTime : 2020-05-29 09:25:11

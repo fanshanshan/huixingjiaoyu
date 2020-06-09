@@ -1,8 +1,9 @@
 package com.qulink.hxedu.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PicMaster {
+public class PicMaster implements Serializable {
     /**
      * badge : []
      * headImg : null

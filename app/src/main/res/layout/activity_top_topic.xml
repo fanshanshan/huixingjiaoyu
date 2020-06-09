@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.zone.TopTopicActivity">
+
+    <include layout="@layout/bar"/>
+   <com.scwang.smart.refresh.layout.SmartRefreshLayout
+       android:layout_width="match_parent"
+       android:id="@+id/smart_layout"
+       android:layout_height="match_parent">
+       <com.qulink.hxedu.view.MyScrollView
+           android:layout_width="match_parent"
+           android:fillViewport="true"
+           android:layout_height="match_parent">
+
+           <LinearLayout
+               android:orientation="vertical"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+               <LinearLayout
+                   android:layout_marginTop="12dp"
+                   android:padding="16dp"
+                   android:layout_marginRight="15dp"
+                   android:layout_marginLeft="15dp"
+                   android:background="@drawable/top_topic_bg"
+                   android:orientation="vertical"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <TextView
+                       android:id="@+id/tv_topic_name"
+                       android:textSize="18dp"
+                       android:textColor="@color/white"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+                   <TextView
+                       android:id="@+id/tv_topic_join_num"
+                       android:layout_marginTop="8dp"
+                       android:textSize="15dp"
+                       android:textColor="@color/white"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+               </LinearLayout>
+
+               <com.qulink.hxedu.view.EmptyRecyclerView
+                   android:background="#F7F7F7"
+                   android:id="@+id/recycle"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+
+               </com.qulink.hxedu.view.EmptyRecyclerView>
+
+               <include layout="@layout/no_data_layout"/>
+           </LinearLayout>
+       </com.qulink.hxedu.view.MyScrollView>
+   </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+</LinearLayout>

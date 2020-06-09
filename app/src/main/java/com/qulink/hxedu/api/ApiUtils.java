@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ApiUtils {
 
-        private static String baseUrl = "https://hx-test.kuaiyunma.com/";//测试服
+    private static String baseUrl = "https://hx-test.kuaiyunma.com/";//测试服
     //public static String baseUrl = "http://192.168.199.187:8080/";//牛元亮
 
     private static ApiUtils instance;
@@ -385,7 +385,7 @@ public class ApiUtils {
 
 
     /**
-     * 获取可曾详情
+     * 获取课程详情
      *
      * @param curriculumId 课程id
      * @param apiCallback  回调
@@ -409,7 +409,7 @@ public class ApiUtils {
     }
 
     /**
-     * 获取本人关于此课程的可观看信息
+     * 获取本人关于此课程的信息
      *
      * @param curriculumId 课程id
      * @param apiCallback  回调
@@ -423,10 +423,11 @@ public class ApiUtils {
 
     /**
      * 上报观看次数
+     *
      * @param curriculumId 课程id
-     * @param apiCallback 回调
+     * @param apiCallback  回调
      */
-    public void increaseLookNumberToServer(int curriculumId,ApiCallback apiCallback){
+    public void increaseLookNumberToServer(int curriculumId, ApiCallback apiCallback) {
         Map<String, String> map = new HashMap<>();
         map.put("curriculumId", curriculumId + "");
         NetUtil.getInstance().post(baseUrl + "curriculum/increaseParticipant", map, apiCallback);
@@ -485,75 +486,139 @@ public class ApiUtils {
 
     /**
      * 个人社区主页
+     *
      * @param apiCallback 回调
      */
-    public void getPersonZoneIndex(ApiCallback apiCallback){
-        NetUtil.getInstance().post(baseUrl+"community/cmInfoByUserId",new HashMap<>(),apiCallback);
+    public void getPersonZoneIndex(ApiCallback apiCallback) {
+        NetUtil.getInstance().post(baseUrl + "community/cmInfoByUserId", new HashMap<>(), apiCallback);
     }
 
     /**
-     *
-     * @param pageSize 页码
-     * @param pageNo size
-     * @param name 搜索关键词
+     * @param pageSize    页码
+     * @param pageNo      size
+     * @param name        搜索关键词
      * @param apiCallback 回调
      */
-    public void searchSubject(int pageSize,int pageNo,String name,ApiCallback apiCallback){
-        Map<String,String > param = new HashMap<>();
-        param.put("pageSize",pageSize+"");
-        param.put("pageNo",pageNo+"");
-        param.put("name",name+"");
-        NetUtil.getInstance().post(baseUrl+"community/searchTopic",param,apiCallback);
+    public void searchSubject(int pageSize, int pageNo, String name, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("pageSize", pageSize + "");
+        param.put("pageNo", pageNo + "");
+        param.put("name", name + "");
+        NetUtil.getInstance().post(baseUrl + "community/searchTopic", param, apiCallback);
     }
 
 
     /**
      * 创建话题
-     * @param name 话题描述
+     *
+     * @param name        话题描述
      * @param apiCallback 回调
      */
-    public void createSubject(String name,ApiCallback apiCallback){
-        Map<String,String > param = new HashMap<>();
-        param.put("name",name+"");
-        NetUtil.getInstance().post(baseUrl+"community/addTopic",param,apiCallback);
+    public void createSubject(String name, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("name", name + "");
+        NetUtil.getInstance().post(baseUrl + "community/addTopic", param, apiCallback);
     }
 
     /**
      * 发布贴子
-     * @param topicId 话题id
-     * @param title 标题
-     * @param content 内容
-     * @param imgPath 图片路径
+     *
+     * @param topicId     话题id
+     * @param title       标题
+     * @param content     内容
+     * @param imgPath     图片路径
      * @param apiCallback 回调
      */
-    public void createTopic(int topicId,String title,String content,String imgPath,ApiCallback apiCallback){
-        Map<String,String > param = new HashMap<>();
-        param.put("topicId",topicId+"");
-        param.put("title",title+"");
-        param.put("content",content+"");
-        param.put("imgPath",imgPath+"");
-        NetUtil.getInstance().post(baseUrl+"community/addArticle",param,apiCallback);
+    public void createTopic(int topicId, String title, String content, String imgPath, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("topicId", topicId + "");
+        param.put("title", title + "");
+        param.put("content", content + "");
+        param.put("imgPath", imgPath + "");
+        NetUtil.getInstance().post(baseUrl + "community/addArticle", param, apiCallback);
     }
 
     /**
      * 获取我参与的话题
+     *
      * @param apiCallback 回调
      */
-    public void getMyTopic(int pageNo,int pageSize,ApiCallback apiCallback){
-        Map<String,String > param = new HashMap<>();
-        param.put("pageSize",pageSize+"");
-        param.put("pageNo",pageNo+"");
-        NetUtil.getInstance().post(baseUrl+"community/articleByUserId",param,apiCallback);
+    public void getMyTopic(int pageNo, int pageSize, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("pageSize", pageSize + "");
+        param.put("pageNo", pageNo + "");
+        NetUtil.getInstance().post(baseUrl + "community/articleByUserId", param, apiCallback);
     }
 
 
+    /**
+     * 获取更多话题
+     *
+     * @param apiCallback 回调
+     */
+    public void getMoreSubject(ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        NetUtil.getInstance().post(baseUrl + "community/getMoreTopics", param, apiCallback);
+    }
 
+    /**
+     * 文章点赞
+     *
+     * @param articleId   文章id
+     * @param apiCallback 回调
+     */
+    public void likeArtical(int articleId, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("articleId", articleId + "");
+        NetUtil.getInstance().post(baseUrl + "community/doThumbs", param, apiCallback);
+    }
+    /**
+     * 文章取消点赞
+     *
+     * @param articleId   文章id
+     * @param apiCallback 回调
+     */
+    public void cancelLikeArtical(int articleId, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("articleId", articleId + "");
+        NetUtil.getInstance().post(baseUrl + "community/cancelThumbs", param, apiCallback);
+    }
+
+    /**
+     *获取文章评论列表
+     * @param pageNo 页码
+     * @param pageSize 数量
+     * @param articleId 文章id
+     * @param sortType 排序类型 排序方式 0-点赞数 1-最新
+     * @param apiCallback 回调
+     */
+    public void getArticalComments(int pageNo,int pageSize,int articleId,int sortType, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("articleId", articleId + "");
+        param.put("pageNo", pageNo + "");
+        param.put("pageSize", pageSize + "");
+        param.put("sortType", sortType + "");
+        NetUtil.getInstance().post(baseUrl + "community/comments", param, apiCallback);
+    }
+
+    /**
+     * 评论贴子
+     * @param articleId 贴子id
+     * @param content 评论内容
+     * @param apiCallback 回调
+     */
+ public void comments(int articleId,String content, ApiCallback apiCallback) {
+        Map<String, String> param = new HashMap<>();
+        param.put("articleId", articleId + "");
+        param.put("content", content);
+        NetUtil.getInstance().post(baseUrl + "community/doComment", param, apiCallback);
+    }
 
     //*************************************************************************
-    public void wxLogin(String code,ApiCallback apiCallback){
-        Map<String,String> map = new HashMap<>();
-        map.put("code",code);
-        NetUtil.getInstance().post(baseUrl+"user/wxLogin",map,apiCallback);
+    public void wxLogin(String code, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("code", code);
+        NetUtil.getInstance().post(baseUrl + "user/wxLogin", map, apiCallback);
     }
 
 }

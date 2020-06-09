@@ -129,5 +129,4 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(path: ':selectorlibrary')
-    implementation 'com.github.open-android:ImageSelector:0.1.0'
 }

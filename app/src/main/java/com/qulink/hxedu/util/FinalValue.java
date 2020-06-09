@@ -26,6 +26,7 @@ public class FinalValue {
     public static int completePlanAddScore =1;
     public static int limit =8;
     public static int maxStudyLimit = 6;
+    public static int maxCommentLimit = 200;
     public static int startpageNo =1;
 
 
