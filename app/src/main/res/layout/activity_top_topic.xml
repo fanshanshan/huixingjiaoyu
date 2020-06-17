@@ -24,8 +24,8 @@
                <LinearLayout
                    android:layout_marginTop="12dp"
                    android:padding="16dp"
-                   android:layout_marginRight="15dp"
-                   android:layout_marginLeft="15dp"
+                   android:layout_marginRight="10dp"
+                   android:layout_marginLeft="10dp"
                    android:background="@drawable/top_topic_bg"
                    android:orientation="vertical"
                    android:layout_width="match_parent"

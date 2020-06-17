@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.qulink.hxedu.R;
+import com.zzhoujay.richtext.RichText;
 
 import butterknife.BindView;
 
@@ -26,8 +27,10 @@ public class RichTextActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         title = getIntent().getStringExtra("title");
         content = getIntent().getStringExtra("content");
-        tvContent.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_COMPACT)
-        );
+
+
+        RichText.from(content).into(tvContent);
+
         tvTitle.setText(title);
     }
 

@@ -90,10 +90,8 @@
                                     android:layout_width="60dp"
                                     android:layout_height="22dp"
                                     android:layout_marginTop="6dp"
-                                    android:background="@drawable/level1"
                                     android:gravity="center"
                                     android:paddingLeft="8dp"
-                                    android:text="@string/default_level"
                                     android:textColor="@color/white"
                                     android:textSize="10sp" />
                             </LinearLayout>
@@ -193,6 +191,7 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/rl_study_relation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
@@ -358,11 +357,13 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/iv_saoma"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/sao" />
 
                     <ImageView
+                        android:id="@+id/iv_msg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"

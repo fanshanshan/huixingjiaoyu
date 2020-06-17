@@ -20,6 +20,7 @@ import java.util.List;
 public class IndexInfoPresenter extends BasePresenter<IndexInfoContract.View> implements IndexInfoContract.Presenter {
 
     private IndexInfoContract.Model model;
+
     public IndexInfoPresenter() {
         this.model = new IndexInfoModel();
     }
@@ -30,22 +31,28 @@ public class IndexInfoPresenter extends BasePresenter<IndexInfoContract.View> im
         model.getBanner(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                mView.onBannerSuccess(t);
+                if (mView != null) {
+                    mView.onBannerSuccess(t);
 
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onBannerError(msg);
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onBannerError(msg);
+                    mView.onError(msg);
+                }
 
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onBannerError(expectionMsg);
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.onBannerError(expectionMsg);
+                    mView.onError(expectionMsg);
 
+                }
 
             }
         });
@@ -59,19 +66,26 @@ public class IndexInfoPresenter extends BasePresenter<IndexInfoContract.View> im
             public void success(ResponseData t) {
                 List<CourseItemBean> list = GsonUtil.getInstance().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<CourseItemBean>>() {
                 }.getType());
-                mView.onCourseSuccess(list);
+                if (mView != null) {
+                    mView.onCourseSuccess(list);
+
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onCourseError(msg);
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onCourseError(msg);
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onCourseError(expectionMsg);
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.onCourseError(expectionMsg);
+                    mView.onError(expectionMsg);
+                }
 
             }
         });
@@ -82,7 +96,7 @@ public class IndexInfoPresenter extends BasePresenter<IndexInfoContract.View> im
         model.getHotCourse(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                HotCourseBean hotCourseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),HotCourseBean.class);
+                HotCourseBean hotCourseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), HotCourseBean.class);
                 mView.onHotCourseSuccess(hotCourseBean);
             }
 
@@ -105,7 +119,7 @@ public class IndexInfoPresenter extends BasePresenter<IndexInfoContract.View> im
         model.getMoneyCourse(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                HotCourseBean hotCourseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),HotCourseBean.class);
+                HotCourseBean hotCourseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), HotCourseBean.class);
                 mView.onMoneyCourseSuccess(hotCourseBean);
             }
 

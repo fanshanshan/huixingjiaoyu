@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:id="@+id/drawer_Layout"
+    android:layout_height="match_parent"
+    tools:context=".ui.zone.SearchTopicActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/status"/>
+
+
+        <LinearLayout
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bar_height">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:src="@drawable/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:gravity="center"
+                android:background="@drawable/search_edit_bg"
+                android:paddingLeft="12dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:paddingRight="12dp"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="30dp">
+                <ImageView
+                    android:src="@drawable/search_page_sc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:imeActionLabel="@string/search"
+                    android:layout_marginLeft="8dp"
+                    android:background="@null"
+                    android:textColor="@color/black"
+                    android:textColorHint="#999999"
+                    android:textSize="13sp"
+                    android:hint="@string/search_subject_hint"
+                    android:layout_weight="1"
+                    android:id="@+id/et_search"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_search"
+                android:textSize="15sp"
+                android:textColor="#999999"
+                android:text="@string/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ll_search_history"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:paddingRight="15dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:textSize="15sp"
+                        android:textColor="#222222"
+                        android:text="@string/search_hitory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:id="@+id/iv_delete"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <com.qulink.hxedu.view.FlowLayout
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:id="@+id/flowLayout_search_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.qulink.hxedu.view.FlowLayout>
+
+                <LinearLayout
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="12dp"
+                    android:paddingLeft="15dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="#222222"
+                        android:text="@string/hot_subject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/hot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <include layout="@layout/divider_bold"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_hot_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_search_result"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/smart_layout"
+                        android:layout_height="match_parent">
+
+                        <com.qulink.hxedu.view.EmptyRecyclerView
+                            android:id="@+id/recycle_result"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        </com.qulink.hxedu.view.EmptyRecyclerView>
+                    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+                    <TextView
+                        android:id="@+id/ll_empty"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:text="空空如也，换个关键词试试吧~"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

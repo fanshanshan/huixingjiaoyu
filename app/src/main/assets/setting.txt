@@ -1,0 +1,42 @@
+{
+	"callback_url": {
+		"id": 4,
+		"dicKey": "callback_url",
+		"value": "https://hx-test.kuaiyunma.com",
+		"info": "回调url",
+		"createTime": "2020-05-26 12:03:34",
+		"updateTime": "2020-05-27 17:35:45"
+	},
+	"img_assets_url": {
+		"id": 1,
+		"dicKey": "img_assets_url",
+		"value": "huixing-pub-assets.kuaiyunma.com",
+		"info": "图片域名",
+		"createTime": "2020-05-21 10:55:59",
+		"updateTime": "2020-06-03 12:06:23"
+	},
+	"buy_vip_callback_path_wxpay": {
+		"id": 27,
+		"dicKey": "buy_vip_callback_path_wxpay",
+		"value": "/vip/buyVipCallbackByWxPay",
+		"info": "购买会员微信支付",
+		"createTime": "2020-06-05 14:42:39",
+		"updateTime": "2020-06-05 14:43:20"
+	},
+	"buy_vip_callback_path_alipay": {
+		"id": 3,
+		"dicKey": "buy_vip_callback_path_alipay",
+		"value": "/vip/buyVipCallbackByAliPay",
+		"info": "购买会员支付宝回调path",
+		"createTime": "2020-05-26 09:55:19",
+		"updateTime": "2020-05-27 09:48:54"
+	},
+	"vip_price": {
+		"id": 2,
+		"dicKey": "vip_price",
+		"value": "0.1",
+		"info": "会员价格",
+		"createTime": "2020-05-25 13:53:42",
+		"updateTime": "2020-05-25 13:53:59"
+	}
+}

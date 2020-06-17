@@ -20,7 +20,9 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
 
     @Override
     public void getFilterContent(int classifyId) {
-        mView.showLoading();
+        if (mView != null) {
+            mView.showLoading();
+        }
         model.getFilterContent(classifyId, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
@@ -29,24 +31,30 @@ public class SearchPresenter extends BasePresenter<SearchContract.View> implemen
 
                 List<CourseNameBean> list = GsonUtil.getInstance().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<CourseNameBean>>() {
                 }.getType());
-                mView.getFilterContentSuccess(list);
+                if (mView != null) {
+                    mView.getFilterContentSuccess(list);
 
+                }
             }
 
             @Override
             public void error(String code, String msg) {
 
-                mView.onError(msg);
-                mView.hideLoading();
+                if (mView != null) {
+                    mView.onError(msg);
+                    mView.hideLoading();
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                if(expectionMsg!=null){
-                    mView.onError(expectionMsg);
-                }
-                mView.hideLoading();
+                if (mView != null) {
+                    if (expectionMsg != null) {
+                        mView.onError(expectionMsg);
+                    }
+                    mView.hideLoading();
 
+                }
             }
         });
     }

@@ -19,6 +19,7 @@
 
             <!--手机号-->
             <RelativeLayout
+                android:id="@+id/ll_phone"
                 android:layout_marginTop="12dp"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -42,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/tv_phone"
                         android:textColor="#999999"
                         android:textSize="15sp"
                         android:text=""
@@ -85,6 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <Switch
+                        android:id="@+id/switch_wx"
                         android:checked="true"
                         android:track="@drawable/switch_track"
                         android:thumb="@drawable/switch_thumb"
@@ -97,6 +100,7 @@
 
             <!--修改密码-->
             <RelativeLayout
+                android:id="@+id/ll_edit_pwd"
                 android:layout_marginTop="1dp"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -131,6 +135,7 @@
 
             <!--支付密码-->
             <RelativeLayout
+                android:id="@+id/rl_set_pay_pwd"
                 android:layout_marginTop="1dp"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -191,6 +196,7 @@
                     android:layout_height="wrap_content">
 
                     <Switch
+                        android:id="@+id/switch_net_play_video"
                         android:checked="true"
                         android:track="@drawable/switch_track"
                         android:thumb="@drawable/switch_thumb"
@@ -227,6 +233,7 @@
                     android:layout_height="wrap_content">
 
                     <Switch
+                        android:id="@+id/switch_net_download_video"
                         android:checked="true"
                         android:track="@drawable/switch_track"
                         android:thumb="@drawable/switch_thumb"
@@ -240,6 +247,7 @@
 
             <!--清除缓存-->
             <RelativeLayout
+                android:id="@+id/rl_cache"
                 android:layout_marginTop="1dp"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -263,6 +271,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/tv_cache"
                         android:textColor="#999999"
                         android:textSize="15sp"
                         android:layout_width="wrap_content"
@@ -275,6 +284,7 @@
 
             <!--意见反馈-->
             <RelativeLayout
+                android:id="@+id/rl_advice"
                 android:layout_marginTop="1dp"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"

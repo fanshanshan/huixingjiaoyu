@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:id="@+id/drawer_Layout"
     android:layout_height="match_parent"
-    tools:context=".ui.SearchCourseActivity">
+    tools:context=".ui.course.SearchCourseActivity">
 
     <LinearLayout
         android:orientation="vertical"

@@ -1,5 +1,7 @@
 package com.qulink.hxedu.ui;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,14 +21,25 @@ import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
+import com.qulink.hxedu.entity.MessageEvent;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.pay.PayResult;
 import com.qulink.hxedu.pay.PayResultDetail;
 import com.qulink.hxedu.pay.PayWay;
+import com.qulink.hxedu.ui.sign.SignActivity;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.RegexUtil;
 import com.qulink.hxedu.util.ToastUtils;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Map;
 
@@ -35,8 +48,6 @@ import butterknife.OnClick;
 
 public class SendVipActivity extends BaseActivity {
 
-    @BindView(R.id.status)
-    TextView status;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bar_title)
@@ -67,31 +78,41 @@ public class SendVipActivity extends BaseActivity {
     String type;//
     @BindView(R.id.ll_send)
     LinearLayout llSend;
+    @BindView(R.id.tv_price)
+    TextView tvPrice;
 
-    private PayWay payWay = PayWay.ALI;
+    private int payWay =1;
 
-
+    private final int ALIPAY_SUCCESS_CODE=111;
+    private final int WX_SUCCESS_CODE=222;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-            /**
-             * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-             */
-            String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-            String resultStatus = payResult.getResultStatus();
-            // 判断resultStatus 为9000则代表支付成功
-            if (TextUtils.equals(resultStatus, "9000")) {
-                // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                PayResultDetail payResultDetail = GsonUtil.GsonToBean(resultInfo, PayResultDetail.class);
-               if(isBuy()){
-                   buyVipCheck(payResultDetail.getAlipay_trade_app_pay_response().getOut_trade_no());
-               }else{
-                   sendVipCheck(payResultDetail.getAlipay_trade_app_pay_response().getOut_trade_no());
-               }
-             } else {
-                // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                ToastUtils.show(SendVipActivity.this, resultInfo);
-            }
+         switch (msg.what){
+             case ALIPAY_SUCCESS_CODE:
+                 PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                 /**
+                  * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                  */
+                 String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                 String resultStatus = payResult.getResultStatus();
+                 // 判断resultStatus 为9000则代表支付成功
+                 if (TextUtils.equals(resultStatus, "9000")) {
+                     // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                     PayResultDetail payResultDetail = GsonUtil.GsonToBean(resultInfo, PayResultDetail.class);
+                     if (isBuy()) {
+                         buyVipCheck(payResultDetail.getAlipay_trade_app_pay_response().getOut_trade_no());
+                     } else {
+                         sendVipCheck(payResultDetail.getAlipay_trade_app_pay_response().getOut_trade_no());
+                     }
+                 } else {
+                     // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                     ToastUtils.show(SendVipActivity.this, resultInfo);
+                 }
+                 break;
+             case WX_SUCCESS_CODE:
+
+                 break;
+         }
         }
 
         ;
@@ -116,6 +137,7 @@ public class SendVipActivity extends BaseActivity {
             @Override
             public void getDefaultSetting(DefaultSetting defaultSetting) {
                 tvVipPriceDesc.setText(defaultSetting.getVip_price().getValue() + "元/年");
+                tvPrice.setText("￥"+defaultSetting.getVip_price().getValue() );
             }
         });
 
@@ -124,7 +146,7 @@ public class SendVipActivity extends BaseActivity {
             type = "buy";//默认为buy
         }
         setTitle(isBuy() ? getString(R.string.open_vip) : getString(R.string.send_vip2));
-        llSend.setVisibility(isBuy()?View.GONE:View.VISIBLE);
+        llSend.setVisibility(isBuy() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -133,30 +155,31 @@ public class SendVipActivity extends BaseActivity {
     }
 
 
-    private boolean isBuy(){
-        if(type.equals("buy")){
+    private boolean isBuy() {
+        if (type.equals("buy")) {
             return true;
         }
-        return  false;
+        return false;
     }
+
     @OnClick({R.id.rl_ali, R.id.rl_wx, R.id.rl_bank, R.id.tv_buy})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_ali:
-                payWay = PayWay.ALI;
+                payWay = 1;
                 ivAli.setImageResource(R.drawable.pay_checked);
                 ivWx.setImageResource(R.drawable.pay_check);
                 ivBank.setImageResource(R.drawable.pay_check);
 
                 break;
             case R.id.rl_wx:
-                payWay = PayWay.WX;
+                payWay = 2;
                 ivWx.setImageResource(R.drawable.pay_checked);
                 ivAli.setImageResource(R.drawable.pay_check);
                 ivBank.setImageResource(R.drawable.pay_check);
                 break;
             case R.id.rl_bank:
-                payWay = PayWay.BANK;
+                payWay = 3;
                 ivBank.setImageResource(R.drawable.pay_checked);
                 ivWx.setImageResource(R.drawable.pay_check);
                 ivAli.setImageResource(R.drawable.pay_check);
@@ -168,21 +191,10 @@ public class SendVipActivity extends BaseActivity {
     }
 
     void pay() {
-        switch (payWay) {
-            case WX:
-                ToastUtils.show(SendVipActivity.this, "暂未开放");
-                break;
-            case ALI:
-                if(isBuy()){
-                    buyVip();
-                }else{
-                    sendVip();
-                }
-                break;
-            case BANK:
-                ToastUtils.show(SendVipActivity.this, "暂未开放");
-
-                break;
+        if (isBuy()) {
+            buyVip();
+        } else {
+            sendVip();
         }
     }
 
@@ -196,26 +208,32 @@ public class SendVipActivity extends BaseActivity {
             return;
         }
 
-        ApiUtils.getInstance().sendVip(etPhone.getText().toString(), FinalValue.PAY_ALI, new ApiCallback() {
+        DialogUtil.showLoading(this,true);
+        ApiUtils.getInstance().sendVip(etPhone.getText().toString(), payWay+"", new ApiCallback() {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
-                final String orderInfo = t.getData().toString();
-                Runnable payRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        PayTask alipay = new PayTask(SendVipActivity.this);
-                        Map<String, String> result = alipay.payV2(orderInfo, true);
+                if(payWay==1){
+                    final String orderInfo = t.getData().toString();
+                    Runnable payRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            PayTask alipay = new PayTask(SendVipActivity.this);
+                            Map<String, String> result = alipay.payV2(orderInfo, true);
 
-                        Message msg = new Message();
-                        msg.what = 1111;
-                        msg.obj = result;
-                        mHandler.sendMessage(msg);
-                    }
-                };
-                // 必须异步调用
-                Thread payThread = new Thread(payRunnable);
-                payThread.start();
+                            Message msg = new Message();
+                            msg.what = 1111;
+                            msg.obj = result;
+                            mHandler.sendMessage(msg);
+                        }
+                    };
+                    // 必须异步调用
+                    Thread payThread = new Thread(payRunnable);
+                    payThread.start();
+                }else{
+                    payWx();
+                }
+
             }
 
             @Override
@@ -236,7 +254,7 @@ public class SendVipActivity extends BaseActivity {
 
     void buyVip() {
 
-        ApiUtils.getInstance().buyVip( FinalValue.PAY_ALI, new ApiCallback() {
+        ApiUtils.getInstance().buyVip(FinalValue.PAY_ALI, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
@@ -248,7 +266,7 @@ public class SendVipActivity extends BaseActivity {
                         Map<String, String> result = alipay.payV2(orderInfo, true);
 
                         Message msg = new Message();
-                        msg.what = 1111;
+                        msg.what = ALIPAY_SUCCESS_CODE;
                         msg.obj = result;
                         mHandler.sendMessage(msg);
                     }
@@ -276,12 +294,23 @@ public class SendVipActivity extends BaseActivity {
 
     void buyVipCheck(String orderNo) {
         DialogUtil.showLoading(this, true, "正在查询支付状态");
-        ApiUtils.getInstance().buyVipCheck( new ApiCallback() {
+        ApiUtils.getInstance().buyVipCheck(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
 
-                ToastUtils.show(SendVipActivity.this, "购买成功");
+                App.getInstance().getUserInfo(SendVipActivity.this, new UserInfoCallback() {
+                    @Override
+                    public void getUserInfo(UserInfo userInfo) {
+                        userInfo.setStatus(1);
+                    }
+                });
+                DialogUtil.showAlertDialog(SendVipActivity.this, "提示", "会员购买成功", "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
             }
 
             @Override
@@ -295,8 +324,9 @@ public class SendVipActivity extends BaseActivity {
             public void expcetion(String expectionMsg) {
 
             }
-        },orderNo);
+        }, orderNo);
     }
+
     void sendVipCheck(String orderNo) {
         DialogUtil.showLoading(this, true, "正在查询支付状态");
         ApiUtils.getInstance().sendVipCheck(orderNo, etPhone.getText().toString(), new ApiCallback() {
@@ -304,7 +334,12 @@ public class SendVipActivity extends BaseActivity {
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
 
-                ToastUtils.show(SendVipActivity.this, "赠送成功");
+                DialogUtil.showAlertDialog(SendVipActivity.this, "提示", "赠送会员成功", "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
             }
 
             @Override
@@ -321,4 +356,71 @@ public class SendVipActivity extends BaseActivity {
         });
     }
 
+    private IWXAPI api;
+
+    private void regToWx() {
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, FinalValue.WECHAT_APP_ID, true);
+
+        // 将应用的appId注册到微信
+        api.registerApp(FinalValue.WECHAT_APP_ID);
+//        //建议动态监听微信启动广播进行注册到微信
+//        broadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//
+//                // 将该app注册到微信
+//                api.registerApp(FinalValue.WECHAT_APP_ID);
+//            }
+//        };
+//        registerReceiver(broadcastReceiver, new IntentFilter(ConstantsAPI.ACTION_REFRESH_WXAPP));
+
+
+    }
+    private void payWx(){
+        if(api==null){
+            regToWx();
+        }
+        PayReq request = new PayReq();
+
+        request.appId = "wxd930ea5d5a258f4f";//子商户appid
+
+        request.partnerId = "1900000109";//子商户号
+
+        request.prepayId= "1101000000140415649af9fc314aa427";
+
+        request.packageValue = "Sign=WXPay";
+
+        request.nonceStr= "1101000000140429eb40476f8896f4c9";
+
+        request.timeStamp= "1398746574";
+
+        request.sign= "7FFECB600D7157C5AA49810D2D8F28BC2811827B";
+
+        api.sendReq(request);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginSuccess(MessageEvent messageEvent) {
+        if (messageEvent.getCode() == FinalValue.WECHAT_PAYEOK) {
+            mHandler.sendEmptyMessage(WX_SUCCESS_CODE);
+
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

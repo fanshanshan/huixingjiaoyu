@@ -21,10 +21,22 @@ public class UserInfo {
     private String nickname;
     private String headImg;
     private int level;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private int status;
+    private int credit;
     private int payPasswordStatus;
     private int signStatus;
     private int nicknameModifications;
+    private int realAuthStatus;
     private int wxBindStatus;
     private int platformStatus;
     private String arriveDate;
@@ -49,8 +61,34 @@ public class UserInfo {
         return true;
     }
 
+    public int getCredit() {
+        return credit;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
+
+    public int getRealAuthStatus() {
+        return realAuthStatus;
+    }
+
+    public void setRealAuthStatus(int realAuthStatus) {
+        this.realAuthStatus = realAuthStatus;
+    }
+
     public boolean isPlatformAccount(){
         if(this.getPlatformStatus()==0){
+            return false;
+        }
+        return true;
+    }public boolean isRealAuth(){
+        if(this.getRealAuthStatus()==0){
+            return false;
+        }
+        return true;
+    }public boolean isBindWx(){
+        if(this.getWxBindStatus()==0){
             return false;
         }
         return true;

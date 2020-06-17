@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,12 +17,18 @@ import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
+import com.qulink.hxedu.entity.UserInfo;
+import com.qulink.hxedu.ui.setting.ForgetPwdActivity;
 import com.qulink.hxedu.util.DialogUtil;
-import com.qulink.hxedu.util.PrefUtils;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.RegexUtil;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -125,12 +130,13 @@ public class PwdLoginActivity extends BaseActivity {
                 DialogUtil.hideLoading(PwdLoginActivity.this);
 
                 TokenInfo tokenInfo = GsonUtil.GsonToBean(t.getData().toString(),TokenInfo.class);
-                App.getInstance().loginSuccess(tokenInfo);
+                App.getInstance().loginSuccess(PwdLoginActivity.this,tokenInfo);
 
                 MyActivityManager.getInstance().pushActivity(PwdLoginActivity.this);
                 RouteUtil.startNewActivity(PwdLoginActivity.this,new Intent(PwdLoginActivity.this, MainActivity.class));
                 MyActivityManager.getInstance().popAllActivitys();
 
+                setJpushAlias();
             }
 
             @Override
@@ -149,4 +155,12 @@ public class PwdLoginActivity extends BaseActivity {
     }
 
 
+    private void setJpushAlias(){
+        App.getInstance().getUserInfo(this, new UserInfoCallback() {
+            @Override
+            public void getUserInfo(UserInfo userInfo) {
+                EventBus.getDefault().post(new MessageEvent(FinalValue.SET_ALIS, userInfo.getId()));
+            }
+        });
+    }
 }

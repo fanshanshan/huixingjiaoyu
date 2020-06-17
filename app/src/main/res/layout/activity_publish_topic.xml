@@ -79,7 +79,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="180dp">
         <EditText
             android:maxEms="251"
             android:hint="@string/i_want_see"
@@ -90,7 +90,7 @@
             android:textSize="15sp"
             android:padding="12dp"
             android:layout_width="match_parent"
-            android:layout_height="120dp" />
+            android:layout_height="160dp" />
         <TextView
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"

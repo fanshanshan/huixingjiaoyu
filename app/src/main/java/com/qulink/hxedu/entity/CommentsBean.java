@@ -1,5 +1,7 @@
 package com.qulink.hxedu.entity;
 
+import com.qulink.hxedu.util.FinalValue;
+
 import java.util.List;
 
 import lombok.Data;
@@ -21,6 +23,7 @@ public class CommentsBean {
      * replyList : [{"id":15,"content":"你在吞吐什么","fromUserId":1,"toUserId":9,"fromUserName":"456","toUserName":"kkkppp"},{"id":43,"content":"摸摸","fromUserId":null,"toUserId":9,"fromUserName":null,"toUserName":"kkkppp"},{"id":51,"content":"德德","fromUserId":9,"toUserId":9,"fromUserName":"kkkppp","toUserName":"kkkppp"},{"id":52,"content":"不会在任何时候","fromUserId":9,"toUserId":1,"fromUserName":"kkkppp","toUserName":"456"}]
      */
 
+    private boolean noMoreReply;
     private int id;
     private String content;
     private int userId;
@@ -30,7 +33,8 @@ public class CommentsBean {
     private String headImg;
     private int status;
     private List<ReplyListBean> replyList;
-
+    private int replyPageNo = 1;
+    private int replyPageSize = FinalValue.limit;
     @NoArgsConstructor
     @Data
     public static class ReplyListBean {
@@ -41,8 +45,11 @@ public class CommentsBean {
          * toUserId : 9
          * fromUserName : 456
          * toUserName : kkkppp
+         * rootCommentId 根评论id
          */
 
+        private int rootCommentUserId;
+        private int rootCommentId;
         private int id;
         private String content;
         private int fromUserId;

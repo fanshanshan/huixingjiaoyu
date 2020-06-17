@@ -71,6 +71,7 @@ public class NetUtil {
                 requestParams.addQueryStringParameter(entry.getKey(), entry.getValue());
         }
         requestParams.addHeader("token", getToken());
+        requestParams.setConnectTimeout(1000*10);
         Log.e("请求ulr", requestParams.toString());
         Log.e("header", requestParams.getHeaders().toString());
         Log.e("body", requestParams.getBodyParams().toString());
@@ -92,11 +93,9 @@ public class NetUtil {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                apiCallback.expcetion(ex.getMessage());
-                if (ex.getMessage() != null) {
-                    Log.e("请求异常", ex.getMessage());
+                if(ex.getMessage()!=null){
+                    apiCallback.expcetion(ex.getMessage());
                 }
-
             }
 
             @Override
@@ -139,11 +138,9 @@ public class NetUtil {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                apiCallback.expcetion(ex.getMessage());
-                if (ex.getMessage() != null) {
-                    Log.e("请求异常", ex.getMessage());
+                if(ex.getMessage()!=null){
+                    apiCallback.expcetion(ex.getMessage());
                 }
-
             }
 
             @Override
@@ -178,6 +175,8 @@ public class NetUtil {
                 requestParams.addQueryStringParameter(entry.getKey(), entry.getValue());
             }
         }
+        requestParams.setConnectTimeout(1000*10);
+
         Log.e("请求ulr", requestParams.toString());
         Log.e("header", requestParams.getHeaders().toString());
         Log.e("body", requestParams.getBodyParams().toString());
@@ -253,9 +252,8 @@ public class NetUtil {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                apiCallback.expcetion(ex.getMessage());
-                if (ex.getMessage() != null) {
-                    Log.e("请求异常", ex.getMessage());
+                if(ex.getMessage()!=null){
+                    apiCallback.expcetion(ex.getMessage());
                 }
 
             }

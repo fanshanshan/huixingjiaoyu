@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".ui.WithdrawActivity">
+
+    <include layout="@layout/bar"/>
+
+    <LinearLayout
+        android:background="#F4F6F9"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="#222222"
+            android:textSize="15sp"
+            android:text="到账账户"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/tv_show_dialog"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="12dp"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_way"
+                android:src="@drawable/pay_ali"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_way"
+                android:layout_marginLeft="8dp"
+                android:text="支付宝"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <ImageView
+            android:src="@drawable/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="#222222"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textStyle="bold"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:text="￥"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:inputType="numberDecimal"
+                android:id="@+id/et_mount"
+                android:background="@null"
+                android:paddingLeft="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+        </LinearLayout>
+
+        <include layout="@layout/line"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/tv_can_withdraw_money"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:text="可提余额"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <TextView
+
+        android:id="@+id/tv_withdraw"
+        android:layout_marginTop="50dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="提现"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_grey_bg_circle"
+        android:layout_width="match_parent"
+        android:layout_height="45dp" />
+
+
+</LinearLayout>

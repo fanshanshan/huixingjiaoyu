@@ -9,10 +9,12 @@ public class FinalValue {
     public static String SEARCH_HISTORY_KEY = "searchHistory";
     public static String API_ERROR = "5233";
     public static String TOKEN_ERROR = "102";
+    public static String SET_ALIS = "9001";
     public static String LOGIN_SUCCESS = "LOGIN_SUCCESS";
     public static String LOGOUT = "LOGOUT";
     public static String GET_USERINFO = "GET_USERINFO";
-
+    public static String SIGN_SUCCESS = "SIGN_SUCCESS";
+    public static String defaultUserName = "慧行文化";
     public static String PAY_ALI="1";
     public static String PAY_WX="2";
     public static String PAY_BANK="3";
@@ -36,4 +38,7 @@ public class FinalValue {
     public static int WECHAT_LOGINEOK = 888;//微信登录成功返回码
     public static int WECHAT_SHAREOK = 777;//微信分享成功返回码
     public static String WECHAT_APP_ID = "wx9c863272e5ed7596";//微信appid
+
+
+    public static int jpushScene = 1;
 }

@@ -1,10 +1,8 @@
 package com.qulink.hxedu;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,23 +10,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
-import com.qulink.hxedu.api.ApiCallback;
-import com.qulink.hxedu.api.ApiUtils;
-import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.MessageEvent;
-import com.qulink.hxedu.entity.TokenInfo;
+import com.qulink.hxedu.entity.UserInfo;
+import com.qulink.hxedu.jpush.TagAliasOperatorHelper;
 import com.qulink.hxedu.ui.BaseActivity;
-import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.fragment.IndexFragment;
 import com.qulink.hxedu.ui.fragment.LiveFragment;
 import com.qulink.hxedu.ui.fragment.PersonFragment;
-import com.qulink.hxedu.ui.fragment.ZoneFragment;
-import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.ui.zone.ZoneFragment;
 import com.qulink.hxedu.util.FinalValue;
-import com.qulink.hxedu.util.PrefUtils;
-import com.qulink.hxedu.util.RouteUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends BaseActivity {
 
@@ -64,12 +59,38 @@ public class MainActivity extends BaseActivity {
     private String ZONE_FRAGMENT_TAG = "zone";
     private String PERSON_FRAGMENT_TAG = "person";
 
+    private final int SET_ALIAS = 6001;
+    private final int DELETE_ALIAS = 6002;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case SET_ALIAS:
+                    JPushInterface.setAlias(MainActivity.this,FinalValue.jpushScene,msg.obj.toString());
+
+                    break;
+                case DELETE_ALIAS:
+                    JPushInterface.deleteAlias(MainActivity.this,2);
+                    break;
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         ButterKnife.bind(this);
+
         initFragment(savedInstanceState);
+        JPushInterface.init(this);
+        JPushInterface.getAlias(this,3);
+        handler.sendEmptyMessage(DELETE_ALIAS);
+        Message message = new Message();
+        message.obj = 12+"";
+        message.what=SET_ALIAS;
+        handler.sendMessage(message);
     }
 
     @Override
@@ -146,7 +167,6 @@ public class MainActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rb_index:
-
                 rbIndex.setChecked(true);
                 fragmentManager.beginTransaction().hide(liveFragment).hide(zoneFragment).hide(personFragment).show(indexFragment).commit();
                 break;
@@ -166,6 +186,7 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+    public static int sequence = 1;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -186,6 +207,12 @@ public class MainActivity extends BaseActivity {
 //                    dialog.dismiss();
 //                }
 //            });
+
+        }else if(messageEvent.getMessage().equals(FinalValue.SET_ALIS)){
+            Message message = new Message();
+            message.what = SET_ALIAS;
+            message.obj = messageEvent.getCode();
+            handler.sendMessage(message);
 
         }
     }

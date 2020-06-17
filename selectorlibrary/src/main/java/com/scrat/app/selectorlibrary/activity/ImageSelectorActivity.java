@@ -138,7 +138,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements LoaderMa
     private void finishActivity(ArrayList<String> paths) {
         Intent i = new Intent();
         i.putStringArrayListExtra(EXTRA_KEY_DATA, paths);
-        setResult(9998, i);
+        setResult(RESULT_OK, i);
         finish();
     }
 

@@ -54,6 +54,7 @@
                             android:textSize="15sp" />
 
                         <LinearLayout
+                            android:id="@+id/ll_score_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -91,6 +92,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_score_shop"
                             android:layout_width="85dp"
                             android:layout_height="30dp"
                             android:layout_alignParentRight="true"
@@ -463,13 +465,13 @@
                             android:textSize="15sp" />
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <com.qulink.hxedu.view.EmptyRecyclerView
                         android:visibility="gone"
                         android:id="@+id/recycle_plan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    </androidx.recyclerview.widget.RecyclerView>
+                    </com.qulink.hxedu.view.EmptyRecyclerView>
                 </RelativeLayout>
 
 

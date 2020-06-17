@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qulink.hxedu.view.MyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.zone.PublishTopicActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:id="@+id/ll_bar"
+            android:orientation="vertical">
+
+            <include layout="@layout/status" />
+
+            <RelativeLayout
+                android:paddingRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bar_height"
+                android:paddingLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/back" />
+
+                <TextView
+                    android:text="@string/publis_topic"
+                    android:id="@+id/tv_bar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="#222222"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+            <EditText
+                android:maxEms="251"
+                android:hint="您有什么更好的想法和需求，可以畅所欲言"
+                android:gravity="start"
+                android:id="@+id/et_content"
+                android:background="@null"
+                android:textColorHint="#999999"
+                android:textSize="15sp"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="160dp" />
+            <TextView
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="4dp"
+                android:id="@+id/tv_input_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/recycle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+        <TextView
+            android:id="@+id/tv_submit"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/login_btn_bg"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</com.qulink.hxedu.view.MyScrollView>

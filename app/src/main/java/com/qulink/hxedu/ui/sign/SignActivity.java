@@ -1,19 +1,21 @@
 package com.qulink.hxedu.ui.sign;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
@@ -22,14 +24,20 @@ import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.SignDetailEntity;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.ui.BaseActivity;
+import com.qulink.hxedu.ui.score.ScoreShopActivity;
 import com.qulink.hxedu.util.DialogUtil;
-import com.qulink.hxedu.util.FinalValue;
-import com.qulink.hxedu.util.ToastUtils;
 import com.qulink.hxedu.util.FastClick;
+import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.RouteUtil;
+import com.qulink.hxedu.util.ToastUtils;
+import com.qulink.hxedu.view.EmptyRecyclerView;
 import com.qulink.hxedu.view.MyScrollView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,9 +87,11 @@ public class SignActivity extends BaseActivity {
     @BindView(R.id.tv_task4)
     TextView tvTask4;
     @BindView(R.id.recycle_plan)
-    RecyclerView recyclePlan;
+    EmptyRecyclerView recyclePlan;
     @BindView(R.id.ll_un_finish_Plan)
     LinearLayout llUnFinishPlan;
+    @BindView(R.id.ll_score_detail)
+    LinearLayout llScoreDetail;
     private List<String> signDayList;
 
 
@@ -196,63 +206,60 @@ public class SignActivity extends BaseActivity {
             tvTask4.setText(getString(R.string.no_completed));
         }
 
-        if (signDetailEntity.getLearningPlan().size() == 0) {
-            llUnFinishPlan.setVisibility(View.VISIBLE);
-            recyclePlan.setVisibility(View.GONE);
-        } else {
-            recyclePlan.setVisibility(View.VISIBLE);
-            llUnFinishPlan.setVisibility(View.GONE);
-            recyclePlan.setAdapter(new CommonRcvAdapter<SignDetailEntity.LearningPlanBean>(signDetailEntity.getLearningPlan()) {
 
-                TextView tvContent;
-                TextView tvComplete;
-                TextView tvAddsore;
+        recyclePlan.setVisibility(View.VISIBLE);
+        llUnFinishPlan.setVisibility(View.GONE);
+        recyclePlan.setEmptyView(findViewById(R.id.ll_un_finish_Plan));
+        recyclePlan.setAdapter(new CommonRcvAdapter<SignDetailEntity.LearningPlanBean>(signDetailEntity.getLearningPlan()) {
 
-                @NonNull
-                @Override
-                public AdapterItem createItem(Object type) {
-                    return new AdapterItem() {
-                        @Override
-                        public int getLayoutResId() {
-                            return R.layout.sign_study_plan_item;
-                        }
+            TextView tvContent;
+            TextView tvComplete;
+            TextView tvAddsore;
 
-                        @Override
-                        public void bindViews(@NonNull View root) {
-                            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                            layoutParams.height= ViewGroup.LayoutParams.WRAP_CONTENT;
-                            tvContent = root.findViewById(R.id.tv_content);
-                            tvAddsore = root.findViewById(R.id.tv_add_score);
-                            tvComplete = root.findViewById(R.id.tv_complete);
+            @NonNull
+            @Override
+            public AdapterItem createItem(Object type) {
+                return new AdapterItem() {
+                    @Override
+                    public int getLayoutResId() {
+                        return R.layout.sign_study_plan_item;
+                    }
 
-                        }
+                    @Override
+                    public void bindViews(@NonNull View root) {
+                        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        tvContent = root.findViewById(R.id.tv_content);
+                        tvAddsore = root.findViewById(R.id.tv_add_score);
+                        tvComplete = root.findViewById(R.id.tv_complete);
 
-                        @Override
-                        public void setViews() {
+                    }
 
-                        }
+                    @Override
+                    public void setViews() {
 
-                        @Override
-                        public void handleData(Object o, int position) {
+                    }
 
-                            if(o instanceof SignDetailEntity.LearningPlanBean){
-                                SignDetailEntity.LearningPlanBean learningPlanBean = (SignDetailEntity.LearningPlanBean)o;
-                                tvContent.setText(learningPlanBean.getContent());
-                                tvAddsore.setText("+"+ FinalValue.completePlanAddScore+"积分");
-                                if(learningPlanBean.isComplete()){
-                                    tvComplete.setText(getString(R.string.completed));
-                                    tvComplete.setBackgroundResource(R.drawable.btn_theme_bg_circle);
-                                }else{
-                                    tvComplete.setText(getString(R.string.no_completed));
-                                    tvComplete.setBackgroundResource(R.drawable.btn_grey_bg_circle);
-                                }
+                    @Override
+                    public void handleData(Object o, int position) {
+
+                        if (o instanceof SignDetailEntity.LearningPlanBean) {
+                            SignDetailEntity.LearningPlanBean learningPlanBean = (SignDetailEntity.LearningPlanBean) o;
+                            tvContent.setText(learningPlanBean.getContent());
+                            tvAddsore.setText("+" + FinalValue.completePlanAddScore + "积分");
+                            if (learningPlanBean.isComplete()) {
+                                tvComplete.setText(getString(R.string.completed));
+                                tvComplete.setBackgroundResource(R.drawable.btn_theme_bg_circle);
+                            } else {
+                                tvComplete.setText(getString(R.string.no_completed));
+                                tvComplete.setBackgroundResource(R.drawable.btn_grey_bg_circle);
                             }
                         }
-                    };
-                }
-            });
-            recyclePlan.setLayoutManager(new LinearLayoutManager(this));
-        }
+                    }
+                };
+            }
+        });
+        recyclePlan.setLayoutManager(new LinearLayoutManager(this));
     }
 
     void initsignDays(List<String> signRecord) {
@@ -321,20 +328,28 @@ public class SignActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.tv_sign_days, R.id.tv_sign})
+    @OnClick({R.id.tv_sign_days, R.id.tv_sign,R.id.ll_score_detail,R.id.tv_bar_right,R.id.tv_score_shop})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sign_days:
+                break; case R.id.tv_score_shop:
+                    RouteUtil.startNewActivity(this,new Intent(this, ScoreShopActivity.class));
+                break;
+                case R.id.tv_bar_right:
+                    DialogUtil.showRuleDialog(this,"积分规则",getString(R.string.score_rule_desc));
+                break;
+                case R.id.ll_score_detail:
+                    RouteUtil.startNewActivity(this,new Intent(this,ScoreDetailActivity.class));
                 break;
             case R.id.tv_sign:
                 App.getInstance().getUserInfo(this, new UserInfoCallback() {
                     @Override
                     public void getUserInfo(UserInfo userInfo) {
-                        if(FastClick.isFastClick()){
+                        if (FastClick.isFastClick()) {
                             if (userInfo.isSign()) {
-                               ToastUtils.show(SignActivity.this,"已签到");
+                                ToastUtils.show(SignActivity.this, "已签到");
                             } else {
-                               signServer();
+                                signServer();
                             }
                         }
                     }
@@ -351,7 +366,7 @@ public class SignActivity extends BaseActivity {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SignActivity.this);
-                getScoreDetail();;
+                getScoreDetail();
                 App.getInstance().getUserInfo(SignActivity.this, new UserInfoCallback() {
                     @Override
                     public void getUserInfo(UserInfo userInfo) {
@@ -361,6 +376,8 @@ public class SignActivity extends BaseActivity {
                         tvSign.setText(getString(R.string.signed));
                         getScoreDetail();
                         showSignSucDialog();
+                        EventBus.getDefault().post(new MessageEvent(FinalValue.SIGN_SUCCESS));
+
                     }
                 });
             }
@@ -383,7 +400,8 @@ public class SignActivity extends BaseActivity {
     }
 
 
-    void showSignSucDialog() {
+
+   private void showSignSucDialog() {
         View diaView = View.inflate(this, R.layout.sign_suc, null);
 
         Dialog dialog = new Dialog(SignActivity.this, R.style.my_dialog);
@@ -398,5 +416,8 @@ public class SignActivity extends BaseActivity {
         dialog.setContentView(diaView);
         dialog.show();
     }
+
+
+
 
 }

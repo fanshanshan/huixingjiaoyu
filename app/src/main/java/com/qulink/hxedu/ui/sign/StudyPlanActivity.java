@@ -88,7 +88,7 @@ public class StudyPlanActivity extends BaseActivity {
                 if(studyPlan==null){
                     return;
                 }
-                if(studyPlan.getTotal()< FinalValue.limit||studyPlan.getTotal()== FinalValue.limit){
+                if(studyPlan.getTotal()> FinalValue.maxStudyLimit||studyPlan.getTotal()== FinalValue.maxStudyLimit){
                       ToastUtils.show(StudyPlanActivity.this,"每天最多添加"+FinalValue.maxStudyLimit+"个学习计划");
 
                 }else{
@@ -213,6 +213,7 @@ public class StudyPlanActivity extends BaseActivity {
 
             TextView tvContent;
             TextView tvComplete;
+            LinearLayout llRoot;
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
@@ -228,6 +229,7 @@ public class StudyPlanActivity extends BaseActivity {
                         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         tvComplete = root.findViewById(R.id.tv_complete);
                         tvContent = root.findViewById(R.id.tv_content);
+                        llRoot = root.findViewById(R.id.ll_root);
 
                     }
 
@@ -247,6 +249,12 @@ public class StudyPlanActivity extends BaseActivity {
                                 @Override
                                 public void onClick(View v) {
                                     ToastUtils.show(StudyPlanActivity.this,getString(R.string.completed));
+                                }
+                            });
+                            llRoot.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DialogUtil.showRuleDialog(StudyPlanActivity.this,"我的计划",unfinishedBean.getContent());
                                 }
                             });
                         }

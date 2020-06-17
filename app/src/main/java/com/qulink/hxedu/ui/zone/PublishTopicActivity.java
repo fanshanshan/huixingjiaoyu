@@ -210,7 +210,7 @@ public class PublishTopicActivity extends BaseActivity {
                             ivAdd.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ImageSelector.show(PublishTopicActivity.this, CHOOSE_PHOTO_CODE, maxCount - selectImageList.size() - 1);
+                                    ImageSelector.show(PublishTopicActivity.this, CHOOSE_PHOTO_CODE, maxCount - selectImageList.size() + 1);
 
                                 }
                             });
@@ -334,15 +334,21 @@ public class PublishTopicActivity extends BaseActivity {
 
     private String getImagePath(){
         String imagePath = "";
-        for(Object o:selectImageList){
-            if(o instanceof PhotoUploadBean){
-                PhotoUploadBean p = (PhotoUploadBean)o;
-                if(!TextUtils.isEmpty(p.getQiniuPath())){
-                    imagePath += p.getQiniuPath()+",";
+        if(!selectImageList.isEmpty()){
+            for(Object o:selectImageList){
+                if(o instanceof PhotoUploadBean){
+                    PhotoUploadBean p = (PhotoUploadBean)o;
+                    if(!TextUtils.isEmpty(p.getQiniuPath())){
+                        imagePath += p.getQiniuPath()+",";
+                    }
                 }
             }
+            if(imagePath.length()>1){
+                imagePath = imagePath.substring(0,imagePath.length()-1);
+
+            }
         }
-        imagePath = imagePath.substring(0,imagePath.length()-1);
+
         return imagePath;
     }
 

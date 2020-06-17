@@ -1,16 +1,27 @@
 package com.qulink.hxedu.ui.fragment;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.adapter.FragmentViewPagerAdapter;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.entity.LiveClassfyBean;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -46,8 +57,7 @@ public class LiveReadyBeginFragment extends Fragment {
 
             ButterKnife.bind(this, rootView);
 
-            initFragment();
-            initAdapter();
+            initLiveClassfy();
         }
         return rootView;
     }
@@ -55,58 +65,46 @@ public class LiveReadyBeginFragment extends Fragment {
     private List<Fragment> fragmentList;
     private List<String> titleList;
 
-    void initFragment() {
-
-        fragmentList = new ArrayList<>();
-        ReadyBeginSubFragment liveSubFragment = new ReadyBeginSubFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("title", "标题1");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-        liveSubFragment = new ReadyBeginSubFragment();
-        bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
-        liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
-    }
-
     void initAdapter() {
         titleList = new ArrayList<>();
-        titleList.add("分类名称");
-        titleList.add("分类名称");
-        titleList.add("分类名称");
-        titleList.add("分类名称");
-        titleList.add("分类名称");
-        titleList.add("分类名称");
-        titleList.add("分类名称");
+        fragmentList = new ArrayList<>();
+        ReadyBeginSubFragment liveRecordSubFragment;
+        Bundle bundle;
+        for(LiveClassfyBean liveClassfyBean:data){
+            titleList.add(liveClassfyBean.getTitle());
+            liveRecordSubFragment = new ReadyBeginSubFragment();
+            bundle = new Bundle();
+            bundle.putInt("id", liveClassfyBean.getId());//全部
+            liveRecordSubFragment.setArguments(bundle);
+            fragmentList.add(liveRecordSubFragment);
+        }
         viewPagerAdapter = new FragmentViewPagerAdapter(getChildFragmentManager(), titleList, fragmentList);
         vp.setAdapter(viewPagerAdapter);
-        String[] s = new String[]{};
         tabParent.setViewPager(vp);
+    }
+
+    private List<LiveClassfyBean> data;
+
+    private void initLiveClassfy(){
+        ApiUtils.getInstance().getLiveClassify(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                List<LiveClassfyBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<LiveClassfyBean>>() {}.getType());
+                data = new ArrayList<>();
+
+                data.addAll(hotArticalList);
+                initAdapter();
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+
+            }
+        });
     }
 }

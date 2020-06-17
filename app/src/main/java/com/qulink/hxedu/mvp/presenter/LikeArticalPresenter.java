@@ -18,16 +18,24 @@ public class LikeArticalPresenter extends BasePresenter<LikeArticalContract.View
         likeAitical.likeAitical(articalId, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                mView.likeArticalSuc(articalId);
+                if (mView != null) {
+                    mView.likeArticalSuc(articalId);
+
+                }
             }
 
             @Override
             public void error(String code, String msg) {
+                if(mView!=null){
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-
+                if(mView!=null){
+                    mView.onError(expectionMsg);
+                }
             }
         });
     }
@@ -37,15 +45,24 @@ public class LikeArticalPresenter extends BasePresenter<LikeArticalContract.View
         likeAitical.cancelLikeAitical(articalId, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                mView.cancelLikeArticalSuc(articalId);
+                if (mView != null) {
+                    mView.cancelLikeArticalSuc(articalId);
+
+                }
             }
 
             @Override
             public void error(String code, String msg) {
+                if(mView!=null){
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
+                if(mView!=null){
+                    mView.onError(expectionMsg);
+                }
             }
         });
     }

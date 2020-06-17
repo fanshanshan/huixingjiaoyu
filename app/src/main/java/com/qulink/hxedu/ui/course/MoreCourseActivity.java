@@ -137,66 +137,12 @@ public class MoreCourseActivity extends BaseActivity implements OnRefreshListene
 
     private void dealInitData(List<HotCourseBean.RecordsBean> list) {
         recycle.setAdapter(new CommonRcvAdapter<HotCourseBean.RecordsBean>(list) {
-            ImageView ivImg;
-            TextView tvTitle;
-            TextView tvNomey;
-            ImageView ivVip;
-            TextView tvJoinNum;
-            LinearLayout llRoot;
+
 
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
-                return new AdapterItem<HotCourseBean.RecordsBean>() {
-                    @Override
-                    public int getLayoutResId() {
-                        return R.layout.course_item;
-                    }
-
-                    @Override
-                    public void bindViews(@NonNull View root) {
-
-                        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        tvTitle = root.findViewById(R.id.tv_title);
-                        llRoot = root.findViewById(R.id.ll_root);
-                        tvNomey = root.findViewById(R.id.tv_money);
-                        ivVip = root.findViewById(R.id.iv_vip);
-                        tvJoinNum = root.findViewById(R.id.tv_join_num);
-                        ivImg = root.findViewById(R.id.iv_img);
-                    }
-
-                    @Override
-                    public void setViews() {
-                        llRoot.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                RouteUtil.startNewActivity(MoreCourseActivity.this, new Intent(MoreCourseActivity.this, CourseDetailActivity.class));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void handleData(HotCourseBean.RecordsBean data, int position) {
-
-                        tvTitle.setText(data.getCurriculumName());
-                        tvNomey.setText(data.getParticipantNum() + "");
-                        tvJoinNum.setText(data.getParticipantNum() + "人加入了学习");
-                        App.getInstance().getDefaultSetting(MoreCourseActivity.this, new DefaultSettingCallback() {
-                            @Override
-                            public void getDefaultSetting(DefaultSetting defaultSetting) {
-                                Glide.with(MoreCourseActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),data.getCurriculumImage())).into(ivImg);
-
-                            }
-                        });
-                        if(data.isVipFree()){
-                            ivVip.setImageResource(R.drawable.vipmf);
-                        }
-                        if(data.isVipSpecial()){
-                            ivVip.setImageResource(R.drawable.vipzx);
-                        }
-                    }
-                };
+                return new Item();
             }
         });
         recycle.addItemDecoration(new SpacesItemDecoration(0, 4, 0, 0));
@@ -205,6 +151,62 @@ public class MoreCourseActivity extends BaseActivity implements OnRefreshListene
     }
 
 
+    class Item implements AdapterItem<HotCourseBean.RecordsBean>{
+        ImageView ivImg;
+        TextView tvTitle;
+        TextView tvNomey;
+        ImageView ivVip;
+        TextView tvJoinNum;
+        LinearLayout llRoot;
+        @Override
+        public int getLayoutResId() {
+            return R.layout.course_item;
+        }
+
+        @Override
+        public void bindViews(@NonNull View root) {
+
+            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            tvTitle = root.findViewById(R.id.tv_title);
+            llRoot = root.findViewById(R.id.ll_root);
+            tvNomey = root.findViewById(R.id.tv_money);
+            ivVip = root.findViewById(R.id.iv_vip);
+            tvJoinNum = root.findViewById(R.id.tv_join_num);
+            ivImg = root.findViewById(R.id.iv_img);
+        }
+
+        @Override
+        public void setViews() {
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RouteUtil.startNewActivity(MoreCourseActivity.this, new Intent(MoreCourseActivity.this, CourseDetailActivity.class));
+                }
+            });
+        }
+
+        @Override
+        public void handleData(HotCourseBean.RecordsBean data, int position) {
+
+            tvTitle.setText(data.getCurriculumName());
+            tvNomey.setText(data.getParticipantNum() + "");
+            tvJoinNum.setText(data.getParticipantNum() + "人加入了学习");
+            App.getInstance().getDefaultSetting(MoreCourseActivity.this, new DefaultSettingCallback() {
+                @Override
+                public void getDefaultSetting(DefaultSetting defaultSetting) {
+                    Glide.with(MoreCourseActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),data.getCurriculumImage())).into(ivImg);
+
+                }
+            });
+            if(data.isVipFree()){
+                ivVip.setImageResource(R.drawable.vipmf);
+            }
+            if(data.isVipSpecial()){
+                ivVip.setImageResource(R.drawable.vipzx);
+            }
+        }
+    }
     private void dealLoadMore(List<HotCourseBean.RecordsBean> list) {
         List<HotCourseBean.RecordsBean> data =   ((IAdapter<HotCourseBean.RecordsBean>) recycle.getAdapter()).getData();
         data.addAll(list);

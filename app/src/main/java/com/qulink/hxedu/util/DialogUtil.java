@@ -1,13 +1,12 @@
 package com.qulink.hxedu.util;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -115,6 +114,31 @@ public class DialogUtil {
 
     public static void showSingleChooseDialog(Context context,String title,String[] items,DialogInterface.OnClickListener itemClickCallback){
         new AlertDialog.Builder(context).setIcon(R.drawable.logo).setTitle(title).setItems(items,itemClickCallback).create().show();
+    }
+
+
+
+    public static void showRuleDialog(Context context,String title,String content){
+            //创建dialog构造器
+            AlertDialog.Builder normalDialog = new AlertDialog.Builder(context);
+            //设置title
+            normalDialog.setTitle(title);
+            //设置icon
+            normalDialog.setIcon(R.drawable.logo);
+            //设置内容
+            normalDialog.setMessage(content);
+            //设置按钮
+            normalDialog.setPositiveButton("确定"
+                    , new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+                        }
+                    });
+            //创建并显示
+            normalDialog.create().show();
+
     }
 
 }

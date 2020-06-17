@@ -1,16 +1,23 @@
 package com.qulink.hxedu.ui.fragment;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.adapter.FragmentViewPagerAdapter;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -30,6 +37,13 @@ public class LiveFragment extends Fragment {
     SlidingTabLayout tabParent;
     @BindView(R.id.vp)
     ViewPager vp;
+    private Activity mActivity;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mActivity = (Activity)context;
+    }
 
     FragmentViewPagerAdapter viewPagerAdapter;
     private List<Fragment> fragmentList;
@@ -48,6 +62,7 @@ public class LiveFragment extends Fragment {
             ButterKnife.bind(this, rootView);
             initFragment();
             initAdapter();
+            //initLiveClassfy();
         }
         return rootView;
     }
@@ -76,4 +91,6 @@ public class LiveFragment extends Fragment {
         String[] s = new String[]{};
         tabParent.setViewPager(vp);
     }
+
+
 }

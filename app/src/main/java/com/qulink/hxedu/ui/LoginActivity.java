@@ -26,8 +26,10 @@ import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.entity.WxLoginBean;
 import com.qulink.hxedu.util.CourseUtil;
 import com.qulink.hxedu.util.DialogUtil;
@@ -47,6 +49,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 
 public class LoginActivity extends BaseActivity {
 
@@ -177,7 +180,11 @@ public class LoginActivity extends BaseActivity {
                 DialogUtil.hideLoading(LoginActivity.this);
                 ToastUtils.show(LoginActivity.this, getString(R.string.login_success));
                 TokenInfo tokenInfo = GsonUtil.GsonToBean(data.getData().toString(), TokenInfo.class);
-                App.getInstance().loginSuccess(tokenInfo);
+                App.getInstance().loginSuccess(LoginActivity.this,tokenInfo);
+
+                setJpushAlias();
+
+
                 dealLoginNextIntent();
             }
 
@@ -250,7 +257,6 @@ public class LoginActivity extends BaseActivity {
 
     private IWXAPI api;
 
-    private BroadcastReceiver broadcastReceiver;
     private void regToWx() {
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
         api = WXAPIFactory.createWXAPI(this, FinalValue.WECHAT_APP_ID, true);
@@ -309,7 +315,9 @@ public class LoginActivity extends BaseActivity {
                     ToastUtils.show(LoginActivity.this, getString(R.string.login_success));
                     TokenInfo tokenInfo = new TokenInfo();
                     tokenInfo.setToken(wxLoginBean.getToken());
-                    App.getInstance().loginSuccess(tokenInfo);
+                    App.getInstance().loginSuccess(LoginActivity.this,tokenInfo);
+
+                   setJpushAlias();
 
                     dealLoginNextIntent();
                 }else{
@@ -340,6 +348,13 @@ public class LoginActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         }
     }
-
+    private void setJpushAlias(){
+        App.getInstance().getUserInfo(this, new UserInfoCallback() {
+            @Override
+            public void getUserInfo(UserInfo userInfo) {
+                EventBus.getDefault().post(new MessageEvent(FinalValue.SET_ALIS, userInfo.getId()));
+            }
+        });
+    }
 
 }

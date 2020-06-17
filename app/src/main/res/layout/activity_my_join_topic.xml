@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ui.zone.MyJoinTopicActivity">
+
+    <include layout="@layout/bar"/>
+
+    <com.qulink.hxedu.view.tablayout.SlidingTabLayout
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:tl_tab_space_equal="true"
+        android:background="@color/white"
+        android:id="@+id/tab_parent"
+        app:tl_indicator_width="30dp"
+        app:tl_textSelectColor="#3586F9"
+        app:tl_textsize="15sp"
+        app:tl_select_textsize="15sp"
+        app:tl_textUnselectColor="#999999"
+        app:tl_indicator_color="#3586F9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tl_textBold="SELECT"
+        >
+
+    </com.qulink.hxedu.view.tablayout.SlidingTabLayout>
+    <include layout="@layout/line"/>
+
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.viewpager.widget.ViewPager>
+</LinearLayout>

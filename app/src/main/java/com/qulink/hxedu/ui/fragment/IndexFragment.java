@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,13 +35,14 @@ import com.qulink.hxedu.entity.CourseItemBean;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.HotCourseBean;
 import com.qulink.hxedu.entity.IndexBannerBean;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.mvp.contract.IndexInfoContract;
 import com.qulink.hxedu.mvp.presenter.IndexInfoPresenter;
 import com.qulink.hxedu.ui.CourseActivity;
-import com.qulink.hxedu.ui.SearchCourseActivity;
 import com.qulink.hxedu.ui.course.CourseDetailActivity;
 import com.qulink.hxedu.ui.course.MoreCourseActivity;
+import com.qulink.hxedu.ui.course.SearchCourseActivity;
 import com.qulink.hxedu.ui.sign.PlatformAccountSignActivity;
 import com.qulink.hxedu.ui.sign.SignActivity;
 import com.qulink.hxedu.util.DialogUtil;
@@ -56,6 +56,9 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -177,7 +180,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
 
             case R.id.tv_more_hot_course:
                 intent = new Intent(mActivity, MoreCourseActivity.class);
-                intent.putExtra("title","热门课程");
+                intent.putExtra("title", "热门课程");
                 intent.putExtra("curriculumType", FinalValue.hotCourseCurriculumType);
                 RouteUtil.startNewActivity(mActivity, intent);
                 break;
@@ -204,10 +207,11 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         }
     }
 
-    class CourseItem implements AdapterItem<CourseItemBean>{
+    class CourseItem implements AdapterItem<CourseItemBean> {
         TextView tvTitle;
         ImageView ivImg;
         LinearLayout llRoot;
+
         @Override
         public int getLayoutResId() {
             return R.layout.course_index_item;
@@ -232,20 +236,20 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         @Override
         public void handleData(CourseItemBean courseItemBean, int position) {
             tvTitle.setText(courseItemBean.getClassifyName());
-                App.getInstance().getDefaultSetting(mActivity, new DefaultSettingCallback() {
-                    @Override
-                    public void getDefaultSetting(DefaultSetting defaultSetting) {
-                        Glide.with(mActivity).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseItemBean.getClassifyImage())).into(ivImg);
+            App.getInstance().getDefaultSetting(mActivity, new DefaultSettingCallback() {
+                @Override
+                public void getDefaultSetting(DefaultSetting defaultSetting) {
+                    Glide.with(mActivity).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseItemBean.getClassifyImage())).into(ivImg);
 
-                    }
-                });
+                }
+            });
             llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(),CourseActivity.class);
-                    intent.putExtra("id",courseItemBean.getId());
-                    intent.putExtra("title",courseItemBean.getClassifyName());
-                    RouteUtil.startNewActivity(getActivity(),intent);
+                    Intent intent = new Intent(getActivity(), CourseActivity.class);
+                    intent.putExtra("id", courseItemBean.getId());
+                    intent.putExtra("title", courseItemBean.getClassifyName());
+                    RouteUtil.startNewActivity(getActivity(), intent);
                 }
             });
         }
@@ -259,7 +263,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
-                return  new CourseItem();
+                return new CourseItem();
             }
         });
 
@@ -305,7 +309,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
 
     }
 
-    class  HotCourseItem implements AdapterItem<HotCourseBean.RecordsBean>{
+    class HotCourseItem implements AdapterItem<HotCourseBean.RecordsBean> {
         TextView tvTitle;
         TextView tvJoinNum;
         TextView tvDesc;
@@ -314,6 +318,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         ImageView ivCorver;
         ImageView ivVip;
         LinearLayout llRoot;
+
         @Override
         public int getLayoutResId() {
             return R.layout.index_course_item;
@@ -354,7 +359,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
-                    intent.putExtra("courseId",hotCourseBean.getId());
+                    intent.putExtra("courseId", hotCourseBean.getId());
                     RouteUtil.startNewActivity(getActivity(), intent);
                 }
             });
@@ -371,6 +376,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
             }
         }
     }
+
     //热门课程
     private void dealHotCourse(List<HotCourseBean.RecordsBean> list) {
 
@@ -378,7 +384,6 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
             @Override
             public void getDefaultSetting(DefaultSetting defaultSetting) {
                 recycleHotCourse.setAdapter(new CommonRcvAdapter<HotCourseBean.RecordsBean>(list) {
-
 
 
                     @NonNull
@@ -393,11 +398,12 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         });
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
 
-        recycleHotCourse.addItemDecoration(new SpacesItemDecoration(12, 0, 0, 0));
+        recycleHotCourse.addItemDecoration(new SpacesItemDecoration(32, 0, 0, 0));
         recycleHotCourse.setLayoutManager(layoutManager);
 
     }
-    class MoneyCourseItem implements AdapterItem<HotCourseBean.RecordsBean>{
+
+    class MoneyCourseItem implements AdapterItem<HotCourseBean.RecordsBean> {
         TextView tvNewNomey;
 
         TextView tvTitle;
@@ -406,6 +412,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         TextView tvmonney;
         ImageView ivCorver;
         LinearLayout llRoot;
+
         @Override
         public int getLayoutResId() {
             return R.layout.index_course_item;
@@ -448,7 +455,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
-                    intent.putExtra("courseId",hotCourseBean.getId());
+                    intent.putExtra("courseId", hotCourseBean.getId());
                     RouteUtil.startNewActivity(getActivity(), intent);
                 }
             });
@@ -466,6 +473,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
 
         }
     }
+
     private void dealMoneyCourse(List<HotCourseBean.RecordsBean> list) {
 
         App.getInstance().getDefaultSetting(mActivity, new DefaultSettingCallback() {
@@ -486,7 +494,7 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
         });
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
 
-        recycleMoneyCourse.addItemDecoration(new SpacesItemDecoration(12, 0, 0, 0));
+        recycleMoneyCourse.addItemDecoration(new SpacesItemDecoration(32, 0, 0, 0));
         recycleMoneyCourse.setLayoutManager(layoutManager);
 
     }
@@ -577,14 +585,49 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        mActivity = (Activity)context;
+        mActivity = (Activity) context;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.detachView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Success(MessageEvent messageEvent) {
+        if (
+                messageEvent.getMessage().equals(FinalValue.SIGN_SUCCESS)) {
+            App.getInstance().getUserInfo(mActivity, new UserInfoCallback() {
+                @Override
+                public void getUserInfo(UserInfo userInfo) {
+                    if (userInfo != null) {
+                        if (!userInfo.isSign()) {
+                            ivQiandao.setImageResource(R.drawable.wqd);
+                        } else {
+                            ivQiandao.setImageResource(R.drawable.qd);
+                        }
+
+                    }
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+
 }
 
 

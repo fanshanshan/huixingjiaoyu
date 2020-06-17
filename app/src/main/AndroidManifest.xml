@@ -14,7 +14,15 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Optional for location -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <uses-feature android:name="android.hardware.Camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -30,7 +38,33 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name">
-        <activity android:name=".ui.zone.ArticalDetailActivity"></activity>
+        <activity android:name=".ui.msg.ZoneMsgSubPageActivity"></activity>
+        <activity android:name=".ui.msg.NoticeDetailActivity" />
+        <activity android:name=".ui.msg.ActivityDetailActivity" />
+        <activity android:name=".ui.msg.MsgDetailActivity" />
+        <activity android:name="com.google.zxing.activity.CaptureActivity" />
+        <activity android:name=".ui.msg.MsgActivity" />
+        <activity android:name=".ui.AdviceActivity" />
+        <activity android:name=".ui.WithdrawRecordActivity" />
+        <activity android:name=".ui.setting.SetPayPwdActivity" />
+        <activity android:name=".ui.setting.EditPhoneNextActivity" />
+        <activity android:name=".ui.setting.EditPhoneActivity" />
+        <activity android:name=".ui.score.ShopCourseDetailActivity" />
+        <activity android:name=".ui.auth.RealAuthActivity" />
+        <activity android:name=".ui.auth.NoRealAuthActivity" />
+        <activity android:name=".ui.score.ScoreShopActivity" />
+        <activity android:name=".ui.bank.AddBankNextActivity" />
+        <activity android:name=".ui.bank.AddBankActivity" />
+        <activity android:name=".ui.bank.BankListActivity" />
+        <activity android:name=".ui.WithdrawActivity" />
+        <activity android:name=".ui.ScholarShipActivity" />
+        <activity android:name=".ui.StudySubRelationActivity" />
+        <activity android:name=".ui.BadgeDetailActivity" />
+        <activity android:name=".ui.StudyRelationActivity" />
+        <activity android:name=".ui.sign.ScoreDetailActivity" />
+        <activity android:name=".ui.zone.SearchTopicActivity" />
+        <activity android:name=".ui.zone.MyJoinTopicActivity" />
+        <activity android:name=".ui.zone.ArticalDetailActivity" />
         <activity android:name=".ui.zone.MoreSubjectActivity" />
         <activity android:name=".ui.zone.TopTopicActivity" />
         <activity android:name=".ui.zone.AddSubjectActivity" />
@@ -59,7 +93,8 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.qulink.hxedu.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"> <!-- 元数据 -->
+            android:grantUriPermissions="true"
+            tools:replace="android:exported"> <!-- 元数据 -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_paths" />
@@ -72,7 +107,7 @@
             android:name=".ui.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ForgetPwdActivity"
+            android:name=".ui.setting.ForgetPwdActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.PwdLoginActivity"
@@ -111,7 +146,7 @@
             android:name=".ui.CourseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SearchCourseActivity"
+            android:name=".ui.course.SearchCourseActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.BaseActivity" />
         <activity
@@ -146,7 +181,50 @@
 
                 <data android:scheme="wx8c302ab306d3e641" />
             </intent-filter>
-        </activity>
+        </activity> <!-- Required SDK 核心功能 -->
+        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+        <!-- <service -->
+        <!-- android:name="cn.jpush.android.service.PushService" -->
+        <!-- android:process=":pushcore" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTER" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.REPORT" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.PushService" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.PUSH_TIME" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <!-- 替换原生极光推送接收器 -->
+        <!-- <receiver -->
+        <!-- android:name=".jpush.MyJPushReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="false" -->
+        <!-- tools:node="replace"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt; -->
+        <!-- <category android:name="com.qulink.hxedu" /> &lt;!&ndash; JPush上注册的包名 &ndash;&gt; -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调 -->
+        <!-- since 3.3.0 接收JPush相关事件 -->
+        <receiver android:name=".jpush.PushMessageReceiver">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+
+                <category android:name="com.qulink.hxedu" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="95f0c588ba05e38c21501d68" />
     </application>
 
 </manifest>

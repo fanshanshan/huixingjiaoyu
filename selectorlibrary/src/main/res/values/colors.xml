@@ -4,4 +4,5 @@
     <color name="image_selector_red">#F44336</color>
     <color name="image_selector_orange">#FF9800</color>
     <color name="image_selector_yellow">#FFEB3B</color>
+    <color name="yellow">#EAA81C</color>
 </resources>

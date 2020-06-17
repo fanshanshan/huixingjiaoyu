@@ -1,5 +1,6 @@
 package com.qulink.hxedu.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +9,14 @@ import android.widget.TextView;
 
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
+import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
+import com.qulink.hxedu.entity.SendVipBean;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.util.RouteUtil;
 
@@ -21,8 +27,6 @@ public class VipDetailActivity extends BaseActivity {
 
     @BindView(R.id.tv_vip_price_desc)
     TextView tvVipPriceDesc;
-    @BindView(R.id.status)
-    TextView status;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bar_title)
@@ -72,11 +76,12 @@ public class VipDetailActivity extends BaseActivity {
 
             }
         });
+        querySendVipMsg();
     }
 
     @Override
     protected boolean enableGestureBack() {
-        return false;
+        return true;
     }
 
     @OnClick({R.id.iv_send, R.id.tv_buy})
@@ -84,7 +89,6 @@ public class VipDetailActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.iv_send:
-                RouteUtil.startNewActivity(VipDetailActivity.this,new Intent(VipDetailActivity.this,SendVipActivity.class));
                  intent = new Intent(VipDetailActivity.this,SendVipActivity.class);
                 intent.putExtra("type","send");
                 RouteUtil.startNewActivity(VipDetailActivity.this,intent);
@@ -97,6 +101,67 @@ public class VipDetailActivity extends BaseActivity {
 
                 break;
         }
+    }
+
+    private void querySendVipMsg(){
+        ApiUtils.getInstance().getSendVipMsg(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                SendVipBean sendVipBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),SendVipBean.class);
+
+                if(sendVipBean!=null){
+                    //收到别人赠送的vip了
+                    showSignSucDialog(sendVipBean);
+                }
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+
+            }
+        });
+    }
+
+    private void readSendVipMsg(int id){
+        ApiUtils.getInstance().readSendVipMsg(id, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+
+            }
+        });
+    }
+    private void showSignSucDialog( SendVipBean sendVipBean) {
+        View diaView = View.inflate(this, R.layout.send_vip_dialog, null);
+
+        Dialog dialog = new Dialog(VipDetailActivity.this, R.style.my_dialog);
+        diaView.findViewById(R.id.tv_sure).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                readSendVipMsg(sendVipBean.getId());
+            }
+        });
+        TextView tvLine1 = diaView.findViewById(R.id.tv_line1);
+        TextView tvLine2 = diaView.findViewById(R.id.tv_line2);
+        tvLine1.setText("您的好友"+sendVipBean.getGiveUserPhone());
+        tvLine2.setText("为您购买了年会员");
+        dialog.setContentView(diaView);
+        dialog.show();
     }
 
 

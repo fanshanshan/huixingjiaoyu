@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/smart_layout"
+    tools:context=".ui.msg.SystemMsgFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.qulink.hxedu.view.EmptyRecyclerView
+            android:id="@+id/recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.qulink.hxedu.view.EmptyRecyclerView>
+        <include layout="@layout/no_data_layout"/>
+    </RelativeLayout>
+
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>

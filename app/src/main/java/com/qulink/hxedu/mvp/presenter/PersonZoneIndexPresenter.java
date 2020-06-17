@@ -16,9 +16,10 @@ import com.qulink.hxedu.util.FinalValue;
 
 import java.util.List;
 
-public class PersonZoneIndexPresenter  extends BasePresenter<PersonZoneIndexContract.View> implements PersonZoneIndexContract.Presenter {
+public class PersonZoneIndexPresenter extends BasePresenter<PersonZoneIndexContract.View> implements PersonZoneIndexContract.Presenter {
     private PersonZoneIndexModel model;
-    private  int pageNo;
+    private int pageNo;
+
     public PersonZoneIndexPresenter() {
         this.model = new PersonZoneIndexModel();
     }
@@ -30,24 +31,29 @@ public class PersonZoneIndexPresenter  extends BasePresenter<PersonZoneIndexCont
         model.getPersonIndex(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                mView.hideLoading();
 
-                PersonZoneIndexBean personNalCourseDetailBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),PersonZoneIndexBean.class);
-
-                mView.getPersonIndexSuc(personNalCourseDetailBean);
+                PersonZoneIndexBean personNalCourseDetailBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), PersonZoneIndexBean.class);
+                if (mView != null) {
+                    mView.hideLoading();
+                    mView.getPersonIndexSuc(personNalCourseDetailBean);
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.hideLoading();
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.hideLoading();
+                    mView.onError(msg);
+                }
 
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.hideLoading();
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.hideLoading();
+                    mView.onError(expectionMsg);
+                }
 
 
             }
@@ -57,24 +63,31 @@ public class PersonZoneIndexPresenter  extends BasePresenter<PersonZoneIndexCont
     @Override
     public void getMyToPic() {
         pageNo = 1;
-        model.getMyTopic(pageNo,FinalValue.limit,new ApiCallback() {
+        model.getMyTopic(pageNo, FinalValue.limit, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicBean>>() {}.getType());
-                if(hotArticalList.size()< FinalValue.limit){
-                    mView.noMore();
+                List<PicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    if (hotArticalList.size() < FinalValue.limit) {
+                        mView.noMore();
+                    }
+                    mView.getMyTopicSuc(hotArticalList);
                 }
-                mView.getMyTopicSuc(hotArticalList);
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.onError(expectionMsg);
+                }
 
             }
         });
@@ -83,48 +96,68 @@ public class PersonZoneIndexPresenter  extends BasePresenter<PersonZoneIndexCont
     @Override
     public void loadMoreMyTopic() {
         pageNo++;
-        model.getMyTopic(pageNo,FinalValue.limit,new ApiCallback() {
+        model.getMyTopic(pageNo, FinalValue.limit, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicBean>>() {}.getType());
-                if(hotArticalList.size()< FinalValue.limit){
-                    mView.noMore();
+                List<PicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    if (hotArticalList.size() < FinalValue.limit) {
+                        mView.noMore();
+                    }
+                    mView.loadmoreTopicSuc(hotArticalList);
                 }
-                mView.loadmoreTopicSuc(hotArticalList);
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
-                mView.noMore();
+                if (mView != null) {
+                    mView.onError(msg);
+                    mView.noMore();
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onError(expectionMsg);
-                mView.noMore();
+                if (mView != null) {
+                    if (expectionMsg != null) {
+                        mView.onError(expectionMsg);
+                    }
+                    mView.noMore();
+                }
+
             }
         });
     }
+
     @Override
     public void getPicMaster(int userId) {
-        model.getPicMasterById(userId,new ApiCallback() {
+        model.getPicMasterById(userId, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicMaster> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicMaster>>() {}.getType());
-                if(hotArticalList.size()>0){
-                    mView.getPicMasterSuc(hotArticalList.get(0));
+                List<PicMaster> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicMaster>>() {
+                }.getType());
+                if (hotArticalList.size() > 0) {
+                    if (mView != null) {
+                        mView.getPicMasterSuc(hotArticalList.get(0));
+
+                    }
                 }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.onError(expectionMsg);
+                }
 
             }
         });

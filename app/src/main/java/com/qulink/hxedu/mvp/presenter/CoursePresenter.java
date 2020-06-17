@@ -27,29 +27,31 @@ public class CoursePresenter extends BasePresenter<CourseContract.View> implemen
         model.getCourseNameById(id, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                mView.hideLoading();
 
                 List<CourseNameBean> list = GsonUtil.getInstance().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<CourseNameBean>>() {
                 }.getType());
-                mView.getCourseNameSuc(list);
+                if (mView != null) {
+                    mView.hideLoading();
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.hideLoading();
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.hideLoading();
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.hideLoading();
-
-                mView.onExpcetion(expectionMsg);
+                if (mView != null) {
+                    mView.hideLoading();
+                    mView.onExpcetion(expectionMsg);
+                }
             }
         });
     }
-
-
 
 
 }

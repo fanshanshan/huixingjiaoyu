@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.adapter.MyTopicAdapter;
+import com.qulink.hxedu.adapter.TopicAdapter;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
@@ -31,7 +32,9 @@ import com.qulink.hxedu.entity.PersonZoneIndexBean;
 import com.qulink.hxedu.entity.PicBean;
 import com.qulink.hxedu.entity.PicMaster;
 import com.qulink.hxedu.entity.UserInfo;
+import com.qulink.hxedu.mvp.contract.LikeArticalContract;
 import com.qulink.hxedu.mvp.contract.PersonZoneIndexContract;
+import com.qulink.hxedu.mvp.presenter.LikeArticalPresenter;
 import com.qulink.hxedu.mvp.presenter.PersonZoneIndexPresenter;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.ui.ImagesPreviewActivity;
@@ -40,6 +43,7 @@ import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
+import com.qulink.hxedu.view.EmptyRecyclerView;
 import com.qulink.hxedu.view.MyScrollView;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -50,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -57,7 +62,7 @@ import kale.adapter.CommonRcvAdapter;
 import kale.adapter.item.AdapterItem;
 import kale.adapter.util.IAdapter;
 
-public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneIndexContract.View, OnLoadMoreListener, OnRefreshListener {
+public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneIndexContract.View, OnLoadMoreListener, OnRefreshListener, LikeArticalContract.View {
 
 
     @BindView(R.id.iv_top_img)
@@ -75,7 +80,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
     @BindView(R.id.tv_join_topic)
     TextView tvJoinTopic;
     @BindView(R.id.recycle_my_topic)
-    RecyclerView recycleMyTopic;
+    EmptyRecyclerView recycleMyTopic;
     @BindView(R.id.status)
     TextView status;
     @BindView(R.id.iv_back)
@@ -101,6 +106,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
     @BindView(R.id.ll_tab)
     LinearLayout llTab;
     private PersonZoneIndexPresenter mPresenter;
+    private LikeArticalPresenter likeArticalPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +129,13 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         smartLayout.setOnLoadMoreListener(this);
         smartLayout.setOnRefreshListener(this);
         mPresenter = new PersonZoneIndexPresenter();
+        likeArticalPresenter = new LikeArticalPresenter();
         mPresenter.attachView(this);
+        likeArticalPresenter.attachView(this);
         mPresenter.getPersonIndex();
         mPresenter.getMyToPic();
         addScrollviewListener();
-
+        initPicRecycle();
     }
 
     //scorllview添加滑动监听  根据滑动距离改变顶部bar的颜色
@@ -135,12 +143,12 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         sc.setOnScrollListener(new MyScrollView.OnScrollListener() {
             @Override
             public void onScroll(int scrollY) {
-                if (scrollY >(rlTopBg.getHeight()-llTab.getHeight()-status.getHeight())) {
-                    if(llFloat.getVisibility()==View.GONE){
+                if (scrollY > (rlTopBg.getHeight() - llTab.getHeight() - status.getHeight())) {
+                    if (llFloat.getVisibility() == View.GONE) {
                         llFloat.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    if(llFloat.getVisibility()==View.VISIBLE){
+                    if (llFloat.getVisibility() == View.VISIBLE) {
                         llFloat.setVisibility(View.GONE);
                     }
                 }
@@ -153,23 +161,32 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
     }
 
     //初始化我的帖子
-    private void initPicRecycle(List<PicBean> list) {
-        recycleMyTopic.setAdapter(new CommonRcvAdapter<PicBean>(list) {
-
-
+    private List<PicBean> picBeanList;
+    private MyTopicAdapter topicAdapter;
+    private void initPicRecycle() {
+        picBeanList = new ArrayList<>();
+        topicAdapter = new MyTopicAdapter(picBeanList,this);
+        topicAdapter.setClickListener(new MyTopicAdapter.PicAdapterController() {
             @Override
-            public Object getItemType(PicBean picBean) {
-                return super.getItemType(picBean);
+            public void getPicMaster(int userId) {
+                mPresenter.getPicMaster(userId);
             }
 
-            @NonNull
             @Override
-            public AdapterItem createItem(Object type) {
+            public void cancelLikeArtical(int id) {
+                likeArticalPresenter.cancelLikeArtical(id);
+
+            }
+
+            @Override
+            public void likeArtical(int id) {
+                likeArticalPresenter.likeArtical(id);
 
 
-                return new TopicItem();
             }
         });
+        recycleMyTopic.setAdapter(topicAdapter);
+        recycleMyTopic.setEmptyView(findViewById(R.id.ll_empty));
         recycleMyTopic.setLayoutManager(new LinearLayoutManager(PersonZoneIndexActivity.this));
     }
 
@@ -178,10 +195,12 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         return true;
     }
 
-    //获取我的页面信息陈宫
+    //获取我的页面信息成功
+   private PersonZoneIndexBean personZoneIndexBean;
     @Override
     public void getPersonIndexSuc(PersonZoneIndexBean s) {
-        dealData(s);
+        personZoneIndexBean = s;
+        dealData();
     }
 
     //获取我的话题成功
@@ -190,34 +209,35 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         smartLayout.setNoMoreData(false);
 
         smartLayout.finishRefresh(true);
-        if(hotArticalList.isEmpty()){
-            showEmpty();
-        }else{
-            initPicRecycle(hotArticalList);
+        if(hotArticalList!=null&&!hotArticalList.isEmpty()){
+            picBeanList.clear();
+            picBeanList.addAll(hotArticalList);
+            topicAdapter.notifyDataSetChanged();
         }
+
     }
 
     //加载更多话题成功 刷新界面
     @Override
     public void loadmoreTopicSuc(List<PicBean> hotArticalList) {
-        List<PicBean> list = ((IAdapter<PicBean>) recycleMyTopic.getAdapter()).getData();
-        list.addAll(hotArticalList);
-        ((IAdapter<PicBean>) recycleMyTopic.getAdapter()).setData(list);
-        recycleMyTopic.getAdapter().notifyDataSetChanged();
         smartLayout.finishLoadMore(true);
+        if(hotArticalList!=null&&!hotArticalList.isEmpty()){
+            picBeanList.addAll(hotArticalList);
+            topicAdapter.notifyItemRangeChanged(picBeanList.size()-hotArticalList.size(),hotArticalList.size());
+        }
     }
 
     //根据用户id获取用户信息
     @Override
     public void getPicMasterSuc(PicMaster picMaster) {
-        List<PicBean> list = ((IAdapter<PicBean>) recycleMyTopic.getAdapter()).getData();
-        for (PicBean p : list) {
-            if (p.getUserId() == picMaster.getUserId()) {
-                p.setPicMaster(picMaster);
-                p.setInitMaster(false);
+        for(int i = 0;i<picBeanList.size();i++){
+            if(picBeanList.get(i).getUserId()==picMaster.getUserId()&&picBeanList.get(i).getPicMaster()==null){
+                picBeanList.get(i).setPicMaster(picMaster);
+                picBeanList.get(i).setInitMaster(false);
+                topicAdapter.notifyItemChanged(i,picBeanList);
+                break;
             }
         }
-        recycleMyTopic.getAdapter().notifyDataSetChanged();
     }
 
 
@@ -259,7 +279,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         mPresenter.detachView();
     }
 
-    private void dealData(PersonZoneIndexBean personZoneIndexBean) {
+    private void dealData() {
         if (personZoneIndexBean == null) {
             return;
         }
@@ -270,7 +290,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                     public void getDefaultSetting(DefaultSetting defaultSetting) {
                         String url = ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),
                                 personZoneIndexBean.getHeadImg());
-                        RelativeLayout.LayoutParams layoutParams = ( RelativeLayout.LayoutParams )ivTopImg.getLayoutParams();
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ivTopImg.getLayoutParams();
                         layoutParams.height = rlTopBg.getHeight();
                         ivTopImg.setLayoutParams(layoutParams);
                         Glide.with(PersonZoneIndexActivity.this)
@@ -287,11 +307,24 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                 });
 
         tvName.setText(personZoneIndexBean.getNickname());
-        tvMyTopic.setText("我的话题(" + personZoneIndexBean.getArticles() + ")");
-        tvMyTopicFloat.setText("我的话题(" + personZoneIndexBean.getArticles() + ")");
-        tvJoinTopic.setText("我参与的(" + (personZoneIndexBean.getThumbs() + personZoneIndexBean.getComments()) + ")");
-        tvJoinTopicFloat.setText("我参与的(" + (personZoneIndexBean.getThumbs() + personZoneIndexBean.getComments()) + ")");
-        if (CourseUtil.isOk(personZoneIndexBean.getStatus())) {
+        if(personZoneIndexBean.getArticles()>100){
+            tvMyTopic.setText("我的话题(99+)");
+            tvMyTopicFloat.setText("我的话题(99+)");
+        }else{
+            tvMyTopic.setText("我的话题(" + personZoneIndexBean.getArticles() + ")");
+            tvMyTopicFloat.setText("我的话题(" + personZoneIndexBean.getArticles() + ")");
+
+        }if((personZoneIndexBean.getThumbs() + personZoneIndexBean.getComments())>100){
+            tvJoinTopic.setText("我参与的(99+)");
+            tvJoinTopicFloat.setText("我参与的(99+)");
+
+        }else{
+            tvJoinTopic.setText("我参与的(" + (personZoneIndexBean.getThumbs() + personZoneIndexBean.getComments()) + ")");
+            tvJoinTopicFloat.setText("我参与的(" + (personZoneIndexBean.getThumbs() + personZoneIndexBean.getComments()) + ")");
+
+        }
+
+         if (CourseUtil.isOk(personZoneIndexBean.getStatus())) {
             ivHg.setVisibility(View.VISIBLE);
         }
         if (!personZoneIndexBean.getBadge().isEmpty()) {
@@ -299,14 +332,28 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         }
     }
 
-    @OnClick({R.id.tv_bar_title, R.id.tv_bar_right})
+    @OnClick({R.id.tv_bar_title, R.id.tv_bar_right,R.id.tv_join_topic,R.id.tv_join_topic_float})
     public void onViewClicked(View view) {
+        Intent intent = null;
+
         switch (view.getId()) {
             case R.id.tv_bar_title:
                 break;
             case R.id.tv_bar_right:
                 //相册
                 RouteUtil.startNewActivityAndResult(PersonZoneIndexActivity.this, new Intent(this, PublishTopicActivity.class), 0);
+                break;
+            case R.id.tv_join_topic:
+                 intent = new Intent(PersonZoneIndexActivity.this,MyJoinTopicActivity.class);
+                intent.putExtra("commentNum",personZoneIndexBean==null?0:personZoneIndexBean.getComments());
+                intent.putExtra("likeNum",personZoneIndexBean==null?0:personZoneIndexBean.getThumbs());
+                RouteUtil.startNewActivity(this,intent);
+                break;
+                case R.id.tv_join_topic_float:
+                 intent = new Intent(PersonZoneIndexActivity.this,MyJoinTopicActivity.class);
+                intent.putExtra("commentNum",personZoneIndexBean==null?0:personZoneIndexBean.getComments());
+                intent.putExtra("likeNum",personZoneIndexBean==null?0:personZoneIndexBean.getThumbs());
+                RouteUtil.startNewActivity(this,intent);
                 break;
         }
     }
@@ -315,10 +362,28 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            //刷新一下我的贴子
-            mPresenter.getMyToPic();
-            mPresenter.getPersonIndex();
+            if(requestCode == 0 ){
+                //刷新一下我的贴子
+
+                mPresenter.getMyToPic();
+                mPresenter.getPersonIndex();
+            }else if(requestCode==1){
+                PicBean picBean = (PicBean) data.getSerializableExtra("data");
+                if(picBean==null){
+                    return;
+                }
+                for(int i = 0;i<picBeanList.size();i++){
+                    if(picBeanList.get(i).getId()==picBean.getId()){
+                        picBeanList.get(i).setThumbStatus(picBean.getThumbStatus());
+                        picBeanList.get(i).setThumbs(picBean.getThumbs());
+                        picBeanList.get(i).setComments(picBean.getComments());
+                        topicAdapter.notifyItemChanged(i,picBeanList);
+                        break;
+                    }
+                }
+            }
         }
+
     }
 
     @Override
@@ -328,20 +393,64 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        hideEmpty();
+        smartLayout.setNoMoreData(false);
         mPresenter.getMyToPic();
         mPresenter.getPersonIndex();
     }
 
+    @Override
+    public void likeArticalSuc(int articalId) {
+        for(int i = 0;i<picBeanList.size();i++){
+            if(picBeanList.get(i).getId()==articalId){
+                picBeanList.get(i).setThumbStatus(1);
+                picBeanList.get(i).setThumbs(picBeanList.get(i).getThumbs()+1);
+
+                recycleMyTopic.getAdapter().notifyItemChanged(i,picBeanList);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void cancelLikeArticalSuc(int articalId) {
+        for(int i = 0;i<picBeanList.size();i++){
+            if(picBeanList.get(i).getId()==articalId){
+                picBeanList.get(i).setThumbStatus(0);
+                picBeanList.get(i).setThumbs(picBeanList.get(i).getThumbs()-1);
+                recycleMyTopic.getAdapter().notifyItemChanged(i,picBeanList);
+                break;
+            }
+        }
+    }
+
     class TopicItem implements AdapterItem<PicBean> {
+
+        @BindView(R.id.iv_headimg)
+        CircleImageView ivHeadimg;
+        @BindView(R.id.tv_name)
         TextView tvName;
-        TextView tvCommentNum;
-        TextView tvLikeNum;
+        @BindView(R.id.ll_level_contanier)
+        LinearLayout llLevelContanier;
+        @BindView(R.id.content)
+        ExpandableTextView content;
+        @BindView(R.id.recycle_img)
+        RecyclerView recycleImg;
+        @BindView(R.id.tv_item)
         TextView tvItem;
-        ExpandableTextView expandableTextView;
-        RecyclerView imgRecycleview;
-        ImageView ivHeadimg;
-        LinearLayout levelContanier;
+        @BindView(R.id.iv_comment)
+        ImageView ivComment;
+        @BindView(R.id.tv_comment_num)
+        TextView tvCommentNum;
+        @BindView(R.id.iv_like)
+        ImageView ivLike;
+        @BindView(R.id.tv_like_num)
+        TextView tvLikeNum;
+        @BindView(R.id.ll_like)
+        LinearLayout llLike;
+        @BindView(R.id.iv_share)
+        ImageView ivShare;
+        @BindView(R.id.ll_root)
+        LinearLayout llRoot;
 
         @Override
         public int getLayoutResId() {
@@ -351,17 +460,11 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
         @Override
         public void bindViews(@NonNull View root) {
 
+            ButterKnife.bind(this, root);
             ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-            tvName = root.findViewById(R.id.tv_name);
-            tvCommentNum = root.findViewById(R.id.tv_comment_num);
-            tvLikeNum = root.findViewById(R.id.tv_like_num);
-            expandableTextView = root.findViewById(R.id.content);
-            tvItem = root.findViewById(R.id.tv_item);
-            ivHeadimg = root.findViewById(R.id.iv_headimg);
-            imgRecycleview = root.findViewById(R.id.recycle_img);
-            levelContanier = root.findViewById(R.id.ll_level_contanier);
+
 
         }
 
@@ -386,7 +489,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                     if (userInfo.isVip()) {
                         ImageView imageView = new ImageView(PersonZoneIndexActivity.this);
                         imageView.setImageResource(R.drawable.hg);
-                        levelContanier.addView(imageView);
+                        llLevelContanier.addView(imageView);
                     }
 //                    if (!userInfo.getBadge().isEmpty()) {
 //                        ImageView imageView = new ImageView(PersonZoneIndexActivity.this);
@@ -399,27 +502,32 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                 }
             });
 
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PersonZoneIndexActivity.this, ArticalDetailActivity.class);
+                    intent.putExtra("data", shareContentBean);
+                    startActivityForResult(intent, 1);
+                }
+            });
             tvLikeNum.setText(shareContentBean.getThumbs() + "");
             tvCommentNum.setText(shareContentBean.getComments() + "");
-            expandableTextView.setContent(shareContentBean.getContent());
-            levelContanier.removeAllViews();
+            content.setContent(shareContentBean.getContent());
+            llLevelContanier.removeAllViews();
 
             if (!TextUtils.isEmpty(shareContentBean.getTopicName())) {
                 tvItem.setText(shareContentBean.getTopicName());
                 tvItem.setVisibility(View.VISIBLE);
+                tvItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RouteUtil.goSubjectPage(PersonZoneIndexActivity.this,shareContentBean.getTopicName(),shareContentBean.getTopicId(),0);
+                    }
+                });
             } else {
                 tvItem.setVisibility(View.GONE);
 
             }
-
-//                            if (shareContentBean.item != "") {
-//                                tvItem.setText(shareContentBean.item);
-//                                tvItem.setVisibility(View.VISIBLE);
-//                            } else {
-//                                tvItem.setVisibility(View.GONE);
-//
-//                            }
-
 
             if (!TextUtils.isEmpty(shareContentBean.getImgPath())) {
                 App.getInstance().getDefaultSetting(PersonZoneIndexActivity.this, new DefaultSettingCallback() {
@@ -432,7 +540,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                             imgLig.add(s);
                         }
 
-                        imgRecycleview.setAdapter(new CommonRcvAdapter<String>(imgLig) {
+                        recycleImg.setAdapter(new CommonRcvAdapter<String>(imgLig) {
 
                             ImageView iv;
 
@@ -476,7 +584,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                                 };
                             }
                         });
-                        imgRecycleview.setLayoutManager(new GridLayoutManager(PersonZoneIndexActivity.this, 3));
+                        recycleImg.setLayoutManager(new GridLayoutManager(PersonZoneIndexActivity.this, 3));
 
                     }
                 });
@@ -484,17 +592,7 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
 
 
         }
-        protected void hideEmpty(){
-            View view = findViewById(R.id.ll_empty);
-            if(view!=null){
-                view.setVisibility(View.GONE);
-            }
-        }
-        protected void showEmpty(){
-            View view = findViewById(R.id.ll_empty);
-            if(view!=null){
-                view.setVisibility(View.VISIBLE);
-            }
-        }
+
     }
+
 }

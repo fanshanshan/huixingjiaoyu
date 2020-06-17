@@ -286,7 +286,7 @@ public class PlatformAccountSignActivity extends BaseActivity {
         return id;
     }
 
-    @OnClick(R.id.tv_submit)
+    @OnClick({R.id.tv_submit,R.id.ll_score_detail})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_submit:
@@ -298,6 +298,10 @@ public class PlatformAccountSignActivity extends BaseActivity {
                 }else{
                     subit();
                 }
+                break;
+            case R.id.ll_score_detail:
+                RouteUtil.startNewActivity(this,new Intent(this,ScoreDetailActivity.class));
+
                 break;
         }
     }

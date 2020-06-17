@@ -23,6 +23,8 @@ public class FragmentViewPagerAdapter extends FragmentStatePagerAdapter {
         this.fragments = fragments;
     }
 
+
+
     @Override
     public Fragment getItem(int position) {
         return fragments.get(position);

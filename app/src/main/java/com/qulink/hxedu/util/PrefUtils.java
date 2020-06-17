@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.entity.SystemSettingBean;
 import com.qulink.hxedu.entity.TokenInfo;
 
 
@@ -77,6 +78,8 @@ public class PrefUtils {
 
 	public static void saveToken(Context context,TokenInfo tokenJson){
 		putString(context,TOKEN_KEY,GsonUtil.GsonString(tokenJson));
+	}	public static void saveSystemSetting(Context context,SystemSettingBean systemSettingBean){
+		putString(context,PREF_NAME,GsonUtil.GsonString(systemSettingBean));
 	}
 	public static void clearToken(Context context){
 		putString(context,TOKEN_KEY,"");
@@ -85,6 +88,9 @@ public class PrefUtils {
 	public static TokenInfo getTokenBean(Context context){
 		String tokenStr = getString(context,TOKEN_KEY,"");
 		return GsonUtil.GsonToBean(tokenStr,TokenInfo.class);
+	}public static SystemSettingBean getSystemSetting(Context context){
+		String tokenStr = getString(context,PREF_NAME,"");
+		return GsonUtil.GsonToBean(tokenStr,SystemSettingBean.class);
 	}
 	public static void clearData(Context context){
 		putBoolean(context,"login",false);

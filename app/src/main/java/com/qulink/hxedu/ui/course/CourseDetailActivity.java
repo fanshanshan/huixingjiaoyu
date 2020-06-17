@@ -1,6 +1,7 @@
 package com.qulink.hxedu.ui.course;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,11 +17,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.CatalogBean;
 import com.qulink.hxedu.entity.CourseDetailBean;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.PersonNalCourseDetailBean;
@@ -48,6 +64,10 @@ import kale.adapter.item.AdapterItem;
 
 public class CourseDetailActivity extends BaseActivity implements CourseDetailContract.View {
 
+    @BindView(R.id.ll_like)
+    LinearLayout llLike;
+    @BindView(R.id.videoView)
+    PlayerView videoView;
     private String TAG = "CourseDetailActivity";
     @BindView(R.id.iv_course_corver)
     ImageView ivCourseCorver;
@@ -106,6 +126,8 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     private int BUY_LESSON_CODE = 2;
     private int OPEN_VIP_CODE = 3;
 
+    private boolean exChange;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,16 +138,38 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         return R.layout.activity_course_detail;
     }
 
+    private void initPlayer(){
+        SimpleExoPlayer player = new SimpleExoPlayer.Builder(this).build();
+        videoView.setPlayer(player);
+        // Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, "App"));
+// This is the MediaSource representing the media to be played.
+
+        // Measures bandwidth during playback. Can be null if not required.
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+// Produces Extractor instances for parsing the media data.
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        MediaSource source = new ExtractorMediaSource(Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),dataSourceFactory, extractorsFactory, null, null);
+// Loops the video indefinitely.
+        LoopingMediaSource loopingSource = new LoopingMediaSource(source);
+
+
+// Prepare the player with the source.
+        player.prepare(loopingSource);
+        player.setPlayWhenReady(true);
+    }
     @Override
     protected void init() {
         courseId = getIntent().getIntExtra("courseId", 0);
+        exChange = getIntent().getBooleanExtra("exChange", false);
         mPresenter = new CourseDetailPresenter();
         mPresenter.attachView(this);
         mPresenter.getCourseDetail(courseId);
-        mPresenter.getPersonnalCourseDetail(courseId);
-        mPresenter.getCourseLookNumberNameById(courseId);
+//        mPresenter.getPersonnalCourseDetail(courseId);
+//        mPresenter.getCourseLookNumberNameById(courseId);
         chooseCourseDetail();
-
+        initPlayer();
     }
 
 
@@ -141,7 +185,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
 
     void chooseCourseCatalog() {
         if (catalogList == null) {
-            initCatalog();
+            mPresenter.getCourseChapter(courseId);
         }
         courseCatalogIndicator.setVisibility(View.VISIBLE);
         courseDetailIndicator.setVisibility(View.GONE);
@@ -153,25 +197,19 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     }
 
 
-    private List<String> catalogList;
-    private CommonRcvAdapter<String> commonRcvAdapter;
+    private List<CatalogBean> catalogList;
+    private CommonRcvAdapter<CatalogBean> commonRcvAdapter;
 
     void initCatalog() {
-        catalogList = new ArrayList<>();
-        catalogList.add("今天你吃饭了吗");
-        catalogList.add("中午没吃");
-        catalogList.add("为啥不吃");
-        catalogList.add("减肥呢");
-        catalogList.add("然后呢");
-        catalogList.add("晚上要撸串");
-        commonRcvAdapter = new CommonRcvAdapter<String>(catalogList) {
+
+        commonRcvAdapter = new CommonRcvAdapter<CatalogBean>(catalogList) {
             TextView tvNumber;
             TextView tvTitle;
 
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
-                return new AdapterItem() {
+                return new AdapterItem<CatalogBean>() {
                     @Override
                     public int getLayoutResId() {
                         return R.layout.course_catalog_item;
@@ -192,10 +230,10 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
                     }
 
                     @Override
-                    public void handleData(Object o, int position) {
+                    public void handleData(CatalogBean o, int position) {
 
-                        tvTitle.setText(o.toString());
-                        tvNumber.setText("第" + (position + 1) + "讲");
+                        tvTitle.setText(o.getChapterName().toString());
+                        tvNumber.setText("第" + o.getChapterId() + "讲");
                     }
                 };
             }
@@ -209,7 +247,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         return false;
     }
 
-    @OnClick({R.id.ll_like,R.id.ll_course_catalog, R.id.ll_course_detail, R.id.tv_buy, R.id.tv_share, R.id.iv_like, R.id.tv_download})
+    @OnClick({R.id.ll_like, R.id.ll_course_catalog, R.id.ll_course_detail, R.id.tv_buy, R.id.tv_share, R.id.iv_like, R.id.tv_download})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_course_catalog:
@@ -249,8 +287,12 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
             case R.id.tv_share:
                 break;
             case R.id.ll_like:
-                if(App.getInstance().isLogin(CourseDetailActivity.this,true)){
-                    collectionVideo();
+                if (App.getInstance().isLogin(CourseDetailActivity.this, true)) {
+                    if (courseDetailBean.getPersonal().getCollectStatus() == 1) {
+                        cancelCollection();
+                    } else {
+                        collectionVideo();
+                    }
                 }
                 break;
             case R.id.tv_download:
@@ -262,9 +304,58 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         mPresenter.increaseVideoLookNumber(courseId);
     }
 
-    void collectionVideo(){
+    void collectionVideo() {
+        DialogUtil.showLoading(this, true);
+        ApiUtils.getInstance().collectionCourse(courseId, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                if (courseDetailBean != null) {
+                    courseDetailBean.getPersonal().setCollectStatus(1);
+                    dealBtnBuy(courseDetailBean.getPersonal());
+                }
+            }
 
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                ToastUtils.show(CourseDetailActivity.this, msg);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                ToastUtils.show(CourseDetailActivity.this, expectionMsg);
+            }
+        });
     }
+
+    void cancelCollection() {
+        DialogUtil.showLoading(this, true);
+        ApiUtils.getInstance().cancelCollectionCourse(courseId + "", new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                if (courseDetailBean != null) {
+                    courseDetailBean.getPersonal().setCollectStatus(0);
+                    dealBtnBuy(courseDetailBean.getPersonal());
+                }
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                ToastUtils.show(CourseDetailActivity.this, msg);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(CourseDetailActivity.this);
+                ToastUtils.show(CourseDetailActivity.this, expectionMsg);
+            }
+        });
+    }
+
     private void toBuy() {
         Intent intent = new Intent(CourseDetailActivity.this, BuyLessonActivity.class);
         RouteUtil.startNewActivityAndResult(CourseDetailActivity.this, intent, BUY_LESSON_CODE);
@@ -288,21 +379,29 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
 
     @Override
     public void getCourseNumberSuc(String s) {
-        tvStudyNum.setText(s + "人学过");
     }
 
     @Override
     public void getPersonnalCourseDetail(PersonNalCourseDetailBean personNalCourseDetailBean) {
         this.personNalCourseDetailBean = personNalCourseDetailBean;
-        dealBtnBuy(personNalCourseDetailBean);
+        //  dealBtnBuy(personNalCourseDetailBean);
     }
 
     @Override
     public void increaseVideoLookNumberSuc() {
-        Log.e(TAG,"上报观看记录成功");
+        Log.e(TAG, "上报观看记录成功");
     }
 
-    void dealBtnBuy(PersonNalCourseDetailBean personNalCourseDetailBean) {
+    @Override
+    public void getCourseChapterSuc(List<CatalogBean> s) {
+        if (s != null && !s.isEmpty()) {
+            catalogList = new ArrayList<>();
+            catalogList.addAll(s);
+            initCatalog();
+        }
+    }
+
+    void dealBtnBuy(CourseDetailBean.PersonalBean personNalCourseDetailBean) {
         if (personNalCourseDetailBean == null) {
             return;
         }
@@ -312,7 +411,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         tvBuy.setVisibility(View.VISIBLE);
         if (CourseUtil.isOk(personNalCourseDetailBean.getCollectStatus())) {
             ivLike.setImageResource(R.drawable.likeed);
-        }else{
+        } else {
             ivLike.setImageResource(R.drawable.course_like);
         }
         if (App.getInstance().isLogin(this)) {
@@ -379,28 +478,35 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         mPresenter.detachView();
     }
 
-    private void dealCourseDetail(CourseDetailBean courseDetailBean) {
+    private CourseDetailBean courseDetailBean;
+
+    private void dealCourseDetail(CourseDetailBean c) {
+        courseDetailBean = c;
+
         if (courseDetailBean == null) {
             return;
         }
-        tvTeacherDesc.setText(courseDetailBean.getCurriculumDetail());
-        tvTeacherName.setText(courseDetailBean.getNickname());
+        tvTeacherDesc.setText(courseDetailBean.getDetail().getCurriculumDetail());
+        tvTeacherName.setText(courseDetailBean.getDetail().getNickname());
         App.getInstance().getDefaultSetting(this, new DefaultSettingCallback() {
             @Override
             public void getDefaultSetting(DefaultSetting defaultSetting) {
-                Glide.with(CourseDetailActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseDetailBean.getHeadImg())).into(ivTeacherHeadimg);
-                Glide.with(CourseDetailActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseDetailBean.getCurriculumImage())).into(ivCourseCorver);
+                Glide.with(CourseDetailActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseDetailBean.getDetail().getHeadImg())).into(ivTeacherHeadimg);
+                Glide.with(CourseDetailActivity.this).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), courseDetailBean.getDetail().getCurriculumImage())).into(ivCourseCorver);
 
             }
         });
 
-        if (CourseUtil.isVipSpecial(courseDetailBean.getSpecialStatus())) {
+        if (CourseUtil.isVipSpecial(courseDetailBean.getDetail().getSpecialStatus())) {
             ivVip.setImageResource(R.drawable.vipzx);
         }
 
-        tvPrice.setText(courseDetailBean.getCurriculumPrice() + "");
-        tvCourseDesc.setContent(courseDetailBean.getCurriculumDetail());
-        tvTeacherDesc.setContent(courseDetailBean.getIntro());
+        tvPrice.setText(courseDetailBean.getDetail().getCurriculumPrice() + "");
+        tvCourseDesc.setContent(courseDetailBean.getDetail().getCurriculumDetail());
+        tvTeacherDesc.setContent(courseDetailBean.getDetail().getIntro());
+        dealBtnBuy(courseDetailBean.getPersonal());
+        tvStudyNum.setText(courseDetailBean.getParticipant().getValue() + "人学过");
+
     }
 
     @Override

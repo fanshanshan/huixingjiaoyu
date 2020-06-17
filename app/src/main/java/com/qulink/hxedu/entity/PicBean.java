@@ -21,7 +21,6 @@ public class PicBean implements Serializable {
 
     private int id;
 
-    private boolean isInitMaster;
 
     public boolean isInitMaster() {
         return isInitMaster;
@@ -38,9 +37,10 @@ public class PicBean implements Serializable {
     public void setPicMaster(PicMaster picMaster) {
         this.picMaster = picMaster;
     }
+    private boolean isInitMaster;
 
     private PicMaster picMaster;
-    private Object topicId;
+    private int topicId;
     private String title;
     private String content;
     private String imgPath;
@@ -50,7 +50,7 @@ public class PicBean implements Serializable {
     private int comments;
     private int thumbs;
     private String topicName;
-    private Object numbers;
+    private int numbers;
 
 
     public int getId() {
@@ -61,11 +61,11 @@ public class PicBean implements Serializable {
         this.id = id;
     }
 
-    public Object getTopicId() {
+    public int getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Object topicId) {
+    public void setTopicId(int topicId) {
         this.topicId = topicId;
     }
 
@@ -141,11 +141,11 @@ public class PicBean implements Serializable {
         this.topicName = topicName;
     }
 
-    public Object getNumbers() {
+    public int getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(Object numbers) {
+    public void setNumbers(int numbers) {
         this.numbers = numbers;
     }
 }

@@ -24,4 +24,9 @@ public class CourseDetailModel implements CourseDetailContract.Model {
     public void increaseVideoLookNumber(int courseId, ApiCallback apiCallback) {
         ApiUtils.getInstance().increaseLookNumberToServer(courseId,apiCallback);
     }
+
+    @Override
+    public void getCourseChapter(int courseId, ApiCallback apiCallback) {
+        ApiUtils.getInstance().getCourseChapter(courseId,apiCallback);
+    }
 }

@@ -24,7 +24,7 @@ public interface ZoneContract {
     }
 
     interface View extends BaseView {
-        void getHotArticalSuc(List<HotArtical> hotArticalList);
+        void getHotArticalSuc(List<PicBean> hotArticalList);
 
         void getTopPicSuc(List<TopPicBean> topPicBeanList);
 
@@ -35,6 +35,7 @@ public interface ZoneContract {
         void loadMorePicSuc(List<PicBean> list);
 
         void getPicMasterSuc(PicMaster picMaster);
+        void getPicMasterFail(int userId);
     }
 
     interface Presenter {

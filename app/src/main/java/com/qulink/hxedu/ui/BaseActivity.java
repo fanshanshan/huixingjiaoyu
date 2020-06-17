@@ -74,6 +74,12 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         if (tvRight != null) {
             tvRight.setText(title);
         }
+    } protected void setRightTitle(String title,int color) {
+        TextView tvRight = (TextView) findViewById(R.id.tv_bar_right);
+        if (tvRight != null) {
+            tvRight.setText(title);
+            tvRight.setTextColor(color);
+        }
     }
     protected void setBackImg(int img) {
         ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
@@ -105,7 +111,17 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                finish();
+                FrameLayout root = getWindow().getDecorView().findViewById(android.R.id.content);
+                if (root != null) {
+                    View loadingView = root.findViewById(R.id.cover_root);
+                    if (loadingView != null) {
+                        root.removeView(loadingView);
+                    } else {
+                        finish();
+                    }
+                } else {
+                    finish();
+                }
                 break;
         }
     }

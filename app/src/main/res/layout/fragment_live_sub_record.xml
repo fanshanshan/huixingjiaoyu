@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.LiveRecordSubFragment">
+    android:orientation="vertical"
+    android:id="@+id/refresh_layout"
+    tools:context=".ui.fragment.ReadyBeginSubFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="J将开始" />
+        android:layout_height="match_parent">
+        <com.qulink.hxedu.view.EmptyRecyclerView
+            android:background="#F8F8F8"
+            android:id="@+id/recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</FrameLayout>
+        </com.qulink.hxedu.view.EmptyRecyclerView>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_empty"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="暂无内容"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>

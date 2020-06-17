@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#f0f0f0"
+    android:layout_height="match_parent"
+    tools:context=".ui.bank.AddBankNextActivity">
+
+    <include layout="@layout/bar"/>
+
+    <TextView
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:id="@+id/tv_phone"
+        android:textColor="#CCCCCC"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <include layout="@layout/line"/>
+    <LinearLayout
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+
+        <TextView
+            android:textSize="15sp"
+            android:textColor="#222222"
+            android:text="验证码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+
+            android:inputType="number"
+            android:textSize="15sp"
+            android:textColorHint="#CCCCCC"
+            android:hint="@string/verify_hint"
+            android:layout_marginLeft="12dp"
+            android:id="@+id/et_verify"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+<!--sbui sb后端 sbios  活干的老子心塞  妈的都干的什么活啊-->
+        <TextView
+            android:id="@+id/tv_send_smd"
+            android:textColor="#3586F9"
+            android:textSize="13sp"
+            android:text="@string/get_smscode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="50dp"
+        android:id="@+id/tv_next"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="下一步"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/login_btn_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

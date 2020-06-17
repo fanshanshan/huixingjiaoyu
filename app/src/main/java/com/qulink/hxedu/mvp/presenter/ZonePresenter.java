@@ -30,18 +30,25 @@ public class ZonePresenter extends BasePresenter<ZoneContract.View> implements Z
         model.getHotArtical(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                    List<HotArtical> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<HotArtical>>() {}.getType());
-                mView.getHotArticalSuc(hotArticalList);
+                List<PicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    mView.getHotArticalSuc(hotArticalList);
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onExpcetion(expectionMsg);
+                if (mView != null) {
+                    mView.onExpcetion(expectionMsg);
+                }
             }
         });
     }
@@ -51,18 +58,25 @@ public class ZonePresenter extends BasePresenter<ZoneContract.View> implements Z
         model.getTopPic(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<TopPicBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<TopPicBean>>() {}.getType());
-                mView.getTopPicSuc(hotArticalList);
+                List<TopPicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<TopPicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    mView.getTopPicSuc(hotArticalList);
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onError(expectionMsg);
+                if (mView != null) {
+                    mView.onError(expectionMsg);
+                }
             }
         });
     }
@@ -72,18 +86,28 @@ public class ZonePresenter extends BasePresenter<ZoneContract.View> implements Z
         model.getAllPic(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicBean>>() {}.getType());
-                mView.getAllPicSuc(hotArticalList);
+                List<PicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    mView.getAllPicSuc(hotArticalList);
+                    if (hotArticalList.size() < FinalValue.limit) {
+                        mView.noMore();
+                    }
+                }
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onExpcetion(expectionMsg);
+                if (mView != null) {
+                    mView.onExpcetion(expectionMsg);
+                }
             }
         });
     }
@@ -93,43 +117,58 @@ public class ZonePresenter extends BasePresenter<ZoneContract.View> implements Z
         model.loadMorePic(new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicBean> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicBean>>() {}.getType());
-                if(hotArticalList.size()< FinalValue.limit){
-                    mView.noMore();
+                List<PicBean> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicBean>>() {
+                }.getType());
+                if (mView != null) {
+                    if (hotArticalList.size() < FinalValue.limit) {
+                        mView.noMore();
+                    }
+                    mView.loadMorePicSuc(hotArticalList);
                 }
-                mView.loadMorePicSuc(hotArticalList);
             }
 
             @Override
             public void error(String code, String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-                mView.onExpcetion(expectionMsg);
+                if (mView != null) {
+                    mView.onExpcetion(expectionMsg);
+                }
             }
         });
     }
 
     @Override
     public void getPicMaster(int userId) {
-        model.getPicMasterById(userId,new ApiCallback() {
+        model.getPicMasterById(userId, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
-                List<PicMaster> hotArticalList =new Gson().fromJson(GsonUtil.GsonString(t.getData()),new TypeToken<List<PicMaster>>() {}.getType());
-                if(hotArticalList.size()>0){
-                    mView.getPicMasterSuc(hotArticalList.get(0));
+                List<PicMaster> hotArticalList = new Gson().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<PicMaster>>() {
+                }.getType());
+                if (hotArticalList.size() > 0) {
+                    if (mView != null) {
+                        mView.getPicMasterSuc(hotArticalList.get(0));
+                    }
                 }
             }
 
             @Override
             public void error(String code, String msg) {
-
+                if (mView != null) {
+                    mView.onExpcetion(msg);
+                }
             }
 
             @Override
             public void expcetion(String expectionMsg) {
+                if (mView != null) {
+                    mView.onExpcetion(expectionMsg);
+                }
 
             }
         });

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.msg.ActivityDetailActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/bar"/>
+
+        <com.qulink.hxedu.view.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/tv_title"
+                    android:textColor="#222222"
+                    android:textSize="17sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/tv_time"
+                    android:textColor="#CCCCCC"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+
+                <TextView
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/tv_content"
+                    android:textColor="#222222"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <include layout="@layout/line"/>
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:textColor="#222222"
+                        android:text="参与活动"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_marginLeft="6dp"
+                        android:id="@+id/tv_join_num"
+                        android:textSize="13sp"
+                        android:textColor="#CCCCCC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_need_pay"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#999999"
+                    android:textSize="13sp"
+                    android:text="本次活动需付费参与哦， 请填写相关信息进行报名预约"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <LinearLayout
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="50dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="手机号："
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#222222"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content" />
+
+                    <EditText
+                        android:inputType="number"
+                        android:id="@+id/et_phone"
+                        android:textSize="16sp"
+                        android:textColorHint="#CCCCCC"
+                        android:hint="请输入手机号"
+                        android:background="@null"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <include layout="@layout/line"/> <LinearLayout
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="微信号："
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/et_wx"
+                    android:textSize="16sp"
+                    android:textColorHint="#CCCCCC"
+                    android:hint="请输入微信号"
+                    android:background="@null"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+                <include layout="@layout/line"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_money"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="报名费："
+                        android:textColor="#222222"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_marginLeft="4dp"
+                        android:id="@+id/tv_money"
+                        android:textColor="#FF9743"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        </com.qulink.hxedu.view.MyScrollView>
+    </LinearLayout>
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:id="@+id/tv_complete"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="50dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+</RelativeLayout>
