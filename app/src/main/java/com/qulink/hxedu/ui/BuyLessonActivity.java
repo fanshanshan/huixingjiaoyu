@@ -35,6 +35,7 @@ public class BuyLessonActivity extends BaseActivity {
     @BindView(R.id.tv_lesson_title)
     TextView tvLessonTitle;
 
+    private boolean withResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,7 @@ public class BuyLessonActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        withResult = getIntent().getBooleanExtra("withResult",false);
         setTitle(getString(R.string.sure_order));
         tvLessonTitle.setText("先定个小目标比方说整他一个亿");
         Glide.with(this).load("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1774576164,138926049&fm=26&gp=0.jpg").into(ivImg);

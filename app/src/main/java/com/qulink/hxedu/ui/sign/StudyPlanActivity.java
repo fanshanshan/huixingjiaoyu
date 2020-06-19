@@ -1,5 +1,6 @@
 package com.qulink.hxedu.ui.sign;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -161,45 +162,10 @@ public class StudyPlanActivity extends BaseActivity {
             recycleUnFinishPlan.setVisibility(View.VISIBLE);
             unFinishAdapter = new CommonRcvAdapter<StudyPlan.UnfinishedBean>(studyPlan.getUnfinished()) {
 
-                TextView tvContent;
-                TextView tvComplete;
                 @NonNull
                 @Override
                 public AdapterItem createItem(Object type) {
-                    return new AdapterItem() {
-                        @Override
-                        public int getLayoutResId() {
-                            return R.layout.un_finished_plan_item;
-                        }
-
-                        @Override
-                        public void bindViews(@NonNull View root) {
-                            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            tvComplete = root.findViewById(R.id.tv_complete);
-                            tvContent = root.findViewById(R.id.tv_content);
-                        }
-
-                        @Override
-                        public void setViews() {
-
-                        }
-
-                        @Override
-                        public void handleData(Object o, int position) {
-                            if(o instanceof StudyPlan.UnfinishedBean){
-                                StudyPlan.UnfinishedBean unfinishedBean = (StudyPlan.UnfinishedBean)o;
-                                tvContent.setText(unfinishedBean.getContent());
-                                tvComplete.setText(getString(R.string.complete));
-                                tvComplete.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        finishStudyPlan(unfinishedBean);
-                                    }
-                                });
-                            }
-                        }
-                    };
+                    return new Item();
                 }
             };
             recycleUnFinishPlan.setAdapter(unFinishAdapter);
@@ -208,6 +174,53 @@ public class StudyPlanActivity extends BaseActivity {
         initFinishRecycle();
     }
 
+    class Item implements AdapterItem<StudyPlan.UnfinishedBean>{
+
+        TextView tvContent;
+        TextView tvComplete;
+        LinearLayout llRoot;
+        @Override
+        public int getLayoutResId() {
+            return R.layout.un_finished_plan_item;
+        }
+
+        @Override
+        public void bindViews(@NonNull View root) {
+            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            tvComplete = root.findViewById(R.id.tv_complete);
+            tvContent = root.findViewById(R.id.tv_content);
+            llRoot = root.findViewById(R.id.ll_root);
+        }
+
+        @Override
+        public void setViews() {
+
+        }
+
+        @Override
+        public void handleData(StudyPlan.UnfinishedBean unfinishedBean, int position) {
+            tvContent.setText(unfinishedBean.getContent());
+            tvComplete.setText(getString(R.string.complete));
+            tvComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishStudyPlan(unfinishedBean);
+                }
+            });
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogUtil.showAlertDialog(StudyPlanActivity.this, "我的计划", unfinishedBean.getContent(), "确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+    }
     void initFinishRecycle(){
         finishAdapter = new CommonRcvAdapter<StudyPlan.UnfinishedBean>(studyPlan.getFinished()) {
 

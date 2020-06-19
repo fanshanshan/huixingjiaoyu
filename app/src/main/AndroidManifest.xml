@@ -38,41 +38,117 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name">
-        <activity android:name=".ui.msg.ZoneMsgSubPageActivity"></activity>
-        <activity android:name=".ui.msg.NoticeDetailActivity" />
-        <activity android:name=".ui.msg.ActivityDetailActivity" />
-        <activity android:name=".ui.msg.MsgDetailActivity" />
-        <activity android:name="com.google.zxing.activity.CaptureActivity" />
-        <activity android:name=".ui.msg.MsgActivity" />
-        <activity android:name=".ui.AdviceActivity" />
-        <activity android:name=".ui.WithdrawRecordActivity" />
-        <activity android:name=".ui.setting.SetPayPwdActivity" />
-        <activity android:name=".ui.setting.EditPhoneNextActivity" />
-        <activity android:name=".ui.setting.EditPhoneActivity" />
-        <activity android:name=".ui.score.ShopCourseDetailActivity" />
-        <activity android:name=".ui.auth.RealAuthActivity" />
-        <activity android:name=".ui.auth.NoRealAuthActivity" />
-        <activity android:name=".ui.score.ScoreShopActivity" />
-        <activity android:name=".ui.bank.AddBankNextActivity" />
-        <activity android:name=".ui.bank.AddBankActivity" />
-        <activity android:name=".ui.bank.BankListActivity" />
-        <activity android:name=".ui.WithdrawActivity" />
-        <activity android:name=".ui.ScholarShipActivity" />
-        <activity android:name=".ui.StudySubRelationActivity" />
-        <activity android:name=".ui.BadgeDetailActivity" />
-        <activity android:name=".ui.StudyRelationActivity" />
-        <activity android:name=".ui.sign.ScoreDetailActivity" />
-        <activity android:name=".ui.zone.SearchTopicActivity" />
-        <activity android:name=".ui.zone.MyJoinTopicActivity" />
-        <activity android:name=".ui.zone.ArticalDetailActivity" />
-        <activity android:name=".ui.zone.MoreSubjectActivity" />
-        <activity android:name=".ui.zone.TopTopicActivity" />
-        <activity android:name=".ui.zone.AddSubjectActivity" />
-        <activity android:name=".ui.zone.PublishTopicActivity" />
-        <activity android:name=".ui.zone.PersonZoneIndexActivity" />
-        <activity android:name=".ui.BindPhoneActivity" />
-        <activity android:name=".ui.course.MoreCourseActivity" />
-        <activity android:name=".ui.sign.PlatformGroupScoreDetailActivity" />
+        <activity android:name=".ui.RecentLearnActivity"></activity>
+        <activity android:name=".ui.LevelInfoActivity" />
+        <activity
+            android:name=".ui.WithdrawResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.ZoneMsgSubPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.NoticeDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.ActivityDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.MsgDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.google.zxing.activity.CaptureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.MsgActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AdviceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.WithdrawRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.setting.SetPayPwdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.setting.EditPhoneNextActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.setting.EditPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.score.ShopCourseDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.auth.RealAuthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.auth.NoRealAuthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.score.ScoreShopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.bank.AddBankNextActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.bank.AddBankActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.bank.BankListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.WithdrawActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ScholarShipActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.StudySubRelationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BadgeDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.StudyRelationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.sign.ScoreDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.SearchTopicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.MyJoinTopicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.ArticalDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.MoreSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.TopTopicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.AddSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.PublishTopicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.zone.PersonZoneIndexActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BindPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.course.MoreCourseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.sign.PlatformGroupScoreDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.sign.PlatformAccountSignActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -141,6 +217,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.course.CourseDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CourseActivity"

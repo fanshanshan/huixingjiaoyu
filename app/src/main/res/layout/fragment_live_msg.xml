@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/smart_layout"
+
     tools:context=".ui.msg.SystemMsgFragment">
 
     <RelativeLayout
@@ -11,6 +12,7 @@
         android:layout_height="match_parent">
         <com.qulink.hxedu.view.EmptyRecyclerView
             android:id="@+id/recycle"
+            android:background="#f0f0f0"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

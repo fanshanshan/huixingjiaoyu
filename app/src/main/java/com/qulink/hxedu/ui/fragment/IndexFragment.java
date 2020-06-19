@@ -602,6 +602,10 @@ public class IndexFragment extends Fragment implements OnRefreshListener, IndexI
     public void Success(MessageEvent messageEvent) {
         if (
                 messageEvent.getMessage().equals(FinalValue.SIGN_SUCCESS)) {
+            presenter.getCourseItem();
+            presenter.getBanner();
+            presenter.getHotCourse();
+            presenter.getMoneyCourse();
             App.getInstance().getUserInfo(mActivity, new UserInfoCallback() {
                 @Override
                 public void getUserInfo(UserInfo userInfo) {

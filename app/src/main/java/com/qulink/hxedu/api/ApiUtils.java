@@ -477,6 +477,20 @@ public class ApiUtils {
         map.put("curriculumId", curriculumId + "");
         NetUtil.getInstance().post(baseUrl + "curriculum/increaseParticipant", map, apiCallback);
     }
+
+    /**
+     * 上报观看时间
+     *
+     * @param minutes     本次观看时长
+     * @param sourceId    课程id
+     * @param apiCallback 回调
+     */
+    public void increaseLookTime(int sourceId, int minutes, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("sourceId", sourceId + "");
+        map.put("minutes", minutes + "");
+        NetUtil.getInstance().post(baseUrl + "daily/addViewedMinutes", map, apiCallback);
+    }
     //**********************************************************社区相关
 
     /**
@@ -927,7 +941,9 @@ public class ApiUtils {
         Map<String, String> map = new HashMap<>();
         map.put("curriculumId", curriculumId + "");
         NetUtil.getInstance().get(baseUrl + "curriculum/getChapter", map, apiCallback);
-    }/**
+    }
+
+    /**
      * 收藏课程
      *
      * @param apiCallback
@@ -937,7 +953,8 @@ public class ApiUtils {
         map.put("curriculumId", curriculumId + "");
         NetUtil.getInstance().post(baseUrl + "curriculum/collectCurriculum", map, apiCallback);
     }
-/**
+
+    /**
      * 取消收藏
      *
      * @param apiCallback
@@ -946,6 +963,17 @@ public class ApiUtils {
         Map<String, String> map = new HashMap<>();
         map.put("collectIds", collectIds);
         NetUtil.getInstance().post(baseUrl + "curriculum/collect/batchCancel", map, apiCallback);
+    }
+
+    /**
+     * 取消收藏
+     *
+     * @param apiCallback
+     */
+    public void getCourseVideoUrl(String videoId, ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("videoId", videoId);
+        NetUtil.getInstance().get(baseUrl + "curriculum/getVideo", map, apiCallback);
     }
 
     /**
@@ -1158,6 +1186,16 @@ public class ApiUtils {
         NetUtil.getInstance().post(baseUrl + "message/live/list", params, apiCallback);
     }
 
+    /**
+     * 批量已读直播消息
+     *
+     * @param apiCallback
+     */
+    public void batchLiveMsg(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().post(baseUrl + "message/live/batchReadMsg", params, apiCallback);
+    }
+
     /*
      *查询是否有人赠送vip啦
      *
@@ -1176,7 +1214,8 @@ public class ApiUtils {
         Map<String, String> params = new HashMap<>();
         params.put("id", id + "");
         NetUtil.getInstance().post(baseUrl + "vip/readGiveMsg", params, apiCallback);
-    }/*
+    }
+    /*
      *ocr实名认证
      *
      * @param apiCallback
@@ -1188,6 +1227,35 @@ public class ApiUtils {
         params.put("idCard", idCard);
         params.put("sex", sex);
         NetUtil.getInstance().post(baseUrl + "user/realAuth", params, apiCallback);
+    }
+    /*
+     *获取经验信息
+     *
+     * @param apiCallback
+     */
+
+    public void getLevelInfo(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().get(baseUrl + "user/levelInfo", params, apiCallback);
+    }/*
+     *最近学习
+     *
+     * @param apiCallback
+     */
+
+    public void recentLean(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().post(baseUrl + "user/recentLearn", params, apiCallback);
+    }/*
+     *删除最近学习
+     *
+     * @param apiCallback
+     */
+
+    public void deleteRecentLearnByIds(String ids,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("ids",ids);
+        NetUtil.getInstance().post(baseUrl + "user/recentLearn/clear", params, apiCallback);
     }
 
 }

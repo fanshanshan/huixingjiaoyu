@@ -17,13 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
+import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.ActivityDetailBean;
 import com.qulink.hxedu.entity.MessageEvent;
+import com.qulink.hxedu.entity.PayWxBean;
+import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.pay.PayResult;
 import com.qulink.hxedu.pay.PayResultDetail;
 import com.qulink.hxedu.ui.BaseActivity;
@@ -36,6 +40,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zzhoujay.richtext.RichText;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -92,6 +97,15 @@ public class ActivityDetailActivity extends BaseActivity {
         getActivityDetail();
     }
 
+
+    private void showPaySucDialog(){
+        DialogUtil.showAlertDialog(this, "提示", "活动报名成功", "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
     @Override
     protected boolean enableGestureBack() {
         return true;
@@ -264,23 +278,35 @@ public class ActivityDetailActivity extends BaseActivity {
                     return;
                 }
                 if (!activityIsOver()) {
+
                     if (activityDetailBean.getParticipated() == 0) {
-                        if(activityDetailBean.getPayRequired()==1){
-                            DialogUtil.showAlertDialog(ActivityDetailActivity.this, "提示", "本次活动需要支付" + activityDetailBean.getPayAmount() + "费用,是否继续报名", "继续", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    showChooseWayDialog();
+                        App.getInstance().getUserInfo(ActivityDetailActivity.this, new UserInfoCallback() {
+                            @Override
+                            public void getUserInfo(UserInfo userInfo) {
+                                if(userInfo.isPlatformAccount()){
+                                    join(0);
+                                }else{
+                                    if(activityDetailBean.getPayRequired()==1){
+
+                                        DialogUtil.showAlertDialog(ActivityDetailActivity.this, "提示", "本次活动需要支付" + activityDetailBean.getPayAmount() + "费用,是否继续报名", "继续", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                showChooseWayDialog();
+                                            }
+                                        }, "取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                    }else{
+                                        join(0);
+                                    }
                                 }
-                            }, "取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                        }else{
-                            join(0);
-                        }
+                            }
+                        });
+
                     }
                 }
                 break;
@@ -295,28 +321,40 @@ public class ActivityDetailActivity extends BaseActivity {
             ToastUtils.show(this,"请输入微信号");
             return;
         }
+        DialogUtil.showLoading(this,true);
         ApiUtils.getInstance().joinActivity(activityId, etPhone.getText().toString(), etWx.getText().toString(), payType, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
+                DialogUtil.hideLoading(ActivityDetailActivity.this);
                 if(payType==0){
-                    ToastUtils.show(ActivityDetailActivity.this,"报名成功");
+                    showPaySucDialog();
                     getActivityDetail();
                 }else{
                     if(payType==1){
-                        payAli("");
+                        payAli(t.getData().toString());
                     }else{
-                        payWx();
+                        String str = StringEscapeUtils.unescapeJava(t.getData().toString());
+                        str = str.replace("\"{","{");
+                        str = str.replace("}\"","}");
+                        PayWxBean payWxBean = GsonUtil.GsonToBean(str,PayWxBean.class);
+
+                        payWx(payWxBean);
                     }
                 }
             }
 
             @Override
             public void error(String code, String msg) {
+                DialogUtil.hideLoading(ActivityDetailActivity.this);
 
+                ToastUtils.show(ActivityDetailActivity.this,msg);
             }
 
             @Override
             public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(ActivityDetailActivity.this);
+
+                ToastUtils.show(ActivityDetailActivity.this,expectionMsg);
 
             }
         });
@@ -362,25 +400,25 @@ public class ActivityDetailActivity extends BaseActivity {
 
 
     }
-    private void payWx(){
+    private void payWx(PayWxBean payWxBean){
         if(api==null){
             regToWx();
         }
         PayReq request = new PayReq();
 
-        request.appId = "wxd930ea5d5a258f4f";//子商户appid
+        request.appId = payWxBean.getAppid();//子商户appid
 
-        request.partnerId = "1900000109";//子商户号
+        request.partnerId = payWxBean.getPartnerid();//子商户号
 
-        request.prepayId= "1101000000140415649af9fc314aa427";
+        request.prepayId=payWxBean.getPrepayid();
 
         request.packageValue = "Sign=WXPay";
 
-        request.nonceStr= "1101000000140429eb40476f8896f4c9";
+        request.nonceStr= payWxBean.getNoncestr();
 
-        request.timeStamp= "1398746574";
+        request.timeStamp=payWxBean.getTimestamp();
 
-        request.sign= "7FFECB600D7157C5AA49810D2D8F28BC2811827B";
+        request.sign= payWxBean.getTimestamp();
 
         api.sendReq(request);
     }
@@ -402,15 +440,15 @@ public class ActivityDetailActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                        // PayResultDetail payResultDetail = GsonUtil.GsonToBean(resultInfo, PayResultDetail.class);
-                        ToastUtils.show(ActivityDetailActivity.this,"报名成功");
                         getActivityDetail();
+                        showPaySucDialog();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtils.show(ActivityDetailActivity.this, resultInfo);
                     }
                     break;
                 case WX_SUCCESS_CODE:
-
+                    showPaySucDialog();
                     ToastUtils.show(ActivityDetailActivity.this,"报名成功");
                     getActivityDetail();
                     break;

@@ -17,8 +17,14 @@ import com.qulink.hxedu.adapter.FragmentViewPagerAdapter;
 import com.qulink.hxedu.api.ApiCallback;
 import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.ResponseData;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +97,5 @@ public class LiveFragment extends Fragment {
         String[] s = new String[]{};
         tabParent.setViewPager(vp);
     }
-
 
 }

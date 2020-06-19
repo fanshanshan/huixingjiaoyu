@@ -481,9 +481,9 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
     public void Success(MessageEvent messageEvent) {
         if (messageEvent.getMessage().equals(FinalValue.LOGIN_SUCCESS)
         ) {
-//            mPresenter.getHotArtical();
-//            mPresenter.getTopPic();
-//            mPresenter.getAllPic();
+            mPresenter.getHotArtical();
+            mPresenter.getTopPic();
+            mPresenter.getAllPic();
         }
     }
 

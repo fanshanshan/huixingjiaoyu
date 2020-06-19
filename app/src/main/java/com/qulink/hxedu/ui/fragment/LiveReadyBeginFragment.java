@@ -21,8 +21,14 @@ import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.entity.LiveClassfyBean;
+import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +68,33 @@ public class LiveReadyBeginFragment extends Fragment {
         return rootView;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Success(MessageEvent messageEvent) {
+        if (messageEvent.getMessage().equals(FinalValue.LOGIN_SUCCESS)
+        ) {
+            initLiveClassfy();
+
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
     private List<Fragment> fragmentList;
     private List<String> titleList;
 

@@ -45,6 +45,6 @@ public class MsgDetailActivity extends BaseActivity {
 
     @Override
     protected boolean enableGestureBack() {
-        return false;
+        return true;
     }
 }

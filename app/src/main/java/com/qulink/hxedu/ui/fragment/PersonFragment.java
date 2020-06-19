@@ -33,18 +33,22 @@ import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.PersonMenuItem;
+import com.qulink.hxedu.entity.RecentLearnBean;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.ui.AdviceActivity;
 import com.qulink.hxedu.ui.BadgeDetailActivity;
 import com.qulink.hxedu.ui.EditHeadAndNickActivity;
+import com.qulink.hxedu.ui.LevelInfoActivity;
 import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.MyOrderActivity;
+import com.qulink.hxedu.ui.RecentLearnActivity;
 import com.qulink.hxedu.ui.ScholarShipActivity;
 import com.qulink.hxedu.ui.SettingActivity;
 import com.qulink.hxedu.ui.StudyRelationActivity;
 import com.qulink.hxedu.ui.VipDetailActivity;
 import com.qulink.hxedu.ui.auth.NoRealAuthActivity;
 import com.qulink.hxedu.ui.bank.BankListActivity;
+import com.qulink.hxedu.ui.course.CourseDetailActivity;
 import com.qulink.hxedu.ui.live.AuthorActivity;
 import com.qulink.hxedu.ui.msg.MsgActivity;
 import com.qulink.hxedu.ui.score.ScoreShopActivity;
@@ -146,7 +150,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_person, container, false);
             ButterKnife.bind(this, rootView);
-            initStudy();
+            getRecentLearn();
             initMenu();
             addScrollviewListener();
             initView();
@@ -215,56 +219,96 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         });
     }
 
-    List<String> studyList;
-    CommonRcvAdapter<String> stringCommonRcvAdapter;
+    CommonRcvAdapter<RecentLearnBean.RecentSevenDaysBean> stringCommonRcvAdapter;
 
-    void initStudy() {
-        if (!App.getInstance().isLogin(mActivity)) {
+    private void getRecentLearn()
+    {
+        ApiUtils.getInstance().recentLean(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                RecentLearnBean recentLearnBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),RecentLearnBean.class);
+                List<RecentLearnBean.RecentSevenDaysBean> list = new ArrayList<>();
+                if(recentLearnBean!=null){
+                    if(recentLearnBean.getRecentSevenDays()!=null){
+                        list.addAll(recentLearnBean.getRecentSevenDays());
+                    } if(recentLearnBean.getToday()!=null){
+                        list.addAll(recentLearnBean.getToday());
+                    }
+                    initStudy(list);
+                }
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+
+            }
+        });
+    }
+    class RecentLearnItem implements AdapterItem<RecentLearnBean.RecentSevenDaysBean>{
+        ImageView ivImg;
+        TextView tvTitle;
+        LinearLayout llRoot;
+            @Override
+            public int getLayoutResId() {
+                return R.layout.near_study_item;
+            }
+
+            @Override
+            public void bindViews(@NonNull View root) {
+
+                ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                ivImg = root.findViewById(R.id.iv_img);
+                tvTitle = root.findViewById(R.id.tv_title);
+                llRoot = root.findViewById(R.id.ll_root);
+            }
+
+            @Override
+            public void setViews() {
+
+            }
+
+            @Override
+            public void handleData(RecentLearnBean.RecentSevenDaysBean o, int position) {
+                App.getInstance().getDefaultSetting(mActivity, new DefaultSettingCallback() {
+                    @Override
+                    public void getDefaultSetting(DefaultSetting defaultSetting) {
+                        Glide.with(mActivity).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(),o.getCurriculumImage())).into(ivImg);
+
+                    }
+                });
+                llRoot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mActivity, CourseDetailActivity.class);
+                        intent.putExtra("courseId",o.getVideoId());
+                        startActivity(intent);
+                    }
+                });
+                tvTitle.setText(o.getCurriculumName());
+            }
+        };
+    void initStudy(List<RecentLearnBean.RecentSevenDaysBean> list) {
+        if (!App.getInstance().isLogin(mActivity) || list.isEmpty()) {
             llNearStudy.setVisibility(View.GONE);
             return;
         } else {
             llNearStudy.setVisibility(View.VISIBLE);
         }
-        studyList = new ArrayList<>();
-        studyList.add("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg");
-        studyList.add("https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3625347790,708645933&fm=26&gp=0.jpg");
-        studyList.add("https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=405250413,4289985831&fm=26&gp=0.jpg");
-        studyList.add("https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=405250413,4289985831&fm=26&gp=0.jpg");
 
-        stringCommonRcvAdapter = new CommonRcvAdapter<String>(studyList) {
-            ImageView ivImg;
-            TextView tvTitle;
+        stringCommonRcvAdapter = new CommonRcvAdapter<RecentLearnBean.RecentSevenDaysBean>(list) {
+
 
             @NonNull
             @Override
             public AdapterItem createItem(Object type) {
 
-                return new AdapterItem() {
-                    @Override
-                    public int getLayoutResId() {
-                        return R.layout.near_study_item;
-                    }
-
-                    @Override
-                    public void bindViews(@NonNull View root) {
-
-                        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-                        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        ivImg = root.findViewById(R.id.iv_img);
-                        tvTitle = root.findViewById(R.id.tv_title);
-                    }
-
-                    @Override
-                    public void setViews() {
-
-                    }
-
-                    @Override
-                    public void handleData(Object o, int position) {
-                        Glide.with(mActivity).load(o.toString()).into(ivImg);
-                        tvTitle.setText("阶能力提升训练营阶能力 提升训练营 ");
-                    }
-                };
+                return new RecentLearnItem();
             }
         };
         recycleStudy.setAdapter(stringCommonRcvAdapter);
@@ -344,7 +388,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         recycleItem.setLayoutManager(new GridLayoutManager(mActivity, 4));
     }
 
-    @OnClick({R.id.iv_vip_status,R.id.iv_saoma, R.id.iv_msg, R.id.rl_study_relation, R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name, R.id.ll_sign, R.id.rl_vip})
+    @OnClick({R.id.tv_more,R.id.tv_level,R.id.iv_vip_status,R.id.iv_saoma, R.id.iv_msg, R.id.rl_study_relation, R.id.ll_user_info, R.id.tv_login, R.id.iv_headimg, R.id.tv_name, R.id.ll_sign, R.id.rl_vip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_study_relation:
@@ -360,8 +404,11 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
             case R.id.iv_headimg:
                 if (App.getInstance().isLogin(mActivity, true)) {
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, EditHeadAndNickActivity.class));
-                } else {
-                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, LoginActivity.class));
+                }
+                break;
+                case R.id.tv_more:
+                if (App.getInstance().isLogin(mActivity, true)) {
+                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, RecentLearnActivity.class));
                 }
                 break;
             case R.id.tv_name:
@@ -383,6 +430,12 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                             }
                         }
                     });
+                }
+                break;
+
+                case R.id.tv_level:
+                if (App.getInstance().isLogin(mActivity, true)) {
+                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, LevelInfoActivity.class));
                 }
                 break;
             case R.id.rl_vip:
@@ -504,12 +557,13 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         ) {
 //            getUserInfo();
             initView();
-            initStudy();
+            getRecentLearn();
+            initIndexMsgInfo();
         } else if (
                 messageEvent.getMessage().equals(FinalValue.LOGOUT)) {
 
             initView();
-            initStudy();
+            getRecentLearn();
         } else if (
                 messageEvent.getMessage().equals(FinalValue.GET_USERINFO)) {
             initView();
@@ -587,6 +641,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         getUserInfo();
         initIndexMsgInfo();//查询是否有未读消息
+        getRecentLearn();//查询是否有未读消息
 
     }
 

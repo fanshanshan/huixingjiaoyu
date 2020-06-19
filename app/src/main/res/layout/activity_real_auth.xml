@@ -12,7 +12,8 @@
     <include layout="@layout/bar"/>
 
     <ImageView
-        android:src="@drawable/ship_top_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sbui3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -83,7 +84,9 @@
         android:layout_height="wrap_content" />
 
     <ImageView
-        android:src="@drawable/sb_ui2"
+        android:scaleType="centerInside"
+        android:background="@drawable/sbui5"
+        android:src="@drawable/sbui4"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"

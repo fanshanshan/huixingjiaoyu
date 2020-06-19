@@ -90,7 +90,7 @@ public class ScoreShopActivity extends BaseActivity implements OnRefreshListener
 
     @Override
     protected boolean enableGestureBack() {
-        return false;
+        return true;
     }
 
     private int pageNo;

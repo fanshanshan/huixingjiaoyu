@@ -8,6 +8,7 @@
     tools:context=".ui.course.CourseDetailActivity">
 
     <com.qulink.hxedu.view.MyScrollView
+        android:id="@+id/sc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -47,8 +48,8 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/play" />
 
-                <com.google.android.exoplayer2.ui.PlayerView
-                    android:id="@+id/videoView"
+                <com.qulink.hxedu.video.MyJzvdStd
+                    android:id="@+id/jz_video"
                     android:layout_width="match_parent"
                     android:layout_height="210dp" />
             </RelativeLayout>
@@ -326,12 +327,10 @@ z
     </com.qulink.hxedu.view.MyScrollView>
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
@@ -342,7 +341,7 @@ z
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="8888"
+            android:text=""
             android:textColor="#FCA84D"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -350,7 +349,9 @@ z
 
         <TextView
             android:visibility="gone"
-            android:id="@+id/tv_buy"
+            android:focusable="true"
+            android:clickable="true"
+            android:id="@+id/tv_next"
             android:layout_width="120dp"
             android:layout_height="36dp"
             android:background="@drawable/start_study_txt_bg"

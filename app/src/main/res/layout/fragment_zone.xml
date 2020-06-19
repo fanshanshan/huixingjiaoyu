@@ -51,13 +51,13 @@
             android:layout_height="match_parent">
             <com.qulink.hxedu.view.MyScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
                 <LinearLayout
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:paddingTop="8dp"

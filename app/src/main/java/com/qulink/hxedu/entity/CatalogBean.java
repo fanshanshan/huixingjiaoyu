@@ -15,10 +15,12 @@ public class CatalogBean {
      * studyStatus : 0
      */
 
+    private boolean isPlaying;
     private int chapterId;
     private String chapterName;
     private int videoId;
     private String videoName;
     private int experienceStatus;
     private int studyStatus;
+    private VideoInfo videoInfo;
 }

@@ -83,6 +83,7 @@ public class SendVipActivity extends BaseActivity {
 
     private int payWay =1;
 
+    private boolean withResult;
     private final int ALIPAY_SUCCESS_CODE=111;
     private final int WX_SUCCESS_CODE=222;
     private Handler mHandler = new Handler() {
@@ -130,6 +131,7 @@ public class SendVipActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        withResult = getIntent().getBooleanExtra("withResult",false);
         setBarBg(0x00000000);
         setBarTtxtColors(0xffffffff);
         setBackImg(R.drawable.back_white2);
@@ -299,6 +301,7 @@ public class SendVipActivity extends BaseActivity {
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
 
+
                 App.getInstance().getUserInfo(SendVipActivity.this, new UserInfoCallback() {
                     @Override
                     public void getUserInfo(UserInfo userInfo) {
@@ -309,6 +312,10 @@ public class SendVipActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        if(withResult){
+                            setResult(RESULT_OK);
+                            finish();
+                        }
                     }
                 });
             }
