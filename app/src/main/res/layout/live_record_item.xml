@@ -6,6 +6,7 @@
     android:paddingRight="12dp"
     android:background="#ffffff"
     android:paddingTop="8dp"
+    android:id="@+id/ll_root"
     android:paddingBottom="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">

@@ -1,6 +1,7 @@
 package com.qulink.hxedu.ui;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,6 +29,7 @@ import com.qulink.hxedu.pay.PayPwdView;
 import com.qulink.hxedu.ui.setting.SetPayPwdActivity;
 import com.qulink.hxedu.util.CourseUtil;
 import com.qulink.hxedu.util.DialogUtil;
+import com.qulink.hxedu.util.RouteUtil;
 import com.qulink.hxedu.util.ToastUtils;
 
 import java.util.List;
@@ -155,6 +157,17 @@ public class WithdrawActivity extends BaseActivity implements PayPwdView.InputCa
             public void error(String code, String msg) {
                 DialogUtil.hideLoading(WithdrawActivity.this);
                 ToastUtils.show(WithdrawActivity.this,msg);
+                DialogUtil.showAlertDialog(WithdrawActivity.this, "提示", "提现申请已提交，查看提现结果", "立即查看", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        RouteUtil.startNewActivity(WithdrawActivity.this,new Intent(WithdrawActivity.this,WithdrawRecordActivity.class));
+                    }
+                }, "取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 
             }
 

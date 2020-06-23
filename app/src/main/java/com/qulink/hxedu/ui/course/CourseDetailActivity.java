@@ -3,6 +3,8 @@ package com.qulink.hxedu.ui.course;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -157,7 +159,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
         mPresenter = new CourseDetailPresenter();
         mPresenter.attachView(this);
         mPresenter.getCourseDetail(courseId);
-      //  mPresenter.getCourseChapter(courseId);
+        //  mPresenter.getCourseChapter(courseId);
 //        mPresenter.getPersonnalCourseDetail(courseId);
 //        mPresenter.getCourseLookNumberNameById(courseId);
         chooseCourseDetail();
@@ -242,7 +244,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
                     if (recycleCourseCatalog.getAdapter() != null) {
                         recycleCourseCatalog.getAdapter().notifyDataSetChanged();
                     }
-                    sc.smoothScrollTo(0,0);
+                    sc.smoothScrollTo(0, 0);
 
                 }
             });
@@ -321,13 +323,11 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     }
 
     private void startPlay() {
-        try {
-            if(courseDetailBean.getPersonal().getStudyStatus()==0){
-                mPresenter.increaseVideoLookNumber(courseId);
-            }
-        }catch (Exception e){
-
+        if (courseDetailBean.getPersonal().getStudyStatus() == 0) {
+            mPresenter.increaseVideoLookNumber(courseId);
         }
+        hideBackBtn();
+
         if (catalogList == null) {
             getCourseCatalog();
         } else {
@@ -335,10 +335,10 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
             jzVideo.setPlayCurrentIndex(0);
             jzVideo.mStartPlay();
             setCatalogStatus(0);
-            if(recycleCourseCatalog.getAdapter()!=null){
+            if (recycleCourseCatalog.getAdapter() != null) {
                 recycleCourseCatalog.getAdapter().notifyDataSetChanged();
             }
-           // sc.smoothScrollTo(0,0);
+            // sc.smoothScrollTo(0,0);
         }
     }
 
@@ -498,7 +498,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     @Override
     public void increaseVideoLookNumberSuc() {
         Log.e(TAG, "上报观看记录成功");
-        if(courseDetailBean!=null){
+        if (courseDetailBean != null) {
             courseDetailBean.getPersonal().setStudyStatus(1);
         }
     }
@@ -577,7 +577,6 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -642,6 +641,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
             }
         }
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -650,7 +650,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
             }
 
         }
-       return super.onKeyDown(keyCode,event);
+        return super.onKeyDown(keyCode, event);
     }
 
 
@@ -673,6 +673,58 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     @Override
     public void startClick() {
         getCourseCatalog();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler.sendEmptyMessageDelayed(HIDE_BACK_CODE, 2000);
+        }
+    }
+
+    @Override
+    public void clickSurface() {
+        showBackBtn();
+
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(HIDE_BACK_CODE, 2000);
+
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+        showBackBtn();
+    }
+
+    private final int HIDE_BACK_CODE = 222;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HIDE_BACK_CODE:
+                    hideBackBtn();
+                    break;
+            }
+        }
+    };
+
+    private void showBackBtn() {
+        ivBack.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBackBtn() {
+
+
+        ivBack.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void playNext(int position) {
+
+        setCatalogStatus(position);
+        if (recycleCourseCatalog.getAdapter() != null) {
+            recycleCourseCatalog.getAdapter().notifyDataSetChanged();
+        }
     }
 
     private void goToVipPage() {

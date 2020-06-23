@@ -82,7 +82,6 @@ public class LevelInfoActivity extends BaseActivity {
         setBarBg(ContextCompat.getColor(this, R.color.white_transparent));
         setBarTtxtColors(ContextCompat.getColor(this, R.color.white));
         getLevelInfo();
-        progress.setProgress(10);
 
     }
 
@@ -111,6 +110,8 @@ public class LevelInfoActivity extends BaseActivity {
         tvTodayCredit.setText(levelInfoBean.getViewedVideoExperience()+levelInfoBean.getTopicsExperience()+"");
         tvVideoCredit.setText("+"+levelInfoBean.getViewedVideoExperience());
         tvTopicCredit.setText("+"+levelInfoBean.getTopicsExperience());
+        progress.setProgress(Integer.parseInt(levelInfoBean.getPercentage()));
+
     }
 
     private void getLevelInfo() {

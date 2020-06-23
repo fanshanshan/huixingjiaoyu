@@ -25,4 +25,10 @@
     <color name="corner_color">#1e00ff</color>
     <!-- QRCode scanner color end -->
 
+
+    <color name="withdraw_suc">#6CDE66</color>
+    <color name="withdraw_fail">#EB6565</color>
+    <color name="withdraw_deal">#666666</color>
+    <color name="withdraw_dealed">#cccccc</color>
+    <color name="withdraw_wait_dealed">#222222</color>
 </resources>

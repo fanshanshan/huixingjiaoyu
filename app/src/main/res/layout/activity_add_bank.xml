@@ -169,7 +169,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/checked"
+            android:id="@+id/iv_rule"
+            android:src="@drawable/check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView

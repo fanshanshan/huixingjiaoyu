@@ -976,24 +976,21 @@ public class ApiUtils {
         NetUtil.getInstance().get(baseUrl + "curriculum/getVideo", map, apiCallback);
     }
 
-    /**
-     * 课程搜索
-     *
-     * @param classifyId
-     * @param tagId
-     * @param pageNo
-     * @param pageSize
-     * @param searchTex
-     * @param apiCallback
-     */
-    public void searchCourse(int classifyId, int tagId, int pageNo, int pageSize, String searchTex, ApiCallback apiCallback) {
+    public void searchCourse(int pageNo,int pageSize,String keyword,int chargeType,String classifyIds,String tagIds,int priceSort,int complexSort, ApiCallback apiCallback) {
         Map<String, String> params = new HashMap<>();
-        params.put("classifyId", classifyId + "");
-        params.put("tagId", tagId + "");
         params.put("pageNo", pageNo + "");
+        params.put("priceSort", priceSort + "");
+        params.put("complexSort", complexSort + "");
         params.put("pageSize", pageSize + "");
-        params.put("searchTex", searchTex + "");
-        NetUtil.getInstance().get(baseUrl + "curriculum/search", params, apiCallback);
+        params.put("chargeType", chargeType + "");
+        params.put("keyword", keyword);
+        if(classifyIds!=null){
+            params.put("classifyIds", classifyIds);
+        }
+        if(tagIds!=null){
+            params.put("tagIds", tagIds);
+        }
+        NetUtil.getInstance().get(baseUrl + "curriculum/index/search", params, apiCallback);
     }
 
     /**
@@ -1046,17 +1043,7 @@ public class ApiUtils {
         NetUtil.getInstance().post(baseUrl + "withdrawRecord/list", params, apiCallback);
     }
 
-    /**
-     * 需求反馈
-     *
-     * @param apiCallback
-     */
-    public void advice(String content, String img, ApiCallback apiCallback) {
-        Map<String, String> params = new HashMap<>();
-        params.put("content", content);
-        params.put("img", img);
-        NetUtil.getInstance().post(baseUrl + "withdrawRecord/list", params, apiCallback);
-    }
+
 
     /**
      * 获取是否有未读消息
@@ -1221,11 +1208,12 @@ public class ApiUtils {
      * @param apiCallback
      */
 
-    public void realAuth(String realName, String idCard, String sex, ApiCallback apiCallback) {
+    public void realAuth(String realName, String idCard, String sex,String realAuthImg, ApiCallback apiCallback) {
         Map<String, String> params = new HashMap<>();
         params.put("realName", realName);
         params.put("idCard", idCard);
         params.put("sex", sex);
+        params.put("realAuthImg", realAuthImg);
         NetUtil.getInstance().post(baseUrl + "user/realAuth", params, apiCallback);
     }
     /*
@@ -1252,10 +1240,73 @@ public class ApiUtils {
      * @param apiCallback
      */
 
-    public void deleteRecentLearnByIds(String ids,ApiCallback apiCallback) {
+    public void deleteRecentLearnByIds(String ids, ApiCallback apiCallback) {
         Map<String, String> params = new HashMap<>();
-        params.put("ids",ids);
+        params.put("ids", ids);
         NetUtil.getInstance().post(baseUrl + "user/recentLearn/clear", params, apiCallback);
+    }/*
+     *删除数仓课程
+     *
+     * @param apiCallback
+     */
+
+    public void deleteColletion(String ids, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("collectIds", ids);
+        NetUtil.getInstance().post(baseUrl + "curriculum/collect/batchCancel", params, apiCallback);
+    }/*
+     *获取收藏列表
+     *
+     * @param apiCallback
+     */
+
+    public void collectCourseList(int pageNo, int pageSize, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageNo", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        NetUtil.getInstance().post(baseUrl + "curriculum/collect/list", params, apiCallback);
+    }/*
+     *获取直播详情
+     *
+     * @param apiCallback
+     */
+
+    public void getLiveDetail(int liveId, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("liveId", liveId + "");
+        NetUtil.getInstance().post(baseUrl + "live/detail", params, apiCallback);
+    }/*
+     *获取直播张杰
+     *
+     * @param apiCallback
+     */
+
+    public void getLiveCatalog(int liveId, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("liveId", liveId + "");
+        NetUtil.getInstance().post(baseUrl + "live/chapter/list", params, apiCallback);
+    }
+    /*
+     *需求反馈
+     *
+     * @param apiCallback
+     */
+
+    public void advice(String content, String images,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("content", content);
+        params.put("images", images);
+        NetUtil.getInstance().post(baseUrl + "suggest", params, apiCallback);
+    }/*
+     *ocr
+     *
+     * @param apiCallback
+     */
+
+    public void ocr(String imgURL,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("imgURL", imgURL);
+        NetUtil.getInstance().post(baseUrl + "user/ocr", params, apiCallback);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.qulink.hxedu.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.LiveDetailBean;
+import com.qulink.hxedu.ui.live.LiveDetailActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.ToastUtils;
@@ -120,7 +122,7 @@ public class LiveRecordSubFragment extends Fragment implements OnRefreshListener
         TextView tvName;
         TextView tvDesc;
         TextView tvStatus;
-
+        LinearLayout llRoot;
         @Override
         public int getLayoutResId() {
             return R.layout.live_record_item;
@@ -136,6 +138,7 @@ public class LiveRecordSubFragment extends Fragment implements OnRefreshListener
             tvName = root.findViewById(R.id.tv_name);
             tvStatus = root.findViewById(R.id.tv_status);
             tvDesc = root.findViewById(R.id.tv_desc);
+            llRoot = root.findViewById(R.id.ll_root);
         }
 
         @Override
@@ -165,6 +168,14 @@ public class LiveRecordSubFragment extends Fragment implements OnRefreshListener
                 @Override
                 public void onClick(View v) {
                     ToastUtils.show(getActivity(), "视频正在制作中");
+                }
+            });
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
+                    intent.putExtra("liveId",o.getId());
+                    startActivity(intent);
                 }
             });
         }

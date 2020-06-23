@@ -8,4 +8,9 @@ public interface VideoStatuListener {
     public  void buyLesson();
 
     public void startClick();
+    public void clickSurface();
+
+    public void onVideoPause();
+
+    public void playNext(int position);
 }

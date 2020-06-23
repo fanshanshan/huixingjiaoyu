@@ -208,6 +208,7 @@ public class RecentLearnActivity extends BaseActivity implements OnRefreshListen
                @Override
                public void success(ResponseData t) {
                    DialogUtil.hideLoading(RecentLearnActivity.this);
+                   setResult(RESULT_OK);
                    getRecentLearn();
                }
 

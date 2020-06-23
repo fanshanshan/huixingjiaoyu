@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -113,6 +115,27 @@ public class StudyRelationActivity extends BaseActivity implements OnLoadMoreLis
     }
 
 
+    private Handler handler = new Handler(){
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if(qrBitmap!=null){
+                ivQrcode.setImageBitmap(qrBitmap);
+
+            }
+
+        }
+    };
+    private void getQrBitMap(Bitmap bitmap){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                qrBitmap = QRCodeUtil.createQRCodeWithLogo(studyRelationBean.getInvitationCode(), ScreenUtil.dip2px(StudyRelationActivity.this, 200), bitmap);
+          handler.sendEmptyMessage(1);
+            }
+        }).start();
+    }
     private void dealData() {
         if (studyRelationBean == null) {
             return;
@@ -120,8 +143,7 @@ public class StudyRelationActivity extends BaseActivity implements OnLoadMoreLis
         tvLow.setText(studyRelationBean.getJuniorNums() + "人");
         tvInviteCode.setText(studyRelationBean.getInvitationCode());
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
-        qrBitmap = QRCodeUtil.createQRCodeWithLogo(studyRelationBean.getInvitationCode(), ScreenUtil.dip2px(StudyRelationActivity.this, 200), bitmap);
-        ivQrcode.setImageBitmap(qrBitmap);
+        getQrBitMap(bitmap);
         if (studyRelationBean.getSeniorName() == null || studyRelationBean.getSeniorPhone() == null) {
             rlHigh.setVisibility(View.GONE);
             vLine.setVisibility(View.GONE);
@@ -393,8 +415,13 @@ public class StudyRelationActivity extends BaseActivity implements OnLoadMoreLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(handler!=null){
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
         if (qrBitmap != null) {
             qrBitmap.recycle();
+
         }
     }
 }

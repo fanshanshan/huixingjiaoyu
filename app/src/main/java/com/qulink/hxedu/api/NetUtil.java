@@ -12,6 +12,7 @@ import com.qulink.hxedu.entity.HotCourseBean;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
 import com.qulink.hxedu.ui.LoginActivity;
+import com.qulink.hxedu.ui.SettingActivity;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
@@ -86,8 +87,9 @@ public class NetUtil {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
                         showTokenErrorDialog();
                         // EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                    }else{
+                        apiCallback.error(responseData.getCode(), responseData.getMsg());
                     }
-                    apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
             }
 
@@ -157,8 +159,9 @@ public class NetUtil {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
                         showTokenErrorDialog();
                         // EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                    }else{
+                        apiCallback.error(responseData.getCode(), responseData.getMsg());
                     }
-                    apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
             }
         });
@@ -191,8 +194,10 @@ public class NetUtil {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
                         showTokenErrorDialog();
                         //EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                    }else{
+                        apiCallback.error(responseData.getCode(), responseData.getMsg());
+
                     }
-                    apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
             }
 
@@ -273,8 +278,10 @@ public class NetUtil {
                     if (responseData.getCode().equals(FinalValue.TOKEN_ERROR)) {
                         showTokenErrorDialog();
                         //EventBus.getDefault().post(new MessageEvent(FinalValue.TOKEN_ERROR,0));
+                    }else{
+                        apiCallback.error(responseData.getCode(), responseData.getMsg());
+
                     }
-                    apiCallback.error(responseData.getCode(), responseData.getMsg());
                 }
             }
         });
@@ -292,14 +299,23 @@ public class NetUtil {
             return;
         }
         isShow = true;
+        App.getInstance().logout();
+        PrefUtils.clearToken(App.getInstance().getCurrentActivity());
+        App.getInstance().setTokenInfo(null);
+        App.getInstance().deleteAlias(App.getInstance().getCurrentActivity());
+        NetUtil.getInstance().setToken("");
+        EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT));
+
 
         DialogUtil.showAlertDialog(App.getInstance().getCurrentActivity(), "提示", "登陆状态已过期，请重新登陆", "确定", (dialog, which) -> {
             dialog.dismiss();
-            App.getInstance().logout();
-            EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
-            RouteUtil.startNewActivity(App.getInstance().getCurrentActivity(), new Intent(MyActivityManager.getInstance().currentActivity(), LoginActivity.class));
+            isShow = false;
+
+
+            RouteUtil.startNewActivity(App.getInstance().getCurrentActivity(), new Intent(App.getInstance().getCurrentActivity(), LoginActivity.class));
         }, "一会再说", (dialog, which) -> {
             App.getInstance().logout();
+            isShow = false;
             dialog.dismiss();
         });
 

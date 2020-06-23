@@ -591,10 +591,60 @@ public class ShopCourseDetailActivity extends BaseActivity implements CourseDeta
     @Override
     public void buyLesson() {
     }
-
     @Override
     public void startClick() {
         getCourseCatalog();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler.sendEmptyMessageDelayed(HIDE_BACK_CODE, 2000);
+        }
+    }
+
+    @Override
+    public void clickSurface() {
+        showBackBtn();
+
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(HIDE_BACK_CODE, 2000);
+
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+        showBackBtn();
+    }
+
+    private final int HIDE_BACK_CODE = 222;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HIDE_BACK_CODE:
+                    hideBackBtn();
+                    break;
+            }
+        }
+    };
+
+    private void showBackBtn() {
+        ivBack.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBackBtn() {
+
+
+        ivBack.setVisibility(View.GONE);
+
+    }
+    @Override
+    public void playNext(int position) {
+
+        setCatalogStatus(position);
+        if (recycleCourseCatalog.getAdapter() != null) {
+            recycleCourseCatalog.getAdapter().notifyDataSetChanged();
+        }
     }
 
 

@@ -1,5 +1,11 @@
 package com.qulink.hxedu.entity;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import com.qulink.hxedu.ui.auth.NoRealAuthActivity;
+import com.qulink.hxedu.util.RouteUtil;
+
 public class UserInfo {
 
     /**
@@ -42,20 +48,22 @@ public class UserInfo {
     private String arriveDate;
     private int boughtStatus;
 
-    public boolean isSign(){
-        if(this.getSignStatus()==0){
+    public boolean isSign() {
+        if (this.getSignStatus() == 0) {
             return false;
         }
         return true;
     }
-    public boolean isVip(){
-        if(this.getStatus()==0){
+
+    public boolean isVip() {
+        if (this.getStatus() == 0) {
             return false;
         }
         return true;
     }
-    public boolean isBoughtVip(){
-        if(this.getBoughtStatus()==0){
+
+    public boolean isBoughtVip() {
+        if (this.getBoughtStatus() == 0) {
             return false;
         }
         return true;
@@ -77,22 +85,29 @@ public class UserInfo {
         this.realAuthStatus = realAuthStatus;
     }
 
-    public boolean isPlatformAccount(){
-        if(this.getPlatformStatus()==0){
-            return false;
-        }
-        return true;
-    }public boolean isRealAuth(){
-        if(this.getRealAuthStatus()==0){
-            return false;
-        }
-        return true;
-    }public boolean isBindWx(){
-        if(this.getWxBindStatus()==0){
+    public boolean isPlatformAccount() {
+        if (this.getPlatformStatus() == 0) {
             return false;
         }
         return true;
     }
+
+    public boolean isRealAuth(Activity activity) {
+        if (this.getRealAuthStatus() == 0) {
+            RouteUtil.startNewActivity(activity, new Intent(activity, NoRealAuthActivity.class));
+
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isBindWx() {
+        if (this.getWxBindStatus() == 0) {
+            return false;
+        }
+        return true;
+    }
+
     public String getPhone() {
         return phone;
     }

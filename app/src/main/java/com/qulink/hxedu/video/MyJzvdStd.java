@@ -191,13 +191,27 @@ public class MyJzvdStd extends JzvdStd {
 
     @Override
     public void onClick(View v) {
-        if(catalogList==null){
-            if(videoStatuListener!=null){
-                videoStatuListener.startClick();
-            }
-        }else{
-            int i = v.getId();
+        int i = v.getId();
+
+
             switch (i){
+                case R.id.start:
+                    if(catalogList==null){
+
+                        if(videoStatuListener!=null){
+                            videoStatuListener.startClick();
+                        }
+                    }else{
+                        super.onClick(v);
+                    }
+
+                    break;
+                case R.id.surface_container:
+                    if(videoStatuListener!=null){
+                        videoStatuListener.clickSurface();
+                    }
+                    super.onClick(v);
+                    break;
                 case R.id.tv_buy:
                     if(videoType==2){
                         if(videoStatuListener!=null){
@@ -219,7 +233,6 @@ public class MyJzvdStd extends JzvdStd {
                         super.onClick(v);
 
             }
-        }
 
 
     }
@@ -312,6 +325,9 @@ public class MyJzvdStd extends JzvdStd {
         super.onStatePause();
         isPlaying = false;
         pauseTimer();
+        if(videoStatuListener!=null){
+            videoStatuListener.onVideoPause();
+        }
     }
 
     @Override
@@ -326,8 +342,17 @@ public class MyJzvdStd extends JzvdStd {
         super.onStateAutoComplete();
         playCurrentIndex++;
         if (playCurrentIndex<catalogList.size()){
-            setUp(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
-            changeUrl(jzDataSource,0);
+            if(videoStatuListener!=null){
+                videoStatuListener.playNext(playCurrentIndex);
+            }
+            if(catalogList.get(playCurrentIndex).getVideoInfo()==null){
+                getVideoUrl(catalogList.get(playCurrentIndex).getVideoId());
+            }else{
+                setUp(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
+                changeUrl(jzDataSource,0);
+            }
+
+
         }
 
     }

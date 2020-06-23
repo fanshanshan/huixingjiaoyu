@@ -59,8 +59,17 @@ public class CourseNameBean {
          * value : 健康短视频
          */
 
+        private boolean isCheck;
         private int id;
         private String value;
+
+        public boolean isCheck() {
+            return isCheck;
+        }
+
+        public void setCheck(boolean check) {
+            isCheck = check;
+        }
 
         public int getId() {
             return id;

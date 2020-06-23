@@ -341,7 +341,14 @@ public class PersonZoneIndexActivity extends BaseActivity implements PersonZoneI
                 break;
             case R.id.tv_bar_right:
                 //相册
-                RouteUtil.startNewActivityAndResult(PersonZoneIndexActivity.this, new Intent(this, PublishTopicActivity.class), 0);
+                App.getInstance().getUserInfo(this, new UserInfoCallback() {
+                    @Override
+                    public void getUserInfo(UserInfo userInfo) {
+                        if(userInfo.isRealAuth(PersonZoneIndexActivity.this)){
+                            RouteUtil.startNewActivityAndResult(PersonZoneIndexActivity.this, new Intent(PersonZoneIndexActivity.this, PublishTopicActivity.class), 0);
+                        }
+                    }
+                });
                 break;
             case R.id.tv_join_topic:
                  intent = new Intent(PersonZoneIndexActivity.this,MyJoinTopicActivity.class);

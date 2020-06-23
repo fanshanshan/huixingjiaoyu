@@ -151,7 +151,7 @@ public class ScholarShipActivity extends BaseActivity implements OnRefreshListen
                 break;
             case R.id.ll_withdraw_record:
                 Intent intent1 = new Intent(this,WithdrawRecordActivity.class);
-                intent1.putExtra("amount",tvWithdrawedMoney+"");
+                intent1.putExtra("amount",tvWithdrawedMoney.getText().toString()+"");
                 RouteUtil.startNewActivity(this,intent1);
                 break;
         }

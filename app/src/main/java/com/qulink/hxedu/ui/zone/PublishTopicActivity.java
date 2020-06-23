@@ -270,7 +270,7 @@ public class PublishTopicActivity extends BaseActivity {
                 addFooter =false;
             }
         }
-        if(addFooter){
+        if(addFooter&&selectImageList.size()<maxCount){
             selectImageList.add("footer");
         }
 

@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ import com.qulink.hxedu.entity.RecentLearnBean;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.ui.AdviceActivity;
 import com.qulink.hxedu.ui.BadgeDetailActivity;
+import com.qulink.hxedu.ui.CollectionCourseActivity;
 import com.qulink.hxedu.ui.EditHeadAndNickActivity;
 import com.qulink.hxedu.ui.LevelInfoActivity;
 import com.qulink.hxedu.ui.LoginActivity;
@@ -132,6 +134,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
     private Activity mActivity;
 
+    private int RECENT_LEARN_CODE=22;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -150,11 +153,13 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_person, container, false);
             ButterKnife.bind(this, rootView);
-            getRecentLearn();
             initMenu();
             addScrollviewListener();
             initView();
-            initIndexMsgInfo();//查询是否有未读消息
+           if(App.getInstance().isLogin(mActivity)){
+               initIndexMsgInfo();//查询是否有未读消息
+               getRecentLearn();
+           }
             refreshLayout.setOnRefreshListener(this);
         }
         return rootView;
@@ -408,7 +413,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 break;
                 case R.id.tv_more:
                 if (App.getInstance().isLogin(mActivity, true)) {
-                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, RecentLearnActivity.class));
+
+               startActivityForResult( new Intent(mActivity, RecentLearnActivity.class),RECENT_LEARN_CODE);
                 }
                 break;
             case R.id.tv_name:
@@ -444,10 +450,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                     App.getInstance().getUserInfo(mActivity, new UserInfoCallback() {
                         @Override
                         public void getUserInfo(UserInfo userInfo) {
-                            if (userInfo.isRealAuth()) {
+                            if (userInfo.isRealAuth(getActivity())) {
                                 RouteUtil.startNewActivity(mActivity, new Intent(mActivity, VipDetailActivity.class));
-                            } else {
-                                RouteUtil.startNewActivity(mActivity, new Intent(mActivity, NoRealAuthActivity.class));
                             }
                         }
                     });
@@ -500,10 +504,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                         App.getInstance().getUserInfo(mActivity, new UserInfoCallback() {
                             @Override
                             public void getUserInfo(UserInfo userInfo) {
-                                if (userInfo.isRealAuth()) {
+                                if (userInfo.isRealAuth(getActivity())) {
                                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, ScholarShipActivity.class));
-                                } else {
-                                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, NoRealAuthActivity.class));
                                 }
                             }
                         });
@@ -526,6 +528,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                     break;
                 case "积分商城":
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, ScoreShopActivity.class));
+                    break;     case "收藏":
+                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, CollectionCourseActivity.class));
                     break;
                 case "积分":
                     App.getInstance().getUserInfo(mActivity, new UserInfoCallback() {
@@ -563,7 +567,7 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                 messageEvent.getMessage().equals(FinalValue.LOGOUT)) {
 
             initView();
-            getRecentLearn();
+          //  getRecentLearn();
         } else if (
                 messageEvent.getMessage().equals(FinalValue.GET_USERINFO)) {
             initView();
@@ -639,9 +643,11 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        getUserInfo();
-        initIndexMsgInfo();//查询是否有未读消息
-        getRecentLearn();//查询是否有未读消息
+        if(App.getInstance().isLogin(mActivity)){
+            initIndexMsgInfo();//查询是否有未读消息
+            getRecentLearn();
+            getUserInfo();
+        }
 
     }
 
@@ -677,4 +683,11 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RECENT_LEARN_CODE&&resultCode==-1){
+            getRecentLearn();
+        }
+    }
 }

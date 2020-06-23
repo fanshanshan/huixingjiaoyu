@@ -41,4 +41,9 @@ public class FinalValue {
 
 
     public static int jpushScene = 1;
+
+
+
+    public static String txCloudSecretId = "AKIDh3WjfwqNhkL9hztnLgkOSmqdObYDnCn8";
+    public static String txCloudSecretKey = "DsHRSER5ZnkQqEXaNuA9imZ7OVMwFONV";
 }

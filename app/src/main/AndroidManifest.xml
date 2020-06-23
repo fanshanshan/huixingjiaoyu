@@ -38,7 +38,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name">
-        <activity android:name=".ui.RecentLearnActivity"></activity>
+        <activity android:name=".ui.live.LiveDetailActivity"></activity>
+        <activity android:name=".ui.CollectionCourseActivity" />
+        <activity android:name=".ui.RecentLearnActivity" />
         <activity android:name=".ui.LevelInfoActivity" />
         <activity
             android:name=".ui.WithdrawResultActivity"

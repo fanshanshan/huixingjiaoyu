@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.util.ScreenUtil;
 
@@ -156,5 +157,11 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         if(view!=null){
             view.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        App.getInstance().setCurrentActivity(this);
     }
 }

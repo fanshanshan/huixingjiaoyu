@@ -31,8 +31,9 @@ public class CoursePresenter extends BasePresenter<CourseContract.View> implemen
                 List<CourseNameBean> list = GsonUtil.getInstance().fromJson(GsonUtil.GsonString(t.getData()), new TypeToken<List<CourseNameBean>>() {
                 }.getType());
                 if (mView != null) {
-                    mView.hideLoading();
-                }
+                    mView.getCourseNameSuc(list);
+                }mView.hideLoading();
+
             }
 
             @Override

@@ -76,7 +76,7 @@ public class App extends Application {
 
     public static final int DELAY_SET_MOBILE_NUMBER_ACTION = 2;
     private TokenInfo tokenInfo;
-    private Activity currentActivity;
+    private  Activity mCurrentActivity;
     private DefaultSetting defaultSetting;
 
     private SystemSettingBean systemSettingBean;
@@ -92,16 +92,16 @@ public class App extends Application {
         this.systemSettingBean = systemSettingBean;
     }
 
-    public Activity getCurrentActivity() {
+    public  Activity getCurrentActivity() {
 
-        return currentActivity;
+        return mCurrentActivity;
     }
 
-    public void setCurrentActivity(Activity currentActivity) {
-        this.currentActivity = currentActivity;
+    public  void setCurrentActivity(Activity currentActivity) {
+        mCurrentActivity = currentActivity;
     }
 
-    public void getDefaultSetting(Context context, DefaultSettingCallback defaultSettingCallback) {
+    public synchronized void getDefaultSetting(Context context, DefaultSettingCallback defaultSettingCallback) {
         if (defaultSetting == null) {
             getSettingInfo(context, defaultSettingCallback);
         } else {
@@ -114,7 +114,7 @@ public class App extends Application {
         this.defaultSetting = defaultSetting;
     }
 
-    public void getUserInfo(Context context, UserInfoCallback userInfoCallback) {
+    public synchronized void getUserInfo(Context context, UserInfoCallback userInfoCallback) {
         if (userInfo == null) {
             if (getTokenInfo(context) != null) {
                 getUserinfoByServer(context, userInfoCallback);
@@ -248,17 +248,18 @@ public class App extends Application {
             @Override
             public void onActivityStarted(Activity activity) {
 
-                currentActivity = activity;
+           //     currentActivity = activity;
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
+                setCurrentActivity(activity);
 
             }
 
             @Override
             public void onActivityPaused(Activity activity) {
-
+              //  currentActivity = null;
             }
 
             @Override

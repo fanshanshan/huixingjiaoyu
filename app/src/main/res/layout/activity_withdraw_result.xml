@@ -1,9 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.WithdrawResultActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/bar"/>
+
+    <com.qulink.hxedu.view.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:id="@+id/iv_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/tv_type"
+                android:textSize="17sp"
+                android:textColor="#222222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/line"/>
+            <LinearLayout
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:text="当前状态"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                  <ImageView
+                      android:src="@drawable/circle_point_theme_color"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+
+                    <View
+                        android:visibility="gone"
+                        android:background="@color/theme_color"
+                        android:id="@+id/v_deal"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"/>
+
+                    <ImageView
+                        android:visibility="gone"
+
+                        android:id="@+id/iv_deal"
+                        android:src="@drawable/circle_point_theme_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:visibility="gone"
+                        android:background="@color/theme_color"
+
+                        android:id="@+id/v_suc"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/iv_result"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:textSize="15sp"
+                            android:id="@+id/tv_statu1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="2020-06-23 01:22:22"
+
+                            android:textSize="15sp"
+                            android:id="@+id/tv_statu1_tie"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:text="处理中"
+                            android:textSize="15sp"
+                            android:id="@+id/tv_statu2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:gravity="bottom"
+                        android:id="@+id/ll_result"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <TextView
+                            android:textSize="15sp"
+                            android:id="@+id/tv_statu3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:text="2020-06-23 01:22:22"
+                            android:textSize="15sp"
+                            android:id="@+id/tv_statu3_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/line"/>
+
+
+            <LinearLayout
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:text="提现金额"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_amount"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:text="申请时间"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_apply_time"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:id="@+id/tv_result_statu"
+                    android:text="失败时间"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_result_time"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:text="到账账户"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:text="提现单号"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_order"
+                    android:textSize="15sp"
+                    android:textColor="#222222"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.qulink.hxedu.view.MyScrollView>
+</LinearLayout>

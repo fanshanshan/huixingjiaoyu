@@ -150,7 +150,6 @@ public class AdviceActivity extends BaseActivity {
                             ivAdd.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ToastUtils.show(AdviceActivity.this,maxCount - selectImageList.size()+1 +"");
                                     ImageSelector.show(AdviceActivity.this, CHOOSE_PHOTO_CODE, maxCount - selectImageList.size()+1 );
 
                                 }
@@ -380,7 +379,7 @@ public class AdviceActivity extends BaseActivity {
                 addFooter =false;
             }
         }
-        if(addFooter){
+        if(addFooter&&selectImageList.size()<maxCount){
             selectImageList.add("footer");
         }
 

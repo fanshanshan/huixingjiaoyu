@@ -11,96 +11,126 @@
 
     <include layout="@layout/bar"/>
 
-    <ImageView
-        android:scaleType="centerCrop"
-        android:src="@drawable/sbui3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:paddingBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:orientation="horizontal"
+    <com.qulink.hxedu.view.MyScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#333333"
-            android:text="真实姓名"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <ImageView
+                android:scaleType="centerCrop"
+                android:src="@drawable/sbui3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/tv_name"
-            android:text="此处为自动识别"
-            android:layout_marginLeft="12dp"
-            android:textSize="14sp"
-            android:textColor="#B3B3B3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <LinearLayout
+                android:paddingBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <include layout="@layout/line"/>
+                <TextView
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:text="真实姓名"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:paddingBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:text="此处为自动识别"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="14sp"
+                    android:textColor="#B3B3B3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#333333"
-            android:text="身份证号"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <include layout="@layout/line"/>
 
-        <TextView
-            android:id="@+id/tv_card"
-            android:text="此处为自动识别"
-            android:layout_marginLeft="12dp"
-            android:textSize="14sp"
-            android:textColor="#B3B3B3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <LinearLayout
+                android:paddingBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <include layout="@layout/divider_bold"/>
+                <TextView
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:text="身份证号"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_card"
+                    android:text="此处为自动识别"
+                    android:layout_marginLeft="12dp"
+                    android:textSize="14sp"
+                    android:textColor="#B3B3B3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <include layout="@layout/divider_bold"/>
 
 
-    <TextView
-        android:layout_marginTop="12dp"
-        android:textSize="15sp"
-        android:textColor="#333333"
-        android:text="上传身份证照片"
-        android:layout_marginLeft="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="12dp"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:text="上传身份证照片"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <ImageView
-        android:scaleType="centerInside"
-        android:background="@drawable/sbui5"
-        android:src="@drawable/sbui4"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <ImageView
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/iv_open_camera"
+                    android:scaleType="centerInside"
+                    android:background="@drawable/sbui5"
+                    android:src="@drawable/sbui4"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
 
-    <TextView
-        android:id="@+id/tv_submit"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:textColor="#FFFFFF"
-        android:text="提交"
-        android:background="@drawable/login_btn_bg"
-        android:layout_marginTop="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/iv_card"
+
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_submit"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:text="提交"
+                android:background="@drawable/login_btn_bg"
+                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.qulink.hxedu.view.MyScrollView>
+
 </LinearLayout>
