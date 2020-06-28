@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -135,6 +138,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
     private Activity mActivity;
 
     private int RECENT_LEARN_CODE=22;
+    private int TO_LIVE_CODE=22;
+    private int OPEN_QR_CODE=333;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -471,26 +476,39 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
     private void startQr() {
 
-        PermissionUtils.checkAndRequestPermission(mActivity, Manifest.permission.CAMERA, 0, new PermissionUtils.PermissionRequestSuccessCallBack() {
-            @Override
-            public void onHasPermission() {
-                Intent intent = new Intent();
-                intent.setClass(mActivity, CaptureActivity.class);
-                startActivity(intent);
-            }
-        });
+        if(                    ContextCompat.checkSelfPermission(mActivity,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
+
+
+        ){
+            requestPermissions(new String[]{Manifest.permission.CAMERA},TO_LIVE_CODE);
+
+        }else{
+            Intent intent = new Intent();
+            intent.setClass(mActivity, CaptureActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (PermissionUtils.isPermissionRequestSuccess(grantResults)) {
-            // 权限申请成功
-            Intent intent = new Intent();
-            intent.setClass(mActivity, CaptureActivity.class);
-            startActivity(intent);
+        if(requestCode==TO_LIVE_CODE){
+            if (PermissionUtils.isPermissionRequestSuccess(grantResults)) {
+                // 权限申请成功
+                RouteUtil.startNewActivity(mActivity, new Intent(mActivity, AuthorActivity.class));
+            }
+
+        }else if(requestCode==OPEN_QR_CODE){
+            if (PermissionUtils.isPermissionRequestSuccess(grantResults)) {
+                // 权限申请成功
+                Intent intent = new Intent();
+                intent.setClass(mActivity, CaptureActivity.class);
+                startActivity(intent);
+            }
         }
+
     }
 
     void menuClickCallback(String title) {
@@ -518,7 +536,20 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, BankListActivity.class));
                     break;
                 case "开启直播":
+
+
+                if(                    ContextCompat.checkSelfPermission(mActivity,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
+
+                ||                     ContextCompat.checkSelfPermission(mActivity,Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED
+
+                ){
+                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA},TO_LIVE_CODE);
+
+                }else{
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, AuthorActivity.class));
+
+                }
+
                     break;
                 case "需求收集":
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, AdviceActivity.class));
@@ -647,6 +678,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
             initIndexMsgInfo();//查询是否有未读消息
             getRecentLearn();
             getUserInfo();
+        }else{
+            refreshLayout.finishRefresh(true);
         }
 
     }
@@ -672,12 +705,12 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
 
             @Override
             public void error(String code, String msg) {
-
+                refreshLayout.finishRefresh(false);
             }
 
             @Override
             public void expcetion(String expectionMsg) {
-
+                refreshLayout.finishRefresh(false);
             }
         });
     }

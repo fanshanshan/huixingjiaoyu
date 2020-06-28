@@ -265,6 +265,7 @@ public class AdviceActivity extends BaseActivity {
 
     private void upload(String path, String token) {
         String key = SystemUtil.getUploadImageKey(this);
+        DialogUtil.showLoading(this,true,"正在上传图片");
         QiniuUtil.getInstance().put(path, key, token,
                 new UpCompletionHandler() {
                     @Override

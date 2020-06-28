@@ -1,12 +1,14 @@
 package com.qulink.hxedu.video;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.qulink.hxedu.util.ToastUtils;
 import java.util.List;
 
 import cn.jzvd.JZDataSource;
+import cn.jzvd.JZUtils;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
@@ -135,6 +138,8 @@ public class MyJzvdStd extends JzvdStd {
 
     public void mStartPlay(){
         llBuy.setVisibility(GONE);
+        isNoPay = false;
+
         if(catalogList.get(playCurrentIndex).getVideoInfo()==null){
             getVideoUrl(catalogList.get(playCurrentIndex).getVideoId());
         }else{
@@ -148,14 +153,29 @@ public class MyJzvdStd extends JzvdStd {
     }
 
 
+    public void  sbPlay(String url,String title){
+        llBuy.setVisibility(GONE);
+        isNoPay = false;
+        if(screen==SCREEN_FULLSCREEN){
+            setUp(url,title,SCREEN_FULLSCREEN);
+        }else{
+            setUp(url,title);
+        }
+
+        changeUrl(jzDataSource,0);
+
+
+    }
     public void changePlayIndex(int index){
         llBuy.setVisibility(GONE);
+        isNoPay = false;
         this.playCurrentIndex = index;
         if(catalogList.get(playCurrentIndex).getVideoInfo()==null){
             getVideoUrl(catalogList.get(playCurrentIndex).getVideoId());
         }else{
-            setUp(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
-            changeUrl(jzDataSource,0);
+
+            sbPlay(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
+            //changeUrl(jzDataSource,0);
         }
 
     }
@@ -181,6 +201,8 @@ public class MyJzvdStd extends JzvdStd {
     @Override
     public void init(Context context) {
         super.init(context);
+        setMediaInterface(JZMediaExo.class);
+        //Jzvd.setMediaInterface(new JZMediaIjkplayer());
         llBuy = findViewById(R.id.ll_buy);
         tvNuy = findViewById(R.id.tv_buy);
         tvNuy.setOnClickListener(this::onClick);
@@ -195,9 +217,17 @@ public class MyJzvdStd extends JzvdStd {
 
 
             switch (i){
+                case R.id.start_layout:
+                    if(catalogList==null){
+                        if(videoStatuListener!=null){
+                            videoStatuListener.startClick();
+                        }
+                    }else{
+                        super.onClick(v);
+                    }
+                    break;
                 case R.id.start:
                     if(catalogList==null){
-
                         if(videoStatuListener!=null){
                             videoStatuListener.startClick();
                         }
@@ -213,11 +243,11 @@ public class MyJzvdStd extends JzvdStd {
                     super.onClick(v);
                     break;
                 case R.id.tv_buy:
-                    if(videoType==2){
+                    if(videoType==3){
                         if(videoStatuListener!=null){
                             videoStatuListener.buyLesson();
                         }
-                    }else if(videoType==3||videoType==4){
+                    }else if(videoType==2||videoType==4){
                         if(videoStatuListener!=null){
                             videoStatuListener.openVip();
                         }
@@ -226,8 +256,12 @@ public class MyJzvdStd extends JzvdStd {
                 case R.id.tv_repeat:
                     llBuy.setVisibility(GONE);
                     isNoPay = false;
-                    changeUrl(jzDataSource,0);
+
+//                    changeUrl(jzDataSource,0);
                     progressBar.setProgress(0);
+                    bottomProgressBar.setProgress(0);
+                    mediaInterface.seekTo(0);
+                    goOnPlayOnResume();
                     break;
                     default:
                         super.onClick(v);
@@ -266,6 +300,21 @@ public class MyJzvdStd extends JzvdStd {
     public void startVideo() {
         super.startVideo();
         Log.i(TAG, "startVideo");
+        if (screen == SCREEN_FULLSCREEN) {
+            Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
+          //  initTextureView();
+            addTextureView();
+            AudioManager mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            JZUtils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+//            JZMediaManager.setDataSource(jzDataSource);
+//            JZMediaManager.instance().positionInList = positionInList;
+            onStatePreparing();
+        } else {
+            super.startVideo();
+        }
+
     }
 
     @Override
@@ -278,11 +327,14 @@ public class MyJzvdStd extends JzvdStd {
     public void gotoFullscreen() {
         super.gotoFullscreen();
         Log.i(TAG, "goto Fullscreen");
+        mCurrent = 1;
     }
 
     @Override
     public void gotoNormalScreen() {
         super.gotoNormalScreen();
+        mCurrent = 1;
+
         Log.i(TAG, "quit Fullscreen");
     }
 
@@ -314,6 +366,10 @@ public class MyJzvdStd extends JzvdStd {
     @Override
     public void onStatePlaying() {
         super.onStatePlaying();
+
+        startButton.setEnabled(true);
+        llBuy.setVisibility(GONE);
+        isNoPay = false;
         if(!isPlaying){
             isPlaying = true;
             startTimer();
@@ -337,9 +393,12 @@ public class MyJzvdStd extends JzvdStd {
         pauseTimer();
     }
 
+    private int mCurrent = 0;
     @Override
     public void onStateAutoComplete() {
         super.onStateAutoComplete();
+
+
         playCurrentIndex++;
         if (playCurrentIndex<catalogList.size()){
             if(videoStatuListener!=null){
@@ -348,11 +407,12 @@ public class MyJzvdStd extends JzvdStd {
             if(catalogList.get(playCurrentIndex).getVideoInfo()==null){
                 getVideoUrl(catalogList.get(playCurrentIndex).getVideoId());
             }else{
-                setUp(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
-                changeUrl(jzDataSource,0);
+                sbPlay(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
+
+                //                if(mCurrent==1){
+//                    gotoFullscreen();
+//                }
             }
-
-
         }
 
     }
@@ -409,6 +469,10 @@ public class MyJzvdStd extends JzvdStd {
         super.onError(what, extra);
     }
 
+    @Override
+    public void onSeekComplete() {
+        super.onSeekComplete();
+    }
 
     boolean isNoPay = false;
     @Override
@@ -416,18 +480,33 @@ public class MyJzvdStd extends JzvdStd {
         super.onProgress(progress, position, duration);
 
         long totalSeconds = position / 1000;
-        if (videoType!=1) {   //这里是从服务器拿到特定字段判断是否付费  这里模拟未付费
+        if (false) {   //这里是从服务器拿到特定字段判断是否付费  这里模拟未付费
             if (totalSeconds >= maxFreeSecond) {   //考虑未付费情况下拖动进度条超过试看时间
                 if (!isNoPay) {   //加个标记 因为此函数一直在回调
                     progressBar.setProgress(maxFreeSecond);
+                    bottomProgressBar.setProgress(maxFreeSecond);
+                    progressBar.setSecondaryProgress(maxFreeSecond);
+                    currentTimeTextView.setText(JZUtils.stringForTime(position));
+                    mediaInterface.seekTo(maxFreeSecond*1000);
                     goOnPlayOnPause();
-                 //   changeUrl(jzDataSource,maxFreeSecond);
+
+                    //onSeekComplete();
+                   // changeUrl(jzDataSource,maxFreeSecond*1000);
                    // Jzvd.goOnPlayOnPause();           //在适当的时候（支付成功后）播放
                     startButton.setEnabled(false);    //在适当的时候取消
                     isNoPay = true;
                     llBuy.setVisibility(VISIBLE);
-                    tvNuy.setText(videoType==2?"购买课程":videoType==3?"开通会员":"立即兑换");
+                    tvNuy.setText(videoType==2?"开通会员":videoType==3?"购买课程":"立即兑换");
+                }else{
+                    currentTimeTextView.setText(JZUtils.stringForTime(position));
+                    progressBar.setProgress(maxFreeSecond);
+                    bottomProgressBar.setProgress(maxFreeSecond);
+                    mediaInterface.seekTo(maxFreeSecond*1000);
                 }
+            }else{
+                goOnPlayOnResume();
+                llBuy.setVisibility(GONE);
+                isNoPay = false;
             }
         }
 
@@ -436,6 +515,8 @@ public class MyJzvdStd extends JzvdStd {
 
     public void dealCourseAndResume(){
         llBuy.setVisibility(GONE);
+        isNoPay = false;
+        findViewById(R.id.start).setEnabled(true);
         if(catalogList==null){
             if(videoStatuListener!=null){
                 videoStatuListener.startClick();
@@ -453,8 +534,12 @@ public class MyJzvdStd extends JzvdStd {
             public void success(ResponseData t) {
                 VideoInfo videoInfo = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),VideoInfo.class);
                 catalogList.get(playCurrentIndex).setVideoInfo(videoInfo);
-                setUp(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
-                changeUrl(jzDataSource,0);
+                sbPlay(catalogList.get(playCurrentIndex).getVideoInfo().getVideoUrl(),catalogList.get(playCurrentIndex).getVideoInfo().getVideoName());
+
+               // changeUrl(jzDataSource,0);
+                if(mCurrent==1){
+                    gotoFullscreen();
+                }
             }
 
             @Override

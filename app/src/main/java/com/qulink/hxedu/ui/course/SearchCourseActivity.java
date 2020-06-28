@@ -361,7 +361,7 @@ public class SearchCourseActivity extends BaseActivity implements SearchContract
             tvTitle.setText(recordsBean.getCurriculumName());
             tvJoinNum.setText(recordsBean.getParticipantNum() + "人加入了学习");
             if (recordsBean.getSpecialStatus() == 1) {
-                ivSbUi.setImageResource(R.drawable.vipzx);
+                ivSbUi.setImageResource(R.drawable.viptj);
                 tvPrice.setText(recordsBean.getVipPrice() + "");
 
             } else {

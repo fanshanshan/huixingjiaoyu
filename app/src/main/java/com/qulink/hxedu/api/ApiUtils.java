@@ -944,6 +944,18 @@ public class ApiUtils {
     }
 
     /**
+     * 购买课程
+     *
+     * @param apiCallback
+     */
+    public void buyLesson(int curriculumId, int payType,ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("curriculumId", curriculumId + "");
+        map.put("payType", payType + "");
+        NetUtil.getInstance().post(baseUrl + "curriculum/purchase", map, apiCallback);
+    }
+
+    /**
      * 收藏课程
      *
      * @param apiCallback

@@ -42,6 +42,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshFooterCreator;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshHeaderCreator;
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshInitializer;
+import com.tencent.rtmp.TXLiveBase;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -147,7 +148,7 @@ public class App extends Application {
         return instance;
     }
 
-    public TokenInfo getTokenInfo(Context context) {
+    public TokenInfo  getTokenInfo(Context context) {
         if (tokenInfo == null) {
             TokenInfo tokenInfo = PrefUtils.getTokenBean(context);
             if (tokenInfo == null) {
@@ -281,9 +282,9 @@ public class App extends Application {
       JPushInterface.init(this);
     }
     void initTxLive() {
-        String licenceURL = "http://license.vod2.myqcloud.com/license/v1/c0eb7b670075d3f4316a5f8deeeddc54/TXLiveSDK.licence"; // 获取到的 licence url
-        String licenceKey = "5b90ec4d6ca6b7511633306647073db0"; // 获取到的 licence key
-       // TXLiveBase.getInstance().setLicence(this, licenceURL, licenceKey);
+        String licenceURL = "http://license.vod2.myqcloud.com/license/v1/eaf48f8e7ba007cf951ce1c71d89288f/TXLiveSDK.licence"; // 获取到的 licence url
+        String licenceKey = "a40dc017e88c03c9f4852ce8d3b4d603"; // 获取到的 licence key
+        TXLiveBase.getInstance().setLicence(this, licenceURL, licenceKey);
     }
 
 

@@ -51,21 +51,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <!--<ImageView-->
 
-                        android:src="@drawable/star"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <!--android:src="@drawable/star"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
 
                     <TextView
+                        android:id="@+id/tv_price1"
                         android:textSize="15sp"
                         android:textColor="#FF973B"
-                        android:text="300+￥200"
+                        android:text=""
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <ImageView
-
+                        android:visibility="gone"
+                        android:id="@+id/iv_vip"
                         android:layout_marginLeft="6dp"
                         android:src="@drawable/viptj"
                         android:layout_width="wrap_content"
@@ -93,6 +95,7 @@
                 android:layout_height="wrap_content" />
             <include layout="@layout/line"/>
             <RelativeLayout
+                android:id="@+id/rl_ali"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:layout_width="match_parent"
@@ -117,6 +120,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_ali"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/pay_checked"
@@ -126,6 +130,7 @@
             <include layout="@layout/line"/>
 
             <RelativeLayout
+                android:id="@+id/rl_wx"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:layout_width="match_parent"
@@ -150,6 +155,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_wx"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/pay_check"
@@ -159,6 +165,7 @@
             <include layout="@layout/line"/>
 
             <RelativeLayout
+                android:id="@+id/rl_bank"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:layout_width="match_parent"
@@ -183,6 +190,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_bank"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/pay_check"
@@ -232,10 +240,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/tv_price2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="￥8888"
+            android:text=""
             android:textColor="#FCA84D"
             android:textSize="25sp"
             android:textStyle="bold" />

@@ -1,11 +1,13 @@
 package com.qulink.hxedu.entity;
 
+import java.io.Serializable;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CourseDetailBean {
+public class CourseDetailBean implements Serializable {
 
 
     /**
@@ -20,7 +22,7 @@ public class CourseDetailBean {
 
     @NoArgsConstructor
     @Data
-    public static class ParticipantBean {
+    public static class ParticipantBean implements Serializable{
         /**
          * value : 0
          */
@@ -30,7 +32,7 @@ public class CourseDetailBean {
 
     @NoArgsConstructor
     @Data
-    public static class PersonalBean {
+    public static class PersonalBean implements Serializable{
         /**
          * contentId : 1
          * collectStatus : 0
@@ -56,7 +58,7 @@ public class CourseDetailBean {
 
     @NoArgsConstructor
     @Data
-    public static class DetailBean {
+    public static class DetailBean implements Serializable{
         /**
          * id : 2
          * curriculumImage : 2ebf3a0320e98a2eiWWX310MKVwaYnM7WD8NPCrvobwMStvS
@@ -76,6 +78,7 @@ public class CourseDetailBean {
 
         private int id;
         private String curriculumImage;
+        private String curriculumName;
         private String curriculumDetail;
         private int popularStatus;
         private int freeStatus;

@@ -14,8 +14,13 @@ import android.widget.Toast;
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.ui.BaseActivity;
+import com.qulink.hxedu.ui.live.liveroom.IMLVBLiveRoomListener;
+import com.qulink.hxedu.ui.live.liveroom.MLVBLiveRoom;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.ToastUtils;
+import com.tencent.rtmp.TXLivePushConfig;
+import com.tencent.rtmp.TXLivePusher;
+import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -23,8 +28,8 @@ import butterknife.OnClick;
 public class AuthorActivity extends BaseActivity {
 
     String TAG = "AuthorActivity";
-//    @BindView(R.id.pusher_tx_cloud_view)
-//    TXCloudVideoView pusherTxCloudView;
+    @BindView(R.id.pusher_tx_cloud_view)
+    TXCloudVideoView pusherTxCloudView;
     @BindView(R.id.status)
     TextView status;
     @BindView(R.id.iv_turn)
@@ -40,10 +45,9 @@ public class AuthorActivity extends BaseActivity {
     @BindView(R.id.tv_start_ive)
     TextView tvStartIve;
 
-//    TXLivePusher mLivePusher;
     @BindView(R.id.ll_preview)
     LinearLayout llPreview;
-
+    MLVBLiveRoom mlvbLiveRoom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +61,12 @@ public class AuthorActivity extends BaseActivity {
     @Override
     protected void init() {
         //启动本地摄像头预览
+        mlvbLiveRoom = MLVBLiveRoom.sharedInstance(this);
 //        TXLivePushConfig mLivePushConfig = new TXLivePushConfig();
 //        mLivePusher = new TXLivePusher(this);
 //        TXCloudVideoView mPusherView = (TXCloudVideoView) findViewById(R.id.pusher_tx_cloud_view);
 //        mLivePusher.startCameraPreview(mPusherView);
+        mlvbLiveRoom.startLocalPreview(true,pusherTxCloudView);
     }
 
     @Override
@@ -89,51 +95,54 @@ public class AuthorActivity extends BaseActivity {
 
     void startLive() {
         //98946.livepush.myqcloud.com
-        String rtmpURL = "rtmp://spark-test.haoyanzhen.com/live/5233?txSecret=ee3f12eedab8ba1daedefdf459fb3a7b&txTime=5ECD3CFF"; //此处填写您的 rtmp 推流地址
-//        int ret = mLivePusher.startPusher(rtmpURL.trim());
-//        if (ret == -5) {
-//            Log.i(TAG, "startRTMPPush: license 校验失败");
-//            ToastUtils.show(this, "license 校验失败");
-//        } else {
-//            //隐藏预览布局
-//            llPreview.setVisibility(View.GONE);
-//        }
+        mlvbLiveRoom.createRoom("5233", "爱我你怕了吗", new IMLVBLiveRoomListener.CreateRoomCallback() {
+            @Override
+            public void onError(int errCode, String errInfo) {
+                ToastUtils.show(AuthorActivity.this, errInfo);
+            }
+
+            @Override
+            public void onSuccess(String RoomID) {
+                llPreview.setVisibility(View.GONE);
+
+            }
+        });
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        mlvbLiveRoom.setListener(null);
+        mlvbLiveRoom.logout();
 
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//     //      if( mLivePusher.isPushing()){
-//               DialogUtil.showAlertDialog(AuthorActivity.this, "提示", "确定要关闭直播间吗", "确定", new DialogInterface.OnClickListener() {
-//                   @Override
-//                   public void onClick(DialogInterface dialog, int which) {
-//                       releaseLive();
-//                       finish();
-//                   }
-//               }, "点错了", new DialogInterface.OnClickListener() {
-//                   @Override
-//                   public void onClick(DialogInterface dialog, int which) {
-//
-//                       dialog.dismiss();
-//                   }
-//               });
-//           }else{
-//               finish();
-//           }
+            if(true){
+               DialogUtil.showAlertDialog(AuthorActivity.this, "提示", "确定要关闭直播间吗", "确定", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       releaseLive();
+                       finish();
+                   }
+               }, "点错了", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+
+                       dialog.dismiss();
+                   }
+               });
+           }else{
+               finish();
+           }
 //
         }
         return true;
     }
 
-//    void releaseLive(){
-//        mLivePusher.stopPusher();
-//        mLivePusher.stopCameraPreview(true);
-//    }
+    void releaseLive(){
+    }
 }

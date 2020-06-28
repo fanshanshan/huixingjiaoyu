@@ -260,22 +260,27 @@ public class SendVipActivity extends BaseActivity {
             @Override
             public void success(ResponseData t) {
                 DialogUtil.hideLoading(SendVipActivity.this);
-                final String orderInfo = t.getData().toString();
-                Runnable payRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        PayTask alipay = new PayTask(SendVipActivity.this);
-                        Map<String, String> result = alipay.payV2(orderInfo, true);
 
-                        Message msg = new Message();
-                        msg.what = ALIPAY_SUCCESS_CODE;
-                        msg.obj = result;
-                        mHandler.sendMessage(msg);
-                    }
-                };
-                // 必须异步调用
-                Thread payThread = new Thread(payRunnable);
-                payThread.start();
+                if(payWay==1){
+                    final String orderInfo = t.getData().toString();
+                    Runnable payRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            PayTask alipay = new PayTask(SendVipActivity.this);
+                            Map<String, String> result = alipay.payV2(orderInfo, true);
+
+                            Message msg = new Message();
+                            msg.what = ALIPAY_SUCCESS_CODE;
+                            msg.obj = result;
+                            mHandler.sendMessage(msg);
+                        }
+                    };
+                    // 必须异步调用
+                    Thread payThread = new Thread(payRunnable);
+                    payThread.start();
+                }else{
+                    payWx();
+                }
             }
 
             @Override

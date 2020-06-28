@@ -244,6 +244,8 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
                     if (recycleCourseCatalog.getAdapter() != null) {
                         recycleCourseCatalog.getAdapter().notifyDataSetChanged();
                     }
+                    hideBackBtn();
+
                     sc.smoothScrollTo(0, 0);
 
                 }
@@ -580,6 +582,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Jzvd.releaseAllVideos();
         mPresenter.detachView();
         jzVideo.destroy();
     }
@@ -612,7 +615,11 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
 
         jzVideo.setVideoStatuListener(this);
         jzVideo.setCourseId(courseId);
-        tvPrice.setText(courseDetailBean.getDetail().getCurriculumPrice() + "");
+        if(courseDetailBean.getDetail().getSpecialStatus()==1){
+            tvPrice.setText(courseDetailBean.getDetail().getVipPrice() + "");
+        }else{
+            tvPrice.setText(courseDetailBean.getDetail().getCurriculumPrice() + "");
+        }
         tvCourseDesc.setContent(courseDetailBean.getDetail().getCurriculumDetail());
         tvTeacherDesc.setContent(courseDetailBean.getDetail().getIntro());
         dealBtnBuy(courseDetailBean.getPersonal());
@@ -634,10 +641,12 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
 
         if (resultCode == RESULT_OK) {
             if (requestCode == BUY_LESSON_CODE) {
+                courseDetailBean.getPersonal().setPurchaseStatus(2);
                 jzVideo.dealCourseAndResume();
 
             } else if (requestCode == OPEN_VIP_CODE) {
                 jzVideo.dealCourseAndResume();
+                dealBtnBuy(courseDetailBean.getPersonal());
             }
         }
     }
@@ -657,8 +666,9 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     @Override
     protected void onPause() {
         super.onPause();
-        Jzvd.releaseAllVideos();
+        jzVideo.goOnPlayOnPause();
     }
+
 
     @Override
     public void openVip() {
@@ -737,7 +747,8 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
     private void goToBuyLessonPage() {
         Intent intent = new Intent(CourseDetailActivity.this, BuyLessonActivity.class);
         intent.putExtra("withResult", true);
-        startActivityForResult(intent, OPEN_VIP_CODE);
+        intent.putExtra("data",courseDetailBean);
+        startActivityForResult(intent, BUY_LESSON_CODE);
     }
 
 }
