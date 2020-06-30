@@ -197,7 +197,7 @@ public class SearchCourseActivity extends BaseActivity implements SearchContract
                 tvMianfei.setBackgroundResource(R.drawable.filter_normal);
                 chargeType = 2;
                 break;
-            case R.id.back:
+            case R.id.iv_back:
                 if (llSearchResult.getVisibility() == View.VISIBLE) {
                     llSearchResult.setVisibility(View.GONE);
                 } else {

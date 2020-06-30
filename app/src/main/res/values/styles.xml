@@ -86,4 +86,17 @@
         <item name="android:textColor">@color/black_text</item>
         <item name="android:background">@drawable/selector_item_pressed</item>
     </style>
+
+
+
+    <!-- KsgLikeView-->
+    <declare-styleable name="KsgLikeView">
+        <!-- 默认favor图片-->
+        <attr name="ksg_default_image" format="reference"/>
+        <!-- 进入动画 时长-->
+        <attr name="ksg_enter_duration" format="integer"/>
+        <!--贝赛尔曲线动画 时长-->
+        <attr name="ksg_curve_duration" format="integer"/>
+
+    </declare-styleable>
 </resources>

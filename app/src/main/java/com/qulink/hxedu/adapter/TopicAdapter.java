@@ -93,12 +93,12 @@ public class TopicAdapter extends RecyclerView.Adapter {
                             Glide.with(context).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), shareContentBean.getPicMaster().getHeadImg())).into(holder.ivHeadimg);
                         }
                     });
+                    holder.levelContanier.removeAllViews();
+
                     if (CourseUtil.isOk(shareContentBean.getPicMaster().getStatus())) {
                         ImageView imageView = new ImageView(context);
                         imageView.setImageResource(R.drawable.hg);
                         holder.levelContanier.addView(imageView);
-                    }else{
-                        holder.levelContanier.removeAllViews();
                     }
                     if (shareContentBean.getPicMaster().getBadge()!=null&&!shareContentBean.getPicMaster().getBadge().isEmpty()) {
 
@@ -133,12 +133,12 @@ public class TopicAdapter extends RecyclerView.Adapter {
                         Glide.with(context).load(ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), shareContentBean.getPicMaster().getHeadImg())).into(holder.ivHeadimg);
                     }
                 });
+                holder.levelContanier.removeAllViews();
+
                 if (CourseUtil.isOk(shareContentBean.getPicMaster().getStatus())) {
                     ImageView imageView = new ImageView(context);
                     imageView.setImageResource(R.drawable.hg);
                     holder.levelContanier.addView(imageView);
-                }else{
-                    holder.levelContanier.removeAllViews();
                 }
                 if (!shareContentBean.getPicMaster().getBadge().isEmpty()) {
 

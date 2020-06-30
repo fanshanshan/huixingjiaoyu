@@ -137,7 +137,10 @@ public class SubCourceFragment extends Fragment implements OnLoadMoreListener, O
                 return new Item();
             }
         });
-        recycleCourse.addItemDecoration(new SpacesItemDecoration(0, 4, 0, 0));
+        if (recycleCourse.getItemDecorationCount() == 0) {
+            recycleCourse.addItemDecoration(new SpacesItemDecoration(0, 4, 0, 0));
+
+        }
         recycleCourse.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
@@ -149,7 +152,7 @@ public class SubCourceFragment extends Fragment implements OnLoadMoreListener, O
         pageNo = 1;
         smartLayout.setNoMoreData(false);
         hideEmpty();
-        ApiUtils.getInstance().getCourseList(classifyId, tagId, pageNo, pageSize, 0, new ApiCallback() {
+        ApiUtils.getInstance().getCourseList(2, tagId, pageNo, pageSize, 0, new ApiCallback() {
             @Override
             public void success(ResponseData t) {
                 CourseBean courseBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()), CourseBean.class);

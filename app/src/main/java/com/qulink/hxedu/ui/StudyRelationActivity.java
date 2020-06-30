@@ -120,6 +120,7 @@ public class StudyRelationActivity extends BaseActivity implements OnLoadMoreLis
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            DialogUtil.hideLoading(StudyRelationActivity.this);
             if(qrBitmap!=null){
                 ivQrcode.setImageBitmap(qrBitmap);
 
@@ -128,6 +129,7 @@ public class StudyRelationActivity extends BaseActivity implements OnLoadMoreLis
         }
     };
     private void getQrBitMap(Bitmap bitmap){
+        DialogUtil.showLoading(this,true);
         new Thread(new Runnable() {
             @Override
             public void run() {

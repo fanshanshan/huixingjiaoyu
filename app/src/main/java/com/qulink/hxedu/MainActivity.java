@@ -1,13 +1,18 @@
 package com.qulink.hxedu;
 
+import android.app.Dialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,16 +22,21 @@ import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.jpush.TagAliasOperatorHelper;
+import com.qulink.hxedu.service.LoadingService;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.ui.fragment.IndexFragment;
 import com.qulink.hxedu.ui.fragment.LiveFragment;
 import com.qulink.hxedu.ui.fragment.PersonFragment;
 import com.qulink.hxedu.ui.zone.ZoneFragment;
 import com.qulink.hxedu.util.FinalValue;
+import com.qulink.hxedu.util.PrefUtils;
+import com.qulink.hxedu.util.SystemUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,7 +92,7 @@ public class MainActivity extends BaseActivity {
 
 
         ButterKnife.bind(this);
-
+        checkVersion();
         initFragment(savedInstanceState);
         JPushInterface.init(this);
         JPushInterface.getAlias(this,3);
@@ -231,5 +241,57 @@ public class MainActivity extends BaseActivity {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+
+    private void checkVersion(){
+        try {
+            if(SystemUtil.compareVersion(SystemUtil.getVersionName(MainActivity.this),"2.0.0")==-1){
+                String path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)+"/2.0.0-hxedu.apk";
+                PrefUtils.putString(MainActivity.this,"apk_url","sddsdsd");
+                PrefUtils.putString(MainActivity.this,"apk_path",path);
+                showVersionDialog(path);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showVersionDialog(String path){
+        View diaView = View.inflate(this, R.layout.version_dialogg, null);
+
+        Dialog dialog = new Dialog(MainActivity.this, R.style.my_dialog);
+        diaView.findViewById(R.id.tv_sure).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                loadAPK(path);
+            }
+        });
+        diaView.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        TextView tvVersionDesc = diaView.findViewById(R.id.tv_version_desc);
+        TextView tvContent = diaView.findViewById(R.id.tv_content);
+        tvVersionDesc.setText("v2.0更新说明");
+        tvContent.setText("本次优化了部分bug");
+        dialog.setContentView(diaView);
+        ViewGroup.LayoutParams layoutParams = diaView.getLayoutParams();
+        //设置为全屏的宽
+        layoutParams.width = getResources().getDisplayMetrics().widthPixels/10*8;
+        dialog.setCanceledOnTouchOutside(false);
+
+        diaView.setLayoutParams(layoutParams);
+        dialog.show();
+    }
+    private void loadAPK(String path){
+
+        File file = new File(path);
+        if(file.exists()){
+            file.delete();
+        }
+        LoadingService.startUploadImg(MainActivity.this);
     }
 }

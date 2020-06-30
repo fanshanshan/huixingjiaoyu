@@ -30,4 +30,12 @@
     <!-- 描述性文字item项的高 -->
     <dimen name="text_item_height">43dp</dimen>
     <dimen name="input_method_spacing">2px</dimen>
+
+
+
+    <!-- 飘星 -->
+    <dimen name="heart_anim_bezier_x_rand">50.0dp</dimen>
+    <dimen name="heart_anim_length">100.0dp</dimen>
+    <dimen name="heart_anim_length_rand">350.0dp</dimen>
+
 </resources>

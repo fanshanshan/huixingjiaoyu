@@ -1,6 +1,7 @@
 package com.qulink.hxedu.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.LiveDetailBean;
+import com.qulink.hxedu.ui.live.AudienceActivity;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.ToastUtils;
@@ -34,7 +37,10 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -99,7 +105,9 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
             }
         };
         recycleView.setAdapter(adapter);
-        recycleView.addItemDecoration(new SpacesItemDecoration(0, 16, 0, 0));
+        if(recycleView.getItemDecorationCount()==0){
+            recycleView.addItemDecoration(new SpacesItemDecoration(0, 16, 0, 0));
+        }
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     }
@@ -161,16 +169,79 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
 
             tvDesc.setText(text);
 
-            tvStatus.setText("查看回放");
+            if(activityIsOver(o.getStartTime())){
+                tvStatus.setText("正在直播");
+                tvStatus.setBackgroundResource(R.drawable.living_txt_bg);
+
+            }else{
+                if(o.getParticipated()==0){
+                    tvStatus.setText("立即报名");
+                    tvStatus.setBackgroundResource(R.drawable.living_join);
+                }else{
+                    tvStatus.setText("已报名");
+                    tvStatus.setBackgroundResource(R.drawable.living_joined);
+
+                }
+            }
+
             tvStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.show(getActivity(), "视频正在制作中");
+                    if(activityIsOver(o.getStartTime())){
+                        Intent intent = new Intent(getActivity(), AudienceActivity.class);
+                        intent.putExtra("id",o.getId());
+                        startActivity(intent);
+                    }else{
+                        if(o.getParticipated()==0){
+                            joinLive(o);
+                        }else{
+            ToastUtils.show(getActivity(),"直播还未开始");
+                        }
+                    }
+
                 }
             });
         }
     }
+    private void joinLive(LiveDetailBean.RecordsBean o){
+        DialogUtil.showLoading(getActivity(),true);
+        ApiUtils.getInstance().joinLive(o.getId(), 0, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                o.setParticipated(1);
+                recycleView.getAdapter().notifyDataSetChanged();
+                DialogUtil.hideLoading(getActivity());
+                ToastUtils.show(getActivity(),"报名成功");
 
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                ToastUtils.show(getActivity(),msg);
+                DialogUtil.hideLoading(getActivity());
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                ToastUtils.show(getActivity(),expectionMsg);
+                DialogUtil.hideLoading(getActivity());
+
+            }
+        });
+    }
+    private boolean activityIsOver(String startData){
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        boolean isOPen = false;
+        try {
+            isOPen = date.after(dateFormat.parse(startData));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            isOPen = true;
+        }
+        return  isOPen;
+    }
     private int pageNo;
     private int pageSize = FinalValue.limit;
 

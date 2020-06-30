@@ -23,6 +23,7 @@ import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.HotCourseBean;
 import com.qulink.hxedu.ui.BaseActivity;
+import com.qulink.hxedu.ui.score.ShopCourseDetailActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
@@ -178,17 +179,21 @@ public class MoreCourseActivity extends BaseActivity implements OnRefreshListene
 
         @Override
         public void setViews() {
-            llRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RouteUtil.startNewActivity(MoreCourseActivity.this, new Intent(MoreCourseActivity.this, CourseDetailActivity.class));
-                }
-            });
+
         }
 
         @Override
         public void handleData(HotCourseBean.RecordsBean data, int position) {
 
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MoreCourseActivity.this, CourseDetailActivity.class);
+                    intent.putExtra("courseId",data.getId());
+                    RouteUtil.startNewActivity(MoreCourseActivity.this, intent);
+
+                }
+            });
             tvTitle.setText(data.getCurriculumName());
             tvNomey.setText(data.getParticipantNum() + "");
             tvJoinNum.setText(data.getParticipantNum() + "人加入了学习");

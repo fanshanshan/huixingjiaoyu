@@ -1321,4 +1321,31 @@ public class ApiUtils {
         NetUtil.getInstance().post(baseUrl + "user/ocr", params, apiCallback);
     }
 
+
+    /*
+     *报名直播
+     *
+     * @param apiCallback
+     */
+
+    public void joinLive(int liveId,int payType,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("liveId", liveId+"");
+        params.put("payType", liveId+"");
+        NetUtil.getInstance().post(baseUrl + "live/participant", params, apiCallback);
+    }
+/*
+     *查询我的订单
+     *
+     * @param apiCallback
+     */
+
+    public void getMyOrder(int pageNo,int pageSize,int classify,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageNo", pageNo+"");
+        params.put("pageSize", pageSize+"");
+        params.put("classify", classify+"");
+        NetUtil.getInstance().post(baseUrl + "user/order", params, apiCallback);
+    }
+
 }

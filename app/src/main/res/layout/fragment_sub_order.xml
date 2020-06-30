@@ -4,15 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/smart_layout"
     tools:context=".ui.fragment.SubCourceFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:background="#f8f8f8"
-        android:id="@+id/recycle_course"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+        <com.qulink.hxedu.view.EmptyRecyclerView
+            android:background="#f8f8f8"
+            android:id="@+id/recycle_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        </com.qulink.hxedu.view.EmptyRecyclerView>
 
+        <include layout="@layout/no_data_layout"/>
+    </RelativeLayout>
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

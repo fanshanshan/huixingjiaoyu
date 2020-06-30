@@ -25,6 +25,7 @@ import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.LiveDetailBean;
+import com.qulink.hxedu.ui.live.AudienceActivity;
 import com.qulink.hxedu.ui.live.LiveDetailActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
@@ -173,8 +174,12 @@ public class LiveRecordSubFragment extends Fragment implements OnRefreshListener
             llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
-                    intent.putExtra("liveId",o.getId());
+//                    Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
+//                    intent.putExtra("liveId",o.getId());
+//                    startActivity(intent);
+
+                    Intent intent = new Intent(getActivity(), AudienceActivity.class);
+                    intent.putExtra("id",o.getId());
                     startActivity(intent);
                 }
             });

@@ -2,9 +2,15 @@ package com.qulink.hxedu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.api.ApiCallback;
@@ -18,14 +24,18 @@ import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.TokenInfo;
 import com.qulink.hxedu.entity.UserInfo;
+import com.qulink.hxedu.service.LoadingService;
 import com.qulink.hxedu.ui.BaseActivity;
+import com.qulink.hxedu.ui.sign.SignActivity;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
 import com.qulink.hxedu.util.RouteUtil;
+import com.qulink.hxedu.util.SystemUtil;
 import com.qulink.hxedu.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

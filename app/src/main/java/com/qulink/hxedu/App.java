@@ -82,6 +82,16 @@ public class App extends Application {
 
     private SystemSettingBean systemSettingBean;
 
+    private boolean loginLive;
+
+    public boolean isLoginLive() {
+        return loginLive;
+    }
+
+    public void setLoginLive(boolean loginLive) {
+        this.loginLive = loginLive;
+    }
+
     public SystemSettingBean getSystemSettingBean(Context context) {
         if(systemSettingBean==null){
             systemSettingBean = PrefUtils.getSystemSetting(context);
@@ -192,6 +202,7 @@ public class App extends Application {
 
     public void logout() {
         setTokenInfo(null);
+        setLoginLive(false);
         PrefUtils.saveToken(this, tokenInfo);
         EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT, 0));
 

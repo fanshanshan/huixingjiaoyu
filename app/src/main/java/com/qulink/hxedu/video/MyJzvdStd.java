@@ -480,7 +480,7 @@ public class MyJzvdStd extends JzvdStd {
         super.onProgress(progress, position, duration);
 
         long totalSeconds = position / 1000;
-        if (false) {   //这里是从服务器拿到特定字段判断是否付费  这里模拟未付费
+        if (videoType!=1) {   //这里是从服务器拿到特定字段判断是否付费  这里模拟未付费
             if (totalSeconds >= maxFreeSecond) {   //考虑未付费情况下拖动进度条超过试看时间
                 if (!isNoPay) {   //加个标记 因为此函数一直在回调
                     progressBar.setProgress(maxFreeSecond);

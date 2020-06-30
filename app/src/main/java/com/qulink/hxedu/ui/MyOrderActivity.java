@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.adapter.FragmentViewPagerAdapter;
+import com.qulink.hxedu.ui.fragment.LiveOrderFragment;
 import com.qulink.hxedu.ui.fragment.ReadyBeginSubFragment;
 import com.qulink.hxedu.ui.fragment.SubOrderFragment;
 import com.qulink.hxedu.view.tablayout.SlidingTabLayout;
@@ -56,16 +57,16 @@ public class MyOrderActivity extends BaseActivity {
     void initFragment() {
 
         fragmentList = new ArrayList<>();
-        SubOrderFragment liveSubFragment = new SubOrderFragment();
+        LiveOrderFragment liveSubFragment = new LiveOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("title", "标题1");//全部
+        bundle.putInt("classfy", 1);//全部
         liveSubFragment.setArguments(bundle);
         fragmentList.add(liveSubFragment);
-        liveSubFragment = new SubOrderFragment();
+        SubOrderFragment subOrderFragment = new SubOrderFragment();
         bundle = new Bundle();
-        bundle.putString("title", "标题2");//全部
+        bundle.putInt("classfy", 2);//全部
         liveSubFragment.setArguments(bundle);
-        fragmentList.add(liveSubFragment);
+        fragmentList.add(subOrderFragment);
 
     }
 
