@@ -295,7 +295,7 @@ public class NetUtil {
         if (isShow) {
             return;
         }
-        if (App.getInstance().getCurrentActivity() == null) {
+        if (App.getInstance().getCurrentActivity() == null||!App.getInstance().isLogin(App.getInstance().getCurrentActivity())) {
             return;
         }
         isShow = true;

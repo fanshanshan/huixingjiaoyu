@@ -1,6 +1,8 @@
 package com.qulink.hxedu.api;
 
 
+import android.text.TextUtils;
+
 import com.qulink.hxedu.entity.HotCourseBean;
 
 import java.util.HashMap;
@@ -953,6 +955,16 @@ public class ApiUtils {
         map.put("curriculumId", curriculumId + "");
         map.put("payType", payType + "");
         NetUtil.getInstance().post(baseUrl + "curriculum/purchase", map, apiCallback);
+    }  /**
+     * 购买直播课程
+     *
+     * @param apiCallback
+     */
+    public void buylive(int liveId, int payType,ApiCallback apiCallback) {
+        Map<String, String> map = new HashMap<>();
+        map.put("liveId", liveId + "");
+        map.put("payType", payType + "");
+        NetUtil.getInstance().post(baseUrl + "live/participant", map, apiCallback);
     }
 
     /**
@@ -1003,6 +1015,16 @@ public class ApiUtils {
             params.put("tagIds", tagIds);
         }
         NetUtil.getInstance().get(baseUrl + "curriculum/index/search", params, apiCallback);
+    } public void searchLive(int pageNo,int pageSize,String keyword,int liveStatus,String classifyId, ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pageNo", pageNo + "");
+        params.put("pageSize", pageSize + "");
+        params.put("classifyId", classifyId==null?"":classifyId );
+
+        params.put("liveStatus", liveStatus + "");
+        params.put("keyword", keyword);
+
+        NetUtil.getInstance().post(baseUrl + "live/list", params, apiCallback);
     }
 
     /**
@@ -1333,6 +1355,26 @@ public class ApiUtils {
         params.put("liveId", liveId+"");
         params.put("payType", liveId+"");
         NetUtil.getInstance().post(baseUrl + "live/participant", params, apiCallback);
+    } public void startlive(int liveId,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("liveId", liveId+"");
+        NetUtil.getInstance().post(baseUrl + "live/startLive", params, apiCallback);
+    }public void endlive(int liveId,int commentCount,int likeCount,ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("liveId", liveId+"");
+        params.put("commentCount", commentCount+"");
+        params.put("likeCount", likeCount+"");
+        NetUtil.getInstance().post(baseUrl + "live/endLive", params, apiCallback);
+    }
+    /*
+     *获取我的直播间
+     *
+     * @param apiCallback
+     */
+
+    public void getCurrentLive(ApiCallback apiCallback) {
+        Map<String, String> params = new HashMap<>();
+        NetUtil.getInstance().post(baseUrl + "live/currentLive", params, apiCallback);
     }
 /*
      *查询我的订单

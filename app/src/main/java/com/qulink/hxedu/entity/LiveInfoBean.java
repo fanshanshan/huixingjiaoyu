@@ -32,6 +32,7 @@ public class LiveInfoBean implements Serializable {
     private double payAmount;
     private double vipAmount;
     private int participantTotal;
+    private int id;
     private int participated;
     private int status;
     private String startTime;

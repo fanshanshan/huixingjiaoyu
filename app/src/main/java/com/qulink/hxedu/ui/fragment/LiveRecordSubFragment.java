@@ -174,13 +174,13 @@ public class LiveRecordSubFragment extends Fragment implements OnRefreshListener
             llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
-//                    intent.putExtra("liveId",o.getId());
-//                    startActivity(intent);
-
-                    Intent intent = new Intent(getActivity(), AudienceActivity.class);
-                    intent.putExtra("id",o.getId());
+                    Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
+                    intent.putExtra("liveId",o.getId());
                     startActivity(intent);
+
+//                    Intent intent = new Intent(getActivity(), AudienceActivity.class);
+//                    intent.putExtra("id",o.getId());
+//                    startActivity(intent);
                 }
             });
         }

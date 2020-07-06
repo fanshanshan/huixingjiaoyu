@@ -309,6 +309,7 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
                 }
                 break;
             case R.id.tv_share:
+                ToastUtils.show(this,"暂未开放");
                 break;
             case R.id.ll_like:
                 if (App.getInstance().isLogin(CourseDetailActivity.this, true)) {
@@ -320,6 +321,8 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
                 }
                 break;
             case R.id.tv_download:
+                ToastUtils.show(this,"暂未开放");
+
                 break;
         }
     }
@@ -643,9 +646,10 @@ public class CourseDetailActivity extends BaseActivity implements CourseDetailCo
             if (requestCode == BUY_LESSON_CODE) {
                 courseDetailBean.getPersonal().setPurchaseStatus(2);
                 jzVideo.dealCourseAndResume();
-
+                dealBtnBuy(courseDetailBean.getPersonal());
             } else if (requestCode == OPEN_VIP_CODE) {
                 jzVideo.dealCourseAndResume();
+
                 dealBtnBuy(courseDetailBean.getPersonal());
             }
         }

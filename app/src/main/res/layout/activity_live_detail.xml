@@ -94,7 +94,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="4dp"
-
+                                android:id="@+id/tv_start"
                                 android:text="观看录播"
                                 android:textColor="#FFFFFF"
                                 android:textSize="15sp" />
@@ -107,7 +107,7 @@
                     android:id="@+id/jz_video"
                     android:layout_width="match_parent"
                     android:layout_height="210dp"
-                    android:visibility="gone" />
+                     />
 
 
             </RelativeLayout>

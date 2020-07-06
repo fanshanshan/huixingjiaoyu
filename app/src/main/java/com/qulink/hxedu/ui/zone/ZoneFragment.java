@@ -349,6 +349,8 @@ public class ZoneFragment extends Fragment implements ZoneContract.View, OnRefre
                 public void onClick(View v) {
                     Intent intent = new Intent(mActivity, ArticalDetailActivity.class);
                     intent.putExtra("id",o.getId());
+                    intent.putExtra("data",o);
+
                     startActivity(intent);
                 }
             });

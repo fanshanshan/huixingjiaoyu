@@ -237,6 +237,7 @@ public class SettingActivity extends BaseActivity {
                 App.getInstance().setTokenInfo(null);
                 App.getInstance().deleteAlias(SettingActivity.this);
                 NetUtil.getInstance().setToken("");
+                App.getInstance().setLoginLive(false);
                 EventBus.getDefault().post(new MessageEvent(FinalValue.LOGOUT));
                 RouteUtil.startNewActivity(SettingActivity.this, new Intent(SettingActivity.this, MainActivity.class));
             }

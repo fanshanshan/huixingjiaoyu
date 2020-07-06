@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class LiveDetailBean {
+
+
     /**
-     * records : [{"id":1,"title":"Java 高并发实战","startTime":"2020-06-03 12:09:14","coverUrl":"www.baidu.com","participated":0,"headImage":"DA8B6D0E-655D-4920-A286-B1293DD2EB5B01592215900","teacherName":"kkkppp","userId":9}]
+     * records : [{"id":2,"title":"C# 实战","startTime":"2020-06-04 14:24:45","coverUrl":"www.baidu.com","participated":0,"headImage":"900a089e48566799UoYXrWsRxC3WObJcOpLhrhOun9G8OAkr","teacherName":"刘宁山","userId":12,"status":1,"type":1,"payAmount":0,"vipAmount":0}]
      * total : 1
      * size : 8
      * current : 1
@@ -32,14 +34,18 @@ public class LiveDetailBean {
     @Data
     public static class RecordsBean {
         /**
-         * id : 1
-         * title : Java 高并发实战
-         * startTime : 2020-06-03 12:09:14
+         * id : 2
+         * title : C# 实战
+         * startTime : 2020-06-04 14:24:45
          * coverUrl : www.baidu.com
          * participated : 0
-         * headImage : DA8B6D0E-655D-4920-A286-B1293DD2EB5B01592215900
-         * teacherName : kkkppp
-         * userId : 9
+         * headImage : 900a089e48566799UoYXrWsRxC3WObJcOpLhrhOun9G8OAkr
+         * teacherName : 刘宁山
+         * userId : 12
+         * status : 1
+         * type : 1
+         * payAmount : 0.0
+         * vipAmount : 0.0
          */
 
         private int id;
@@ -50,5 +56,9 @@ public class LiveDetailBean {
         private String headImage;
         private String teacherName;
         private int userId;
+        private int status;
+        private int type;
+        private double payAmount;
+        private double vipAmount;
     }
 }

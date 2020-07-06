@@ -14,6 +14,7 @@ public class LiveClassfyBean {
      * createTime : 2020-06-04 10:12:00
      */
 
+    private boolean isCheck;
     private int id;
     private String title;
     private int orderNum;

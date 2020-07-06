@@ -201,7 +201,6 @@ public class MyJzvdStd extends JzvdStd {
     @Override
     public void init(Context context) {
         super.init(context);
-        setMediaInterface(JZMediaExo.class);
         //Jzvd.setMediaInterface(new JZMediaIjkplayer());
         llBuy = findViewById(R.id.ll_buy);
         tvNuy = findViewById(R.id.tv_buy);
@@ -328,12 +327,14 @@ public class MyJzvdStd extends JzvdStd {
         super.gotoFullscreen();
         Log.i(TAG, "goto Fullscreen");
         mCurrent = 1;
+        screen = SCREEN_FULLSCREEN;
+
     }
 
     @Override
     public void gotoNormalScreen() {
         super.gotoNormalScreen();
-        mCurrent = 1;
+        screen = SCREEN_NORMAL;
 
         Log.i(TAG, "quit Fullscreen");
     }

@@ -144,10 +144,11 @@ public class BuyLessonActivity extends BaseActivity {
                 ivBank.setImageResource(R.drawable.pay_check);
                 break;
             case R.id.rl_bank:
-                payWay = 3;
-                ivBank.setImageResource(R.drawable.pay_checked);
-                ivWx.setImageResource(R.drawable.pay_check);
-                ivAli.setImageResource(R.drawable.pay_check);
+                ToastUtils.show(this,"暂未开放");
+//                payWay = 3;
+//                ivBank.setImageResource(R.drawable.pay_checked);
+//                ivWx.setImageResource(R.drawable.pay_check);
+//                ivAli.setImageResource(R.drawable.pay_check);
                 break;
         }
     }

@@ -1,6 +1,7 @@
 package com.qulink.hxedu.ui.fragment;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -23,9 +25,14 @@ import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
+import com.qulink.hxedu.callback.UserInfoCallback;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.LiveDetailBean;
+import com.qulink.hxedu.entity.UserInfo;
+import com.qulink.hxedu.ui.BuyliveActivity;
+import com.qulink.hxedu.ui.SendVipActivity;
 import com.qulink.hxedu.ui.live.AudienceActivity;
+import com.qulink.hxedu.ui.live.LiveDetailActivity;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
@@ -47,6 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kale.adapter.CommonRcvAdapter;
 import kale.adapter.item.AdapterItem;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,7 +100,7 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
 
     private List<LiveDetailBean.RecordsBean> data;
 
-
+    LiveDetailBean.RecordsBean recordsBean;
     void getData() {
         data = new ArrayList<>();
 
@@ -108,6 +117,7 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
         if(recycleView.getItemDecorationCount()==0){
             recycleView.addItemDecoration(new SpacesItemDecoration(0, 16, 0, 0));
         }
+        recycleView.setEmptyView(llEmpty);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     }
@@ -129,6 +139,7 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
         TextView tvName;
         TextView tvDesc;
         TextView tvStatus;
+        LinearLayout living_join;
 
         @Override
         public int getLayoutResId() {
@@ -145,6 +156,7 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
             tvName = root.findViewById(R.id.tv_name);
             tvStatus = root.findViewById(R.id.tv_status);
             tvDesc = root.findViewById(R.id.tv_desc);
+            living_join = root.findViewById(R.id.living_join);
         }
 
         @Override
@@ -164,45 +176,84 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
 
                 }
             });
-            String text = "观看回放";
 
 
-            tvDesc.setText(text);
+            tvDesc.setText("");
 
-            if(activityIsOver(o.getStartTime())){
-                tvStatus.setText("正在直播");
-                tvStatus.setBackgroundResource(R.drawable.living_txt_bg);
-
+            if(o.getParticipated()==0){
+                tvStatus.setText("立即报名");
+                living_join.setBackgroundResource(R.drawable.living_join);
             }else{
-                if(o.getParticipated()==0){
-                    tvStatus.setText("立即报名");
-                    tvStatus.setBackgroundResource(R.drawable.living_join);
-                }else{
+                if(o.getStatus()==2){
                     tvStatus.setText("已报名");
-                    tvStatus.setBackgroundResource(R.drawable.living_joined);
-
+                    living_join.setBackgroundResource(R.drawable.living_joined);
+                }else{
+                    tvStatus.setText("正在直播");
+                    living_join.setBackgroundResource(R.drawable.living_txt_bg);
                 }
+
             }
 
             tvStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(activityIsOver(o.getStartTime())){
-                        Intent intent = new Intent(getActivity(), AudienceActivity.class);
-                        intent.putExtra("id",o.getId());
-                        startActivity(intent);
-                    }else{
-                        if(o.getParticipated()==0){
-                            joinLive(o);
-                        }else{
-            ToastUtils.show(getActivity(),"直播还未开始");
-                        }
-                    }
 
+                    startLive(o.getId());
+//                    if(o.getParticipated()==0){
+//                        if(o.getType()==1){
+//                            joinLive(o);
+//                        }else  if(o.getType()==2){
+//                         App.getInstance().getUserInfo(getActivity(), new UserInfoCallback() {
+//                             @Override
+//                             public void getUserInfo(UserInfo userInfo) {
+//                                 if(userInfo.isVip()){
+//                                     joinLive(o);
+//                                 }else{
+//                                     recordsBean = o;
+//                                     goToVipPage();
+//
+//                                 }
+//                             }
+//                         });
+//                        }else{
+//                            recordsBean = o;
+//                            goToBuyLessonPage();
+//                        }
+//                    }else{
+//                        if(o.getStatus()==2){
+//                           startLive(o.getId());
+//                        }else{
+//                            ToastUtils.show(getActivity(),"直播还未开始");
+//                        }
+//                    }
                 }
             });
         }
     }
+    private void startLive(int id){
+        Intent intent = new Intent(getActivity(), AudienceActivity.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
+    }
+
+    private void goToVipPage() {
+        Intent intent = new Intent(getActivity(), SendVipActivity.class);
+        intent.putExtra("withResult", true);
+        intent.putExtra("type", "buy");
+
+        startActivityForResult(intent, OPEN_VIP_CODE);
+    }
+    private int BUY_LESSON_CODE = 2;
+    private int OPEN_VIP_CODE = 3;
+    private void goToBuyLessonPage() {
+        Intent intent = new Intent(getActivity(), BuyliveActivity.class);
+        intent.putExtra("withResult", true);
+        intent.putExtra("liveId", recordsBean.getId());
+        startActivityForResult(intent, OPEN_VIP_CODE);
+
+
+    }
+    private int nextIntent = 0;//
     private void joinLive(LiveDetailBean.RecordsBean o){
         DialogUtil.showLoading(getActivity(),true);
         ApiUtils.getInstance().joinLive(o.getId(), 0, new ApiCallback() {
@@ -211,7 +262,15 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
                 o.setParticipated(1);
                 recycleView.getAdapter().notifyDataSetChanged();
                 DialogUtil.hideLoading(getActivity());
-                ToastUtils.show(getActivity(),"报名成功");
+                if(nextIntent==1){
+                    Intent intent = new Intent(getActivity(), AudienceActivity.class);
+                    intent.putExtra("id",o.getId());
+                    startActivity(intent);
+                }else{
+                    ToastUtils.show(getActivity(),"报名成功");
+
+                }
+
 
             }
 
@@ -262,6 +321,7 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
                         llEmpty.setVisibility(View.GONE);
 
                     }
+                    recycleView.getAdapter().notifyDataSetChanged();
                 } else {
                     llEmpty.setVisibility(View.VISIBLE);
 
@@ -297,6 +357,8 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
                         refreshLayout.setNoMoreData(true);
 
                     }
+                    recycleView.getAdapter().notifyDataSetChanged();
+
                 } else {
                     refreshLayout.setNoMoreData(true);
                 }
@@ -317,5 +379,41 @@ public class ReadyBeginSubFragment extends Fragment implements OnRefreshListener
         });
 
     }
+
+
+    private void showOpenVipDialog() {
+        DialogUtil.showAlertDialog(getActivity(), "提示", "报名该直播需要开通会员？", "立即开通", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goToVipPage();
+            }
+        }, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == BUY_LESSON_CODE) {
+               if(recordsBean!=null){
+                   startLive(recordsBean.getId());
+                   recordsBean = null;
+               }
+            } else if (requestCode == OPEN_VIP_CODE) {
+                if(recordsBean!=null){
+                   joinLive(recordsBean);
+                    recordsBean = null;
+                }
+            }
+        }
+    }
+
+
 }
 

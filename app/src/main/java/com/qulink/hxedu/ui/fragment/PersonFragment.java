@@ -34,6 +34,7 @@ import com.qulink.hxedu.api.GsonUtil;
 import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.CurrentLiveBean;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.PersonMenuItem;
@@ -60,6 +61,7 @@ import com.qulink.hxedu.ui.score.ScoreShopActivity;
 import com.qulink.hxedu.ui.sign.PlatformAccountSignActivity;
 import com.qulink.hxedu.ui.sign.SignActivity;
 import com.qulink.hxedu.ui.sign.StudyPlanActivity;
+import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.PermissionUtils;
@@ -497,7 +499,8 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         if(requestCode==TO_LIVE_CODE){
             if (PermissionUtils.isPermissionRequestSuccess(grantResults)) {
                 // 权限申请成功
-                RouteUtil.startNewActivity(mActivity, new Intent(mActivity, AuthorActivity.class));
+
+                getCurrentLive();
             }
 
         }else if(requestCode==OPEN_QR_CODE){
@@ -533,22 +536,23 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
                     RouteUtil.startNewActivity(mActivity, new Intent(mActivity, SettingActivity.class));
                     break;
                 case "银行卡":
-                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, BankListActivity.class));
+                    ToastUtils.show(mActivity,"暂未开放");
+                    //RouteUtil.startNewActivity(mActivity, new Intent(mActivity, BankListActivity.class));
                     break;
                 case "开启直播":
 
+                    if(                    ContextCompat.checkSelfPermission(mActivity,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
 
-                if(                    ContextCompat.checkSelfPermission(mActivity,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
+                            ||                     ContextCompat.checkSelfPermission(mActivity,Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED
 
-                ||                     ContextCompat.checkSelfPermission(mActivity,Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED
+                    ){
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA},TO_LIVE_CODE);
 
-                ){
-                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA},TO_LIVE_CODE);
+                    }else{
+                        getCurrentLive();
 
-                }else{
-                    RouteUtil.startNewActivity(mActivity, new Intent(mActivity, AuthorActivity.class));
 
-                }
+                    }
 
                     break;
                 case "需求收集":
@@ -722,5 +726,35 @@ public class PersonFragment extends Fragment implements OnRefreshListener, OnLoa
         if(requestCode==RECENT_LEARN_CODE&&resultCode==-1){
             getRecentLearn();
         }
+    }
+
+
+    private void getCurrentLive(){
+        DialogUtil.showLoading(mActivity,true);
+        ApiUtils.getInstance().getCurrentLive(new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(mActivity);
+
+                CurrentLiveBean currentLiveBean = GsonUtil.GsonToBean(GsonUtil.GsonString(t.getData()),CurrentLiveBean.class);
+
+              Intent intent = new Intent(mActivity,AuthorActivity.class);
+              intent.putExtra("data",currentLiveBean);
+              startActivity(intent);
+
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(mActivity);
+                ToastUtils.show(mActivity,msg);
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(mActivity);
+                ToastUtils.show(mActivity,expectionMsg);
+            }
+        });
     }
 }

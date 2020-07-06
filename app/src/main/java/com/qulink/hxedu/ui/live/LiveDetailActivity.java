@@ -39,10 +39,11 @@ import com.qulink.hxedu.mvp.contract.LiveContract;
 import com.qulink.hxedu.mvp.presenter.LivePresenter;
 import com.qulink.hxedu.ui.BaseActivity;
 import com.qulink.hxedu.ui.BuyLessonActivity;
+import com.qulink.hxedu.ui.BuyliveActivity;
 import com.qulink.hxedu.ui.LoginActivity;
 import com.qulink.hxedu.ui.SendVipActivity;
 import com.qulink.hxedu.ui.VipDetailActivity;
-import com.qulink.hxedu.util.CourseUtil;
+import com.qulink.hxedu.ui.course.CourseDetailActivity;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.ImageUtils;
 import com.qulink.hxedu.util.RouteUtil;
@@ -72,6 +73,10 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
     MyScrollView sc;
     @BindView(R.id.tv_like_num)
     TextView tvLikeNum;
+    @BindView(R.id.iv_share)
+    ImageView ivShare;
+    @BindView(R.id.tv_start)
+    TextView tvStart;
     private String TAG = "CourseDetailActivity";
     @BindView(R.id.iv_course_corver)
     ImageView ivCourseCorver;
@@ -130,6 +135,7 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
     protected int getLayout() {
         return R.layout.activity_live_detail;
     }
+
 
 
     private void setCorverImg(CourseDetailBean courseDetailBean) {
@@ -272,12 +278,10 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
         return false;
     }
 
-    @OnClick({R.id.tv_price,  R.id.ll_course_catalog, R.id.ll_course_detail, R.id.tv_next})
+    @OnClick({R.id.tv_start,R.id.tv_price, R.id.ll_course_catalog, R.id.ll_course_detail, R.id.tv_next})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tv_price:
-                ToastUtils.show(this, "wcaonima");
-                break;
+
             case R.id.ll_course_catalog:
                 chooseCourseCatalog();
                 break;
@@ -285,17 +289,21 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
                 chooseCourseDetail();
                 break;
             case R.id.tv_next:
-                App.getInstance().getUserInfo(this, new UserInfoCallback() {
-                    @Override
-                    public void getUserInfo(UserInfo userInfo) {
-                        if (userInfo.isVip()) {
-                            startPlay();
-                        } else {
-                            showOpenVipDialog();
-                        }
-                    }
-                });
+                if (tvNext.getText().toString().equals("开始学习") ) {
+                    startPlay();
+                } else if (tvNext.getText().toString().equals("开通会员")) {
+                    //不是vip 提示开通vip 已经是vip 开始播放
+                    showOpenVipDialog();
+                } else if (tvNext.getText().toString().equals("立即购买")) {
+                    goToBuyLessonPage();
+                }
+
                 break;
+
+                case R.id.tv_start:
+                    startPlay();
+
+                    break;
             case R.id.tv_share:
                 break;
 
@@ -405,7 +413,6 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
     }
 
 
-
     @Override
     public void showLoading() {
 
@@ -467,9 +474,10 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
             }
         });
 
-        if (liveInfoBean.getType() == 1) {
+        if (liveInfoBean.getType() == 2) {
             ivVip.setImageResource(R.drawable.vipzx);
         }
+
 
         jzVideo.setVideoStatuListener(this);
         jzVideo.setCourseId(courseId);
@@ -479,10 +487,40 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
         tvLikeNum.setText(liveInfoBean.getParticipantTotal() + "人点赞");
         tvCourseTime.setText(liveInfoBean.getStartTime());
         tvCourseName.setText(liveInfoBean.getTeacherName());
-
+        dealBtnBuy(liveInfoBean.getType(),liveInfoBean.getParticipated());
 
     }
+    void dealBtnBuy(int type,int joined) {
+        if (type == 1) {
+            tvNext.setText("开始学习");
+            jzVideo.setVideoType(1);
 
+        } else if (type == 2) {
+            App.getInstance().getUserInfo(LiveDetailActivity.this, new UserInfoCallback() {
+                @Override
+                public void getUserInfo(UserInfo userInfo) {
+                    if (userInfo.isVip()) {
+                        jzVideo.setVideoType(1);
+                        tvNext.setText("开始学习");
+                    } else {
+                        jzVideo.setVideoType(2);
+                        tvNext.setText("开通会员");
+                    }
+                }
+            });
+
+        } else if (type== 3) {
+            if(joined==1){
+                jzVideo.setVideoType(1);
+                tvNext.setText("开始学习");
+            }else{
+                jzVideo.setVideoType(3);
+                tvNext.setText("立即购买");
+            }
+
+        }
+        tvNext.setVisibility(View.VISIBLE);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -490,8 +528,10 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
         if (resultCode == RESULT_OK) {
             if (requestCode == BUY_LESSON_CODE) {
                 jzVideo.dealCourseAndResume();
-
+                tvNext.setText("开始学习");
             } else if (requestCode == OPEN_VIP_CODE) {
+                tvNext.setText("开始学习");
+
                 jzVideo.dealCourseAndResume();
             }
         }
@@ -586,13 +626,19 @@ public class LiveDetailActivity extends BaseActivity implements LiveContract.Vie
         Intent intent = new Intent(LiveDetailActivity.this, SendVipActivity.class);
         intent.putExtra("withResult", true);
         intent.putExtra("type", "buy");
+
         startActivityForResult(intent, OPEN_VIP_CODE);
     }
 
     private void goToBuyLessonPage() {
-        Intent intent = new Intent(LiveDetailActivity.this, BuyLessonActivity.class);
+        Intent intent = new Intent(LiveDetailActivity.this, BuyliveActivity.class);
         intent.putExtra("withResult", true);
-        startActivityForResult(intent, OPEN_VIP_CODE);
+        intent.putExtra("img", liveInfoBean.getCoverUrl());
+        intent.putExtra("liveId", liveInfoBean.getId());
+        intent.putExtra("amount", liveInfoBean.getPayAmount());
+        intent.putExtra("title", liveInfoBean.getTitle());
+
+        startActivityForResult(intent, BUY_LESSON_CODE);
     }
 
 }

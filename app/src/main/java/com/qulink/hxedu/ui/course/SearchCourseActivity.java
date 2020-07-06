@@ -169,11 +169,14 @@ public class SearchCourseActivity extends BaseActivity implements SearchContract
             recycleFilterSub.getAdapter().notifyDataSetChanged();
         }
     }
-    @OnClick({R.id.tv_sure,R.id.tv_reset,R.id.tv_mianfei,R.id.tv_fufei,R.id.tv_vip,R.id.back, R.id.tv_cancel, R.id.iv_delete, R.id.ll_zonghe, R.id.ll_price, R.id.ll_filter})
+    @OnClick({R.id.tv_sure,R.id.tv_reset,R.id.tv_mianfei,R.id.tv_fufei,R.id.tv_vip, R.id.tv_cancel, R.id.iv_delete, R.id.ll_zonghe, R.id.ll_price, R.id.ll_filter})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_reset:
                 resetFilter();
+                drawerLayout.closeDrawer(Gravity.RIGHT);
+
+                search();
                 break;
             case R.id.tv_sure:
                 drawerLayout.closeDrawer(Gravity.RIGHT);
@@ -309,12 +312,12 @@ public class SearchCourseActivity extends BaseActivity implements SearchContract
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        search();
+        loadmore();
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        loadmore();
+        search();
     }
 
     class Item implements AdapterItem<SearchResultBean.RecordsBean> {

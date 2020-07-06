@@ -22,9 +22,13 @@ import com.bumptech.glide.Glide;
 import com.qulink.hxedu.App;
 import com.qulink.hxedu.R;
 import com.qulink.hxedu.adapter.LiveMsgAdapter;
+import com.qulink.hxedu.api.ApiCallback;
+import com.qulink.hxedu.api.ApiUtils;
 import com.qulink.hxedu.api.GsonUtil;
+import com.qulink.hxedu.api.ResponseData;
 import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.CurrentLiveBean;
 import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.ui.BaseActivity;
@@ -39,6 +43,7 @@ import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.AuthorMsg;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.AuthorNotice;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.CmdBean;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.LoginInfo;
+import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.MLVBCommonDef;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.SysMsg;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.ImageUtils;
@@ -51,6 +56,7 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -110,6 +116,17 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
     ImageView ivShare;
     @BindView(R.id.heart_layout)
     TCHeartLayout heartLayout;
+    @BindView(R.id.tv_live_title)
+    TextView tvLiveTitle;
+    @BindView(R.id.tv_live_start_time)
+    TextView tvLiveStartTime;
+    @BindView(R.id.tv_live_name)
+    TextView tvLiveName;
+    @BindView(R.id.iv_like)
+    ImageView ivLike;
+
+
+    private CurrentLiveBean currentLiveBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +141,12 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
     @Override
     protected void init() {
 
-
+        currentLiveBean = (CurrentLiveBean) getIntent().getSerializableExtra("data");
+        if(currentLiveBean!=null){
+            tvLiveName.setText(currentLiveBean.getTeacherName());
+            tvLiveTitle.setText(currentLiveBean.getTitle());
+            tvLiveStartTime.setText(currentLiveBean.getStartTime());
+        }
         //启动本地摄像头预览
         mlvbLiveRoom = MLVBLiveRoom.sharedInstance(this);
 //        TXLivePushConfig mLivePushConfig = new TXLivePushConfig();
@@ -160,7 +182,7 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), etComment.getText().toString(), new SendRoomCustomMsgCallback() {
             @Override
             public void onError(int errCode, String errInfo) {
-                    ToastUtils.show(AuthorActivity.this,errInfo);
+                ToastUtils.show(AuthorActivity.this, errInfo);
             }
 
             @Override
@@ -172,7 +194,7 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
                 anchorInfo.level = cmdBean.getLevel();
                 addMsg(new AuthorMsg(anchorInfo, etComment.getText().toString()));
                 SystemUtil.closeKeybord(etComment, AuthorActivity.this);
-
+                setCommentNum();
                 etComment.setText("");
             }
         });
@@ -205,16 +227,16 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         return false;
     }
 
-    private void likeClick(){
+    private void likeClick() {
         heartLayout.addFavor();
-
+        setLikeNum();
         CmdBean cmdBean = new CmdBean();
         cmdBean.setLevel(loginInfo.level);
         cmdBean.setType(LiveParam.ANCHOR_NOTICE);
-        mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), etComment.getText().toString(), new SendRoomCustomMsgCallback() {
+        mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean),LiveParam.LIKE_DESC, new SendRoomCustomMsgCallback() {
             @Override
             public void onError(int errCode, String errInfo) {
-                ToastUtils.show(AuthorActivity.this,errInfo);
+                ToastUtils.show(AuthorActivity.this, errInfo);
             }
 
             @Override
@@ -228,7 +250,8 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             }
         });
     }
-    @OnClick({R.id.iv_like,R.id.iv_share, R.id.ll_sb_Ui, R.id.iv_close2, R.id.tv_comment, R.id.iv_turn, R.id.iv_close, R.id.iv_share_wx, R.id.iv_share_qq, R.id.iv_share_zone, R.id.tv_start_ive})
+
+    @OnClick({R.id.iv_like, R.id.iv_share, R.id.ll_sb_Ui, R.id.iv_close2, R.id.tv_comment, R.id.iv_turn, R.id.iv_close, R.id.iv_share_wx, R.id.iv_share_qq, R.id.iv_share_zone, R.id.tv_start_ive})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_like:
@@ -270,8 +293,35 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         }
     }
 
+    private void startLiveFromServer(){
+        DialogUtil.showLoading(this,true);
+        ApiUtils.getInstance().startlive(currentLiveBean.getId(), new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+                DialogUtil.hideLoading(AuthorActivity.this);
+                startLive();
+            }
+
+            @Override
+            public void error(String code, String msg) {
+                DialogUtil.hideLoading(AuthorActivity.this);
+                ToastUtils.show(AuthorActivity.this,msg);
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+                DialogUtil.hideLoading(AuthorActivity.this);
+                ToastUtils.show(AuthorActivity.this,expectionMsg);
+
+            }
+        });
+    }
+
     void startLive() {
         //98946.livepush.myqcloud.com
+
+
         App.getInstance().getUserInfo(this, new UserInfoCallback() {
             @Override
             public void getUserInfo(UserInfo userInfo) {
@@ -285,59 +335,60 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
                     @Override
                     public void getDefaultSetting(DefaultSetting defaultSetting) {
                         loginInfo.userAvatar = ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), userInfo.getHeadImg());
-                       if(App.getInstance().isLoginLive()){
-                           DialogUtil.showLoading(AuthorActivity.this, true, "正在创建房间");
+                        if (App.getInstance().isLoginLive()) {
+                            DialogUtil.showLoading(AuthorActivity.this, true, "正在创建房间");
 
-                           mlvbLiveRoom.createRoom(userInfo.getId() + "", userInfo.getNickname(), new CreateRoomCallback() {
-                               @Override
-                               public void onError(int errCode, String errInfo) {
-                                   DialogUtil.hideLoading(AuthorActivity.this);
+                            mlvbLiveRoom.createRoom(currentLiveBean.getUserId()+"", currentLiveBean.getTitle(), new CreateRoomCallback() {
+                                @Override
+                                public void onError(int errCode, String errInfo) {
+                                    DialogUtil.hideLoading(AuthorActivity.this);
 
-                                   ToastUtils.show(AuthorActivity.this, errInfo);
-                               }
+                                    ToastUtils.show(AuthorActivity.this, errInfo);
+                                }
 
-                               @Override
-                               public void onSuccess(String RoomID) {
-                                   DialogUtil.hideLoading(AuthorActivity.this);
+                                @Override
+                                public void onSuccess(String RoomID) {
+                                    DialogUtil.hideLoading(AuthorActivity.this);
 
-                                   dealOpenLiveSuc(loginInfo);
-                               }
-                           });
+                                    dealOpenLiveSuc(loginInfo);
+                                }
+                            });
 
-                       }else{
-                           DialogUtil.showLoading(AuthorActivity.this, true, "请稍候");
-                           mlvbLiveRoom.login(loginInfo, new LoginCallback() {
-                               @Override
-                               public void onError(int errCode, String errInfo) {
-                                   ToastUtils.show(AuthorActivity.this, errInfo);
-                                   DialogUtil.hideLoading(AuthorActivity.this);
-                               }
+                        } else {
+                            DialogUtil.showLoading(AuthorActivity.this, true, "请稍候");
+                            mlvbLiveRoom.login(loginInfo, new LoginCallback() {
+                                @Override
+                                public void onError(int errCode, String errInfo) {
+                                    ToastUtils.show(AuthorActivity.this, errInfo);
+                                    DialogUtil.hideLoading(AuthorActivity.this);
+                                }
 
-                               @Override
-                               public void onSuccess() {
-                                   DialogUtil.hideLoading(AuthorActivity.this);
+                                @Override
+                                public void onSuccess() {
+                                    App.getInstance().setLoginLive(true);
+                                    DialogUtil.hideLoading(AuthorActivity.this);
 
-                                   DialogUtil.showLoading(AuthorActivity.this, true, "正在创建房间");
+                                    DialogUtil.showLoading(AuthorActivity.this, true, "正在创建房间");
 
-                                   mlvbLiveRoom.createRoom(userInfo.getId() + "", userInfo.getNickname(), new CreateRoomCallback() {
-                                       @Override
-                                       public void onError(int errCode, String errInfo) {
-                                           DialogUtil.hideLoading(AuthorActivity.this);
+                                    mlvbLiveRoom.createRoom(userInfo.getId() + "", userInfo.getNickname(), new CreateRoomCallback() {
+                                        @Override
+                                        public void onError(int errCode, String errInfo) {
+                                            DialogUtil.hideLoading(AuthorActivity.this);
 
-                                           ToastUtils.show(AuthorActivity.this, errInfo);
-                                       }
+                                            ToastUtils.show(AuthorActivity.this, errInfo);
+                                        }
 
-                                       @Override
-                                       public void onSuccess(String RoomID) {
-                                           DialogUtil.hideLoading(AuthorActivity.this);
+                                        @Override
+                                        public void onSuccess(String RoomID) {
+                                            DialogUtil.hideLoading(AuthorActivity.this);
 
-                                           dealOpenLiveSuc(loginInfo);
-                                       }
-                                   });
-                               }
-                           });
+                                            dealOpenLiveSuc(loginInfo);
+                                        }
+                                    });
+                                }
+                            });
 
-                       }
+                        }
 
                     }
                 });
@@ -352,7 +403,6 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         recycleMsg.getAdapter().notifyItemInserted(msglist.size());
         recycleMsg.scrollToPosition(msglist.size() - 1);
     }
-
 
 
     private void dealOpenLiveSuc(LoginInfo loginInfo) {
@@ -447,7 +497,12 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(App.getInstance().isLoginLive()){
+        logoutLive();
+        endLive();
+    }
+
+    private void logoutLive(){
+        if (App.getInstance().isLoginLive()) {
             mlvbLiveRoom.exitRoom(new ExitRoomCallback() {
                 @Override
                 public void onError(int errCode, String errInfo) {
@@ -461,9 +516,7 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             });
         }
         mlvbLiveRoom.setListener(null);
-
     }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -478,10 +531,13 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
     }
 
 
+
     private void showleaveDialog() {
         DialogUtil.showAlertDialog(AuthorActivity.this, "提示", "确定结束直播", "确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                logoutLive();
+                endLive();
                 finish();
             }
         }, "点错了", new DialogInterface.OnClickListener() {
@@ -589,15 +645,15 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
     @Override
     public void onRecvRoomCustomMsg(String roomID, String userID, String userName, String userAvatar, String cmd, String message) {
 
-        CmdBean cmdBean = GsonUtil.GsonToBean(cmd,CmdBean.class);
-        if(cmdBean.getType().equals(LiveParam.ANCHOR_MSG)){
+        CmdBean cmdBean = GsonUtil.GsonToBean(cmd, CmdBean.class);
+        if (cmdBean.getType().equals(LiveParam.ANCHOR_MSG)) {
             AnchorInfo anchorInfo = new AnchorInfo();
             anchorInfo.userAvatar = userAvatar;
             anchorInfo.userName = userName;
             anchorInfo.userID = userID;
             anchorInfo.level = cmdBean.getLevel();
             addMsg(new AuthorMsg(anchorInfo, message));
-        }else  if(cmdBean.getType().equals(LiveParam.ANCHOR_NOTICE)){
+        } else if (cmdBean.getType().equals(LiveParam.ANCHOR_NOTICE)) {
             AnchorInfo anchorInfo = new AnchorInfo();
             anchorInfo.userAvatar = userAvatar;
             anchorInfo.userName = userName;
@@ -605,7 +661,15 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             anchorInfo.level = cmdBean.getLevel();
 
             addMsg(new AuthorNotice(anchorInfo, message));
-        }else  if(cmdBean.getType().equals(LiveParam.AUDIENCE_MSG)){
+        } else if (cmdBean.getType().equals(LiveParam.AUDIENCE_MSG)) {
+            AudienceInfo anchorInfo = new AudienceInfo();
+            anchorInfo.userAvatar = userAvatar;
+            anchorInfo.userName = userName;
+            anchorInfo.userID = userID;
+            anchorInfo.level = cmdBean.getLevel();
+            addMsg(new AudienceMsg(anchorInfo, message));
+            setCommentNum();
+        }else if (cmdBean.getType().equals(LiveParam.AUDIENCE_NOTICE)) {
             AudienceInfo anchorInfo = new AudienceInfo();
             anchorInfo.userAvatar = userAvatar;
             anchorInfo.userName = userName;
@@ -614,8 +678,66 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             addMsg(new AudienceNotice(anchorInfo, message));
         }
 
-        if(message.equals(LiveParam.LIKE_DESC)){
+        if (message.equals(LiveParam.LIKE_DESC)) {
             heartLayout.addFavor();
+            setLikeNum();
         }
+        if (message.equals(LiveParam.ENTER_DESC)) {
+            refreshAudienceRecycle();
+
+        }
+    }
+    private void refreshAudienceRecycle(){
+        mlvbLiveRoom.getAudienceList(new GetAudienceListCallback() {
+            @Override
+            public void onError(int errCode, String errInfo) {
+
+            }
+
+            @Override
+            public void onSuccess(ArrayList<AudienceInfo> audienceInfoList) {
+                audienceInfoList.clear();
+                tvAudienceNumber.setText(audienceInfoList.size());
+                audienceInfoList.addAll(audienceInfoList);
+                recycleAudience.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+    private void setLikeNum(){
+
+        likeNum++;
+        mlvbLiveRoom.setCustomInfo(MLVBCommonDef.CustomFieldOp.INC, "like", likeNum, null);
+
+    }private void setCommentNum(){
+
+        commentNum++;
+        mlvbLiveRoom.setCustomInfo(MLVBCommonDef.CustomFieldOp.INC, "comment", commentNum, null);
+
+    }
+
+    private int likeNum = 0;
+    private int commentNum = 0;
+
+
+    private void endLive(){
+        if(currentLiveBean==null){
+            return;
+        }
+        ApiUtils.getInstance().endlive(currentLiveBean.getId(), commentNum, likeNum, new ApiCallback() {
+            @Override
+            public void success(ResponseData t) {
+
+            }
+
+            @Override
+            public void error(String code, String msg) {
+
+            }
+
+            @Override
+            public void expcetion(String expectionMsg) {
+
+            }
+        });
     }
 }

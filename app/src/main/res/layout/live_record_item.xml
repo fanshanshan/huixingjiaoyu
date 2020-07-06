@@ -70,6 +70,7 @@
 
 
        <LinearLayout
+           android:id="@+id/living_join"
            android:background="@drawable/living_join"
            android:layout_alignParentBottom="true"
            android:layout_alignParentRight="true"

@@ -370,7 +370,6 @@ public class SignActivity extends BaseActivity {
                 App.getInstance().getUserInfo(SignActivity.this, new UserInfoCallback() {
                     @Override
                     public void getUserInfo(UserInfo userInfo) {
-                        ToastUtils.show(SignActivity.this, getString(R.string.qd_desc));
                         userInfo.setSignStatus(1);
                         tvSign.setBackgroundResource(R.drawable.signed);
                         tvSign.setText(getString(R.string.signed));

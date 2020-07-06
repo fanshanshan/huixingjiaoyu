@@ -18,7 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.qulink.hxedu.callback.DefaultSettingCallback;
 import com.qulink.hxedu.callback.UserInfoCallback;
+import com.qulink.hxedu.entity.DefaultSetting;
 import com.qulink.hxedu.entity.MessageEvent;
 import com.qulink.hxedu.entity.UserInfo;
 import com.qulink.hxedu.jpush.TagAliasOperatorHelper;
@@ -31,6 +33,7 @@ import com.qulink.hxedu.ui.zone.ZoneFragment;
 import com.qulink.hxedu.util.FinalValue;
 import com.qulink.hxedu.util.PrefUtils;
 import com.qulink.hxedu.util.SystemUtil;
+import com.zzhoujay.richtext.RichText;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,7 +95,6 @@ public class MainActivity extends BaseActivity {
 
 
         ButterKnife.bind(this);
-        checkVersion();
         initFragment(savedInstanceState);
         JPushInterface.init(this);
         JPushInterface.getAlias(this,3);
@@ -113,6 +115,12 @@ public class MainActivity extends BaseActivity {
 
         rbIndex.setChecked(true);
 
+        App.getInstance().getDefaultSetting(this, new DefaultSettingCallback() {
+            @Override
+            public void getDefaultSetting(DefaultSetting defaultSetting) {
+                checkVersion(defaultSetting);
+            }
+        });
     }
 
     @Override
@@ -244,19 +252,19 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private void checkVersion(){
+    private void checkVersion(DefaultSetting defaultSetting){
         try {
-            if(SystemUtil.compareVersion(SystemUtil.getVersionName(MainActivity.this),"2.0.0")==-1){
-                String path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)+"/2.0.0-hxedu.apk";
-                PrefUtils.putString(MainActivity.this,"apk_url","sddsdsd");
+            if(SystemUtil.compareVersion(SystemUtil.getVersionName(MainActivity.this),defaultSetting.getAndroid_version().getValue())==-1){
+                String path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)+"/"+defaultSetting.getAndroid_version().getValue()+"-hxedu.apk";
+                PrefUtils.putString(MainActivity.this,"apk_url",defaultSetting.getAndroid_url().getValue());
                 PrefUtils.putString(MainActivity.this,"apk_path",path);
-                showVersionDialog(path);
+                showVersionDialog(defaultSetting.getAndroid_content().getValue(),defaultSetting.getAndroid_version().getValue(),path);
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
     }
-    private void showVersionDialog(String path){
+    private void showVersionDialog(String content,String version,String path){
         View diaView = View.inflate(this, R.layout.version_dialogg, null);
 
         Dialog dialog = new Dialog(MainActivity.this, R.style.my_dialog);
@@ -275,8 +283,10 @@ public class MainActivity extends BaseActivity {
         });
         TextView tvVersionDesc = diaView.findViewById(R.id.tv_version_desc);
         TextView tvContent = diaView.findViewById(R.id.tv_content);
-        tvVersionDesc.setText("v2.0更新说明");
-        tvContent.setText("本次优化了部分bug");
+        tvVersionDesc.setText("v"+version+"更新说明");
+        tvContent.setText(content);
+        RichText.from(content).into(tvContent);
+
         dialog.setContentView(diaView);
         ViewGroup.LayoutParams layoutParams = diaView.getLayoutParams();
         //设置为全屏的宽

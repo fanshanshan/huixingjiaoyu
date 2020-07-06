@@ -42,6 +42,7 @@ import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.AuthorMsg;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.AuthorNotice;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.CmdBean;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.LoginInfo;
+import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.RoomInfo;
 import com.qulink.hxedu.ui.live.liveroom.roomutil.commondef.SysMsg;
 import com.qulink.hxedu.util.DialogUtil;
 import com.qulink.hxedu.util.ImageUtils;
@@ -169,6 +170,7 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
             }
         });
     }
+
     private void sendmsg() {
         App.getInstance().getUserInfo(this, new UserInfoCallback() {
             @Override
@@ -179,7 +181,7 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
                 mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), etComment.getText().toString(), new SendRoomCustomMsgCallback() {
                     @Override
                     public void onError(int errCode, String errInfo) {
-                        ToastUtils.show(AudienceActivity.this,errInfo);
+                        ToastUtils.show(AudienceActivity.this, errInfo);
                     }
 
                     @Override
@@ -188,7 +190,7 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
                         AnchorInfo anchorInfo = new AnchorInfo();
                         anchorInfo.userAvatar = userInfo.getHeadImg();
                         anchorInfo.userName = userInfo.getNickname();
-                        anchorInfo.userID = userInfo.getId()+"";
+                        anchorInfo.userID = userInfo.getId() + "";
                         addMsg(new AuthorMsg(anchorInfo, etComment.getText().toString()));
 
                         etComment.setText("");
@@ -236,7 +238,7 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
                 CmdBean cmdBean = new CmdBean();
                 cmdBean.setLevel(userInfo.getLevel());
                 cmdBean.setType(LiveParam.ANCHOR_NOTICE);
-                mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), etComment.getText().toString(), new SendRoomCustomMsgCallback() {
+                mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), LiveParam.LIKE_DESC, new SendRoomCustomMsgCallback() {
                     @Override
                     public void onError(int errCode, String errInfo) {
                         ToastUtils.show(AudienceActivity.this, errInfo);
@@ -246,8 +248,8 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
                     public void onSuccess() {
                         AudienceInfo anchorInfo = new AudienceInfo();
                         anchorInfo.userAvatar = userInfo.getHeadImg();
-                        anchorInfo.userName =userInfo.getNickname();
-                        anchorInfo.userID = userInfo.getId()+"";
+                        anchorInfo.userName = userInfo.getNickname();
+                        anchorInfo.userID = userInfo.getId() + "";
                         addMsg(new AudienceNotice(anchorInfo, LiveParam.LIKE_DESC));
 
                     }
@@ -256,8 +258,36 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
         });
 
     }
+    private void enterRoom() {
+        App.getInstance().getUserInfo(this, new UserInfoCallback() {
+            @Override
+            public void getUserInfo(UserInfo userInfo) {
 
-    @OnClick({R.id.iv_like,R.id.iv_share, R.id.ll_sb_Ui, R.id.iv_close2, R.id.tv_comment})
+                CmdBean cmdBean = new CmdBean();
+                cmdBean.setLevel(userInfo.getLevel());
+                cmdBean.setType(LiveParam.AUDIENCE_NOTICE);
+                mlvbLiveRoom.sendRoomCustomMsg(GsonUtil.GsonString(cmdBean), LiveParam.ENTER_DESC, new SendRoomCustomMsgCallback() {
+                    @Override
+                    public void onError(int errCode, String errInfo) {
+                        ToastUtils.show(AudienceActivity.this, errInfo);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+//                        AudienceInfo anchorInfo = new AudienceInfo();
+//                        anchorInfo.userAvatar = userInfo.getHeadImg();
+//                        anchorInfo.userName = userInfo.getNickname();
+//                        anchorInfo.userID = userInfo.getId() + "";
+//                        addMsg(new AudienceNotice(anchorInfo, LiveParam.ENTER_DESC));
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    @OnClick({R.id.iv_like, R.id.iv_share, R.id.ll_sb_Ui, R.id.iv_close2, R.id.tv_comment})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_like:
@@ -304,9 +334,19 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
                         loginInfo.userAvatar = ImageUtils.splitImgUrl(defaultSetting.getImg_assets_url().getValue(), userInfo.getHeadImg());
 
                         if (App.getInstance().isLoginLive()) {
+                            mlvbLiveRoom.getRoomList(0, 100, new GetRoomListCallback() {
+                                @Override
+                                public void onError(int errCode, String errInfo) {
 
+                                }
+
+                                @Override
+                                public void onSuccess(ArrayList<RoomInfo> roomInfoList) {
+
+                                }
+                            });
                             DialogUtil.showLoading(AudienceActivity.this, true, "正在进入房间");
-                            mlvbLiveRoom.enterRoom("12", pusherTxCloudView, new EnterRoomCallback() {
+                            mlvbLiveRoom.enterRoom(liveInfoBean.getUserId() + "", pusherTxCloudView, new EnterRoomCallback() {
                                 @Override
                                 public void onError(int errCode, String errInfo) {
                                     DialogUtil.hideLoading(AudienceActivity.this);
@@ -332,19 +372,32 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
 
                                 @Override
                                 public void onSuccess() {
+                                    mlvbLiveRoom.getRoomList(0, 100, new GetRoomListCallback() {
+                                        @Override
+                                        public void onError(int errCode, String errInfo) {
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(ArrayList<RoomInfo> roomInfoList) {
+
+                                        }
+                                    });
                                     DialogUtil.hideLoading(AudienceActivity.this);
                                     App.getInstance().setLoginLive(true);
                                     DialogUtil.showLoading(AudienceActivity.this, true, "正在进入房间");
-                                    mlvbLiveRoom.enterRoom("12", pusherTxCloudView, new EnterRoomCallback() {
+                                    mlvbLiveRoom.enterRoom(liveInfoBean.getUserId() + "", pusherTxCloudView, new EnterRoomCallback() {
                                         @Override
                                         public void onError(int errCode, String errInfo) {
                                             DialogUtil.hideLoading(AudienceActivity.this);
 
-                                           showFailDialog(errInfo);
+                                            showFailDialog(errInfo);
                                         }
 
                                         @Override
                                         public void onSuccess() {
+                                            DialogUtil.hideLoading(AudienceActivity.this);
+
                                             dealOpenLiveSuc(liveInfoBean);
 
                                         }
@@ -370,7 +423,6 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
     }
 
 
-
     private void dealOpenLiveSuc(LiveInfoBean loginInfo) {
         rlContro.setVisibility(View.VISIBLE);
         llSbUi.setVisibility(View.VISIBLE);
@@ -378,7 +430,11 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
         tvAuthorName.setText(loginInfo.getTeacherName());
         initAudienceRecycle();
         initMsgRecycle();
+        enterRoom();
         addMsg(new SysMsg("文明直播间，别乱所花"));
+        refreshAudienceRecycle();
+    }
+    private void refreshAudienceRecycle(){
         mlvbLiveRoom.getAudienceList(new GetAudienceListCallback() {
             @Override
             public void onError(int errCode, String errInfo) {
@@ -460,19 +516,19 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       if(App.getInstance().isLoginLive()){
-           mlvbLiveRoom.exitRoom(new ExitRoomCallback() {
-               @Override
-               public void onError(int errCode, String errInfo) {
+        if (App.getInstance().isLoginLive()) {
+            mlvbLiveRoom.exitRoom(new ExitRoomCallback() {
+                @Override
+                public void onError(int errCode, String errInfo) {
 
-               }
+                }
 
-               @Override
-               public void onSuccess() {
+                @Override
+                public void onSuccess() {
 
-               }
-           });
-       }
+                }
+            });
+        }
         mlvbLiveRoom.setListener(null);
 
     }
@@ -622,10 +678,20 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
             anchorInfo.userID = userID;
             anchorInfo.level = cmdBean.getLevel();
             addMsg(new AudienceNotice(anchorInfo, message));
+        }else if (cmdBean.getType().equals(LiveParam.AUDIENCE_NOTICE)) {
+            AudienceInfo anchorInfo = new AudienceInfo();
+            anchorInfo.userAvatar = userAvatar;
+            anchorInfo.userName = userName;
+            anchorInfo.userID = userID;
+            anchorInfo.level = cmdBean.getLevel();
+            addMsg(new AudienceNotice(anchorInfo, message));
         }
 
-        if(message.equals(LiveParam.LIKE_DESC)){
+        if (message.equals(LiveParam.LIKE_DESC)) {
             heartLayout.addFavor();
+        } if (message.equals(LiveParam.ENTER_DESC)) {
+            refreshAudienceRecycle();
+
         }
     }
 }
