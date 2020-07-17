@@ -10,4 +10,5 @@ public class LiveParam {
 
     public static String LIKE_DESC="点了个赞";
     public static String ENTER_DESC="来了";
+    public static String LEAVE_DESC="来了";
 }

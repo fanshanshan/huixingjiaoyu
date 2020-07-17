@@ -55,6 +55,7 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -423,6 +424,7 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
     }
 
 
+    private int audienceNumber = 0;
     private void dealOpenLiveSuc(LiveInfoBean loginInfo) {
         rlContro.setVisibility(View.VISIBLE);
         llSbUi.setVisibility(View.VISIBLE);
@@ -433,6 +435,19 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
         enterRoom();
         addMsg(new SysMsg("文明直播间，别乱所花"));
         refreshAudienceRecycle();
+        mlvbLiveRoom.getCustomInfo(new GetCustomInfoCallback() {
+            @Override
+            public void onError(int errCode, String errInfo) {
+
+            }
+
+            @Override
+            public void onGetCustomInfo(Map<String, Object> customInfo) {
+                audienceNumber = (int)customInfo.get("audienceNumber");
+                tvAudienceNumber.setText(audienceNumber+"");
+
+            }
+        });
     }
     private void refreshAudienceRecycle(){
         mlvbLiveRoom.getAudienceList(new GetAudienceListCallback() {
@@ -444,8 +459,9 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
             @Override
             public void onSuccess(ArrayList<AudienceInfo> audienceInfoList) {
                 audienceInfoList.clear();
-                tvAudienceNumber.setText(audienceInfoList.size());
                 audienceInfoList.addAll(audienceInfoList);
+                tvAudienceNumber.setText(audienceNumber+"");
+
                 recycleAudience.getAdapter().notifyDataSetChanged();
             }
         });
@@ -690,8 +706,11 @@ public class AudienceActivity extends BaseActivity implements IMLVBLiveRoomListe
         if (message.equals(LiveParam.LIKE_DESC)) {
             heartLayout.addFavor();
         } if (message.equals(LiveParam.ENTER_DESC)) {
+            audienceNumber++;
             refreshAudienceRecycle();
-
+        }if (message.equals(LiveParam.LEAVE_DESC)) {
+            audienceNumber--;
+            refreshAudienceRecycle();
         }
     }
 }

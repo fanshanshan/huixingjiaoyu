@@ -404,6 +404,7 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         recycleMsg.scrollToPosition(msglist.size() - 1);
     }
 
+    private int audienceNumber = 0;
 
     private void dealOpenLiveSuc(LoginInfo loginInfo) {
         mlvbLiveRoom.setCameraMuteImage(BitmapFactory.decodeResource(getResources(), R.drawable.pause_publish));
@@ -415,21 +416,10 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
         tvAuthorName.setText(loginInfo.userName);
         initAudienceRecycle();
         initMsgRecycle();
-        addMsg(new SysMsg("文明直播间，别乱所花"));
-        mlvbLiveRoom.getAudienceList(new GetAudienceListCallback() {
-            @Override
-            public void onError(int errCode, String errInfo) {
-
-            }
-
-            @Override
-            public void onSuccess(ArrayList<AudienceInfo> audienceInfoList) {
-                audienceInfoList.clear();
-                tvAudienceNumber.setText(audienceInfoList.size());
-                audienceInfoList.addAll(audienceInfoList);
-                recycleAudience.getAdapter().notifyDataSetChanged();
-            }
-        });
+        addMsg(new SysMsg("文明直播间"));
+      audienceNumber
+               = 0;
+      tvAudienceNumber.setText(audienceNumber+"");
     }
 
     private List msglist;
@@ -683,7 +673,16 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             setLikeNum();
         }
         if (message.equals(LiveParam.ENTER_DESC)) {
+            audienceNumber++;
             refreshAudienceRecycle();
+            mlvbLiveRoom.setCustomInfo(MLVBCommonDef.CustomFieldOp.INC, "audienceNumber", audienceNumber, null);
+
+
+        }
+        if (message.equals(LiveParam.LEAVE_DESC)) {
+            audienceNumber++;
+            refreshAudienceRecycle();
+            mlvbLiveRoom.setCustomInfo(MLVBCommonDef.CustomFieldOp.INC, "audienceNumber", audienceNumber, null);
 
         }
     }
@@ -697,7 +696,7 @@ public class AuthorActivity extends BaseActivity implements IMLVBLiveRoomListene
             @Override
             public void onSuccess(ArrayList<AudienceInfo> audienceInfoList) {
                 audienceInfoList.clear();
-                tvAudienceNumber.setText(audienceInfoList.size());
+                tvAudienceNumber.setText(audienceNumber+"");
                 audienceInfoList.addAll(audienceInfoList);
                 recycleAudience.getAdapter().notifyDataSetChanged();
             }
